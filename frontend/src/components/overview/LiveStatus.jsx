@@ -1,62 +1,147 @@
+import {
+  FaCircle,
+  FaWifi,
+  FaShieldAlt,
+  FaHeartbeat,
+  FaCloudSun,
+  FaBroadcastTower,
+} from "react-icons/fa";
+
 import Card from "../ui/Card";
-import Badge from "../ui/Badge";
+
+const statusItems = [
+  {
+    title: "Gate Operations",
+    value: "Normal",
+    color: "text-emerald-400",
+    bg: "bg-emerald-500/10",
+    icon: FaShieldAlt,
+  },
+  {
+    title: "Medical Teams",
+    value: "Standby",
+    color: "text-blue-400",
+    bg: "bg-blue-500/10",
+    icon: FaHeartbeat,
+  },
+  {
+    title: "Security Units",
+    value: "Active",
+    color: "text-cyan-400",
+    bg: "bg-cyan-500/10",
+    icon: FaBroadcastTower,
+  },
+  {
+    title: "Network Health",
+    value: "99.8%",
+    color: "text-purple-400",
+    bg: "bg-purple-500/10",
+    icon: FaWifi,
+  },
+  {
+    title: "Weather",
+    value: "29°C Clear",
+    color: "text-yellow-400",
+    bg: "bg-yellow-500/10",
+    icon: FaCloudSun,
+  },
+];
 
 const LiveStatus = () => {
   return (
     <Card>
 
-      <div className="flex items-center justify-between">
+      {/* Header */}
 
-        <h3 className="text-lg font-semibold text-white">
-          Live AI Status
-        </h3>
+      <div className="mb-6 flex items-center justify-between">
 
-        <Badge color="Active">
-          ● Live
-        </Badge>
+        <div>
+
+          <h2 className="text-xl font-bold text-white">
+            Live Operations Status
+          </h2>
+
+          <p className="mt-1 text-sm text-slate-400">
+            Real-time operational monitoring
+          </p>
+
+        </div>
+
+        <div className="flex items-center gap-2 rounded-full bg-emerald-500/10 px-3 py-2">
+
+          <FaCircle className="animate-pulse text-xs text-emerald-400" />
+
+          <span className="text-sm font-medium text-emerald-400">
+            LIVE
+          </span>
+
+        </div>
 
       </div>
 
-      <div className="mt-6 space-y-5">
+      {/* Status Cards */}
 
-        <div>
-          <p className="text-sm text-slate-400">
-            Gemini Connection
-          </p>
+      <div className="space-y-4">
 
-          <p className="font-semibold text-emerald-400">
-            Connected
-          </p>
-        </div>
+        {statusItems.map((item) => {
+          const Icon = item.icon;
 
-        <div>
-          <p className="text-sm text-slate-400">
-            Last Analysis
-          </p>
+          return (
+            <div
+              key={item.title}
+              className="flex items-center justify-between rounded-xl border border-slate-800 bg-slate-950 p-4 transition hover:border-cyan-500/30"
+            >
+              <div className="flex items-center gap-4">
 
-          <p className="font-semibold text-white">
-            2 minutes ago
-          </p>
-        </div>
+                <div
+                  className={`rounded-xl p-3 ${item.bg}`}
+                >
+                  <Icon
+                    className={item.color}
+                    size={20}
+                  />
+                </div>
 
-        <div>
-          <p className="text-sm text-slate-400">
-            AI Confidence
-          </p>
+                <div>
 
-          <p className="font-semibold text-cyan-400">
-            96%
-          </p>
-        </div>
+                  <h3 className="font-medium text-white">
+                    {item.title}
+                  </h3>
 
-        <div>
-          <p className="text-sm text-slate-400">
-            Active Venue
-          </p>
+                  <p className="text-sm text-slate-400">
+                    Operational Status
+                  </p>
 
-          <p className="font-semibold text-white">
-            FIFA Stadium
-          </p>
+                </div>
+
+              </div>
+
+              <span
+                className={`font-semibold ${item.color}`}
+              >
+                {item.value}
+              </span>
+
+            </div>
+          );
+        })}
+
+      </div>
+
+      {/* Footer */}
+
+      <div className="mt-6 rounded-xl border border-cyan-500/20 bg-cyan-500/10 p-4">
+
+        <div className="flex items-center justify-between">
+
+          <span className="text-sm text-slate-300">
+            Last Updated
+          </span>
+
+          <span className="font-semibold text-cyan-400">
+            Just Now
+          </span>
+
         </div>
 
       </div>

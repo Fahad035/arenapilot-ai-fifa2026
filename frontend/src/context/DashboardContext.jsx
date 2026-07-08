@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext,  useState } from "react";
 
 const DashboardContext = createContext(null);
 
@@ -29,14 +29,4 @@ export const DashboardProvider = ({ children }) => {
   );
 };
 
-export const useDashboard = () => {
-  const context = useContext(DashboardContext);
-
-  if (!context) {
-    throw new Error(
-      "useDashboard must be used inside DashboardProvider"
-    );
-  }
-
-  return context;
-};
+export default DashboardContext;

@@ -2,72 +2,83 @@ import {
   FaUsers,
   FaExclamationTriangle,
   FaRobot,
-  FaShieldAlt,
+  FaRoute,
 } from "react-icons/fa";
 
 const StatsCards = ({ analysis }) => {
   const stats = [
     {
-      title: "Crowd Density",
-      value: analysis?.crowdDensity || "81%",
-      subtitle: "Current Occupancy",
+      title: "Attendance",
+      value: "92,580",
+      change: "+8%",
       icon: FaUsers,
-      color: "text-blue-400",
-      bg: "bg-blue-500/10",
+      color: "text-cyan-400",
+      bg: "bg-cyan-500/10",
+      border: "border-cyan-500/20",
     },
     {
       title: "Active Alerts",
-      value: analysis?.alerts || "04",
-      subtitle: "Open Incidents",
+      value: analysis ? "03" : "00",
+      change: "Live",
       icon: FaExclamationTriangle,
-      color: "text-amber-400",
-      bg: "bg-amber-500/10",
+      color: "text-red-400",
+      bg: "bg-red-500/10",
+      border: "border-red-500/20",
     },
     {
       title: "AI Confidence",
-      value: analysis?.confidence || "96%",
-      subtitle: "Recommendation Score",
+      value: analysis?.confidence
+        ? `${analysis.confidence}%`
+        : "98%",
+      change: "Stable",
       icon: FaRobot,
       color: "text-emerald-400",
       bg: "bg-emerald-500/10",
+      border: "border-emerald-500/20",
     },
     {
-      title: "Stadium Status",
-      value: analysis?.status || "Operational",
-      subtitle: "System Health",
-      icon: FaShieldAlt,
+      title: "Recommended Route",
+      value: analysis?.route || "Gate D",
+      change: "Fastest",
+      icon: FaRoute,
       color: "text-purple-400",
       bg: "bg-purple-500/10",
+      border: "border-purple-500/20",
     },
   ];
 
   return (
-    <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+    <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
       {stats.map((card) => {
         const Icon = card.icon;
 
         return (
           <div
             key={card.title}
-            className="rounded-2xl border border-slate-800 bg-slate-900 p-6 transition-all duration-300 hover:border-blue-500/50 hover:-translate-y-1"
+            className={`rounded-2xl border ${card.border} ${card.bg} p-6 transition duration-300 hover:-translate-y-1 hover:shadow-xl`}
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-slate-400">{card.title}</p>
+                <p className="text-sm text-slate-400">
+                  {card.title}
+                </p>
 
-                <h2 className="mt-2 text-3xl font-bold text-white">
+                <h2 className="mt-3 text-3xl font-bold text-white">
                   {card.value}
                 </h2>
 
-                <p className="mt-2 text-xs text-slate-500">
-                  {card.subtitle}
-                </p>
+                <span className={`mt-2 inline-block text-sm ${card.color}`}>
+                  {card.change}
+                </span>
               </div>
 
               <div
-                className={`flex h-14 w-14 items-center justify-center rounded-xl ${card.bg}`}
+                className={`rounded-xl p-4 ${card.bg}`}
               >
-                <Icon className={`text-2xl ${card.color}`} />
+                <Icon
+                  className={card.color}
+                  size={28}
+                />
               </div>
             </div>
           </div>

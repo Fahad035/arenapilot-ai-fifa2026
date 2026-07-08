@@ -1,173 +1,369 @@
+import { useEffect, useState } from "react";
+
 import {
   FaRobot,
-  FaBolt,
-  FaBullhorn,
-  FaExclamationTriangle,
-  FaUsers,
-  FaClock,
-  FaCheckCircle,
-  FaMagic,
+  FaCopy,
+  FaCheck,
+  FaBrain,
+  FaChartLine,
+  FaLightbulb,
 } from "react-icons/fa";
 
+import Card from "../ui/Card";
+
+
 const AIResponse = ({ analysis }) => {
-  if (!analysis) {
-    return (
-      <div className="rounded-2xl border border-dashed border-slate-700 bg-slate-900 p-12 text-center">
 
-        <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-blue-500/10">
-          <FaRobot className="text-4xl text-blue-400" />
-        </div>
+  const [displayText, setDisplayText] = useState("");
+  const [copied, setCopied] = useState(false);
 
-        <h2 className="mt-6 text-3xl font-bold text-white">
-          AI Operational Briefing
-        </h2>
 
-        <p className="mx-auto mt-4 max-w-2xl leading-7 text-slate-400">
-          No operational briefing has been generated yet.
-          Complete the Stadium Situation Form in the Overview tab and
-          ArenaPilot AI will generate crowd management recommendations,
-          navigation guidance, multilingual announcements,
-          accessibility support and operational intelligence.
-        </p>
+  const response =
+    analysis?.summary ||
+    "Run a stadium scenario analysis to generate an AI operational briefing.";
 
-        <div className="mt-8 inline-flex items-center gap-3 rounded-full border border-blue-500/20 bg-blue-500/10 px-6 py-3 text-blue-300">
-          <FaMagic />
-          Generate your first AI briefing
-        </div>
 
-      </div>
+  /*
+    Typewriter Effect
+  */
+
+  useEffect(() => {
+
+  let index = 0;
+
+  const interval = setInterval(() => {
+
+    index++;
+
+    setDisplayText(
+      response.substring(0, index)
     );
-  }
+
+
+    if(index >= response.length){
+      clearInterval(interval);
+    }
+
+  },15);
+
+
+  return () => {
+    clearInterval(interval);
+  };
+
+}, [response]);
+
+
+
+  const copyResponse = async()=>{
+
+    await navigator.clipboard.writeText(response);
+
+    setCopied(true);
+
+
+    setTimeout(()=>{
+      setCopied(false);
+    },2000);
+
+  };
+
+
 
   return (
-    <div className="space-y-6">
+
+    <Card className="space-y-8">
+
 
       {/* Header */}
 
-      <Section title="AI Operations Briefing" icon={<FaRobot />}>
-        <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between">
 
-          <p className="text-slate-300">
-            AI-generated operational recommendations for stadium staff.
-          </p>
 
-          <div className="rounded-full bg-emerald-500/10 px-4 py-2 text-sm font-semibold text-emerald-400">
-            Confidence {analysis.confidence}
+        <div className="flex items-center gap-4">
+
+
+          <div className="rounded-xl bg-cyan-500/10 p-4">
+
+            <FaRobot
+              size={28}
+              className="text-cyan-400"
+            />
+
           </div>
 
+
+
+          <div>
+
+            <h2 className="text-2xl font-bold text-white">
+              Gemini AI Response
+            </h2>
+
+
+            <p className="text-sm text-slate-400">
+              AI generated operational intelligence
+            </p>
+
+
+          </div>
+
+
         </div>
-      </Section>
 
-      <Section title="Situation Summary" icon={<FaRobot />}>
-        <p className="leading-7 text-slate-300">
-          {analysis.summary}
-        </p>
-      </Section>
 
-      <Section title="Priority Level" icon={<FaBolt />}>
-        <span className="inline-flex rounded-full bg-red-500/10 px-4 py-2 font-semibold text-red-400">
-          {analysis.priority}
-        </span>
-      </Section>
 
-      <Section title="Immediate Actions" icon={<FaCheckCircle />}>
-        <ul className="space-y-3">
-          {analysis.actions.map((item, index) => (
-            <li
-              key={index}
-              className="flex gap-3 rounded-xl bg-slate-800/60 p-4"
-            >
-              <FaCheckCircle className="mt-1 text-emerald-400" />
+        <button
+          onClick={copyResponse}
+          className="
+          flex
+          items-center
+          gap-2
+          rounded-xl
+          border
+          border-slate-700
+          bg-slate-900
+          px-4
+          py-3
+          text-sm
+          text-white
+          transition
+          hover:border-cyan-500
+          "
+        >
 
-              <span className="text-slate-300">
-                {item}
-              </span>
-            </li>
-          ))}
-        </ul>
-      </Section>
+          {
+            copied
+            ?
+            <>
+              <FaCheck className="text-emerald-400"/>
+              Copied
+            </>
+            :
+            <>
+              <FaCopy/>
+              Copy
+            </>
+          }
 
-      <Section title="Public Announcement" icon={<FaBullhorn />}>
-        <div className="rounded-xl border border-blue-500/20 bg-blue-500/10 p-5">
-          <p className="leading-7 text-blue-100">
-            {analysis.announcement}
-          </p>
-        </div>
-      </Section>
 
-      <div className="grid gap-6 lg:grid-cols-2">
+        </button>
 
-        <Section title="Resources Required" icon={<FaUsers />}>
-          <ul className="space-y-3">
-            {analysis.resources.map((item, index) => (
-              <li
-                key={index}
-                className="rounded-lg bg-slate-800/60 p-3 text-slate-300"
-              >
-                {item}
-              </li>
-            ))}
-          </ul>
-        </Section>
-
-        <Section title="Risk Assessment" icon={<FaExclamationTriangle />}>
-          <ul className="space-y-3">
-            {analysis.risks.map((item, index) => (
-              <li
-                key={index}
-                className="rounded-lg bg-red-500/10 p-3 text-red-300"
-              >
-                {item}
-              </li>
-            ))}
-          </ul>
-        </Section>
 
       </div>
 
-      <Section title="Recommended Timeline" icon={<FaClock />}>
-        <div className="space-y-4">
-          {analysis.timeline.map((step, index) => (
-            <div
-              key={index}
-              className="flex gap-4"
-            >
-              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-600 font-bold">
-                {index + 1}
-              </div>
 
-              <div className="flex-1 rounded-xl bg-slate-800/60 p-4 text-slate-300">
-                {step}
-              </div>
-            </div>
-          ))}
+
+      {/* AI Text */}
+
+
+      <div
+      className="
+      rounded-2xl
+      border
+      border-cyan-500/20
+      bg-cyan-500/5
+      p-6
+      "
+      >
+
+
+        <p
+        className="
+        leading-8
+        text-slate-200
+        whitespace-pre-line
+        "
+        >
+
+          {displayText}
+
+          <span className="animate-pulse text-cyan-400">
+            |
+          </span>
+
+
+        </p>
+
+
+      </div>
+
+
+
+
+      {/* Intelligence Metrics */}
+
+
+      <div className="grid gap-5 md:grid-cols-3">
+
+
+        <div
+        className="
+        rounded-xl
+        border
+        border-purple-500/20
+        bg-purple-500/10
+        p-5
+        "
+        >
+
+          <div className="flex gap-3 items-center">
+
+            <FaBrain className="text-purple-400"/>
+
+            <span className="text-sm text-slate-400">
+              Reasoning
+            </span>
+
+          </div>
+
+
+          <h3 className="mt-3 font-bold text-white">
+
+            Rules + Gemini
+
+          </h3>
+
+
         </div>
-      </Section>
 
-    </div>
-  );
-};
 
-function Section({ title, icon, children }) {
-  return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900 p-6">
 
-      <div className="mb-5 flex items-center gap-3">
 
-        <div className="text-cyan-400">
-          {icon}
+        <div
+        className="
+        rounded-xl
+        border
+        border-blue-500/20
+        bg-blue-500/10
+        p-5
+        "
+        >
+
+          <div className="flex gap-3 items-center">
+
+            <FaChartLine className="text-blue-400"/>
+
+            <span className="text-sm text-slate-400">
+              Confidence
+            </span>
+
+          </div>
+
+
+          <h3 className="mt-3 text-2xl font-bold text-blue-400">
+
+            {analysis?.confidence || 98}%
+
+          </h3>
+
+
         </div>
 
-        <h3 className="text-xl font-semibold text-white">
-          {title}
+
+
+
+        <div
+        className="
+        rounded-xl
+        border
+        border-emerald-500/20
+        bg-emerald-500/10
+        p-5
+        "
+        >
+
+          <div className="flex gap-3 items-center">
+
+            <FaLightbulb className="text-emerald-400"/>
+
+            <span className="text-sm text-slate-400">
+              Status
+            </span>
+
+          </div>
+
+
+          <h3 className="mt-3 font-bold text-emerald-400">
+
+            Action Ready
+
+          </h3>
+
+
+        </div>
+
+
+      </div>
+
+
+
+      {/* Key Insights */}
+
+
+      <div>
+
+
+        <h3 className="mb-5 text-xl font-bold text-white">
+          AI Key Insights
         </h3>
 
+
+        <div className="space-y-3">
+
+
+          {
+          (
+            analysis?.recommendations ||
+            [
+              "Monitor high density zones.",
+              "Optimize entry flow.",
+              "Maintain emergency readiness."
+            ]
+
+          )
+          .map((item,index)=>(
+
+
+            <div
+            key={index}
+            className="
+            rounded-xl
+            border
+            border-slate-800
+            bg-slate-950
+            p-4
+            text-slate-300
+            "
+            >
+
+              <span className="mr-3 text-cyan-400">
+                {index+1}.
+              </span>
+
+              {item}
+
+
+            </div>
+
+
+          ))
+
+          }
+
+
+        </div>
+
+
       </div>
 
-      {children}
 
-    </div>
+
+    </Card>
+
   );
-}
+
+};
+
 
 export default AIResponse;

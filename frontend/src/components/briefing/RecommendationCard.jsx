@@ -1,59 +1,78 @@
-import { FaArrowRight } from "react-icons/fa";
+import {
+  FaCircleCheck,
+  FaArrowRight,
+  FaTriangleExclamation,
+} from "react-icons/fa6";
 
-const colors = {
-  High: {
-    border: "border-red-500/30",
-    bg: "bg-red-500/10",
-    text: "text-red-400",
-  },
-  Medium: {
-    border: "border-amber-500/30",
-    bg: "bg-amber-500/10",
-    text: "text-amber-400",
-  },
-  Low: {
-    border: "border-emerald-500/30",
-    bg: "bg-emerald-500/10",
-    text: "text-emerald-400",
-  },
-};
+import Card from "../ui/Card";
 
-const RecommendationCard = ({
-  title,
-  description,
-  priority = "Medium",
-}) => {
-  const style = colors[priority];
+const RecommendationCard = ({ analysis }) => {
+  const recommendations =
+    analysis?.recommendations || [
+      "Open Gate D to reduce congestion.",
+      "Deploy additional crowd marshals.",
+      "Increase public announcements.",
+      "Monitor medical response teams.",
+    ];
 
   return (
-    <div
-      className={`rounded-2xl border ${style.border} ${style.bg} p-6 transition hover:-translate-y-1`}
-    >
-      <div className="flex items-center justify-between">
+    <Card>
 
-        <h3 className="text-lg font-semibold text-white">
-          {title}
-        </h3>
+      <div className="mb-6 flex items-center gap-3">
 
-        <span
-          className={`rounded-full px-3 py-1 text-xs font-semibold ${style.text}`}
-        >
-          {priority}
-        </span>
+        <FaCircleCheck
+          className="text-emerald-400"
+          size={22}
+        />
+
+        <h2 className="text-2xl font-bold text-white">
+          Priority Actions
+        </h2>
 
       </div>
 
-      <p className="mt-4 leading-7 text-slate-300">
-        {description}
-      </p>
+      <div className="space-y-4">
 
-      <button className="mt-6 flex items-center gap-2 text-blue-400 transition hover:gap-3">
-        View Details
+        {recommendations.map((item, index) => (
 
-        <FaArrowRight />
-      </button>
+          <div
+            key={index}
+            className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-5 transition hover:border-emerald-400"
+          >
 
-    </div>
+            <div className="flex items-start gap-4">
+
+              <div className="mt-1">
+
+                {index === 0 ? (
+                  <FaTriangleExclamation className="text-red-400" />
+                ) : (
+                  <FaArrowRight className="text-emerald-400" />
+                )}
+
+              </div>
+
+              <div>
+
+                <h3 className="font-semibold text-white">
+                  Priority {index + 1}
+                </h3>
+
+                <p className="mt-2 leading-7 text-slate-300">
+                  {item}
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        ))}
+
+      </div>
+
+    </Card>
   );
 };
 

@@ -1,207 +1,537 @@
 import { useState } from "react";
+import {
+  FaFutbol,
+  FaCloudSun,
+  FaExclamationTriangle,
+  FaFlag,
+  FaMagic,
+} from "react-icons/fa";
 
-const initialForm = {
-  venue: "",
-  match: "",
-  crowdDensity: "Medium",
-  weather: "Clear",
-  transport: "Normal",
-  accessibility: "Normal",
-  emergency: "Low",
-  language: "English",
-  notes: "",
-};
+import Card from "../ui/Card";
+import Button from "../ui/Button";
+import Input from "../ui/Input";
+import { analyzeScenario } from "../../services/analysisService";
+
+const stadiums = [
+  "Lusail Stadium",
+  "Al Bayt Stadium",
+  "974 Stadium",
+  "Al Janoub Stadium",
+  "Education City Stadium",
+];
+
+const matches = [
+  "Argentina vs Brazil",
+  "England vs France",
+  "Germany vs Spain",
+  "Portugal vs Italy",
+  "Netherlands vs Belgium",
+];
+
+const incidents = [
+  "Crowd Congestion",
+  "Medical Emergency",
+  "Security Threat",
+  "Gate Delay",
+  "Transport Delay",
+  "VIP Movement",
+];
+
+const priorities = [
+  "Low",
+  "Medium",
+  "High",
+  "Critical",
+];
+
+const weatherOptions = [
+  "Sunny",
+  "Cloudy",
+  "Rainy",
+  "Windy",
+];
 
 const ScenarioForm = ({
+  scenarioData,
   setScenarioData,
+  analysis,
   setAnalysis,
   loading,
   setLoading,
 }) => {
-  const [formData, setFormData] = useState(initialForm);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const [errors, setErrors] = useState({});
 
-    const updated = {
-      ...formData,
-      [name]: value,
-    };
-
-    setFormData(updated);
-    setScenarioData(updated);
+  const handleChange = (field, value) => {
+    setScenarioData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const validate = () => {
+    const newErrors = {};
+
+    if (!scenarioData.stadium)
+      newErrors.stadium = "Please select a stadium.";
+
+    if (!scenarioData.match)
+      newErrors.match = "Please select a match.";
+
+    if (!scenarioData.crowd)
+      newErrors.crowd = "Crowd size is required.";
+
+    if (!scenarioData.incident)
+      newErrors.incident = "Select an incident.";
+
+    if (!scenarioData.priority)
+      newErrors.priority = "Priority is required.";
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleGenerate = async () => {
+    if (!validate()) return;
 
     setLoading(true);
 
-    // Backend integration will replace this.
-    setTimeout(() => {
-      setAnalysis({
-        crowdDensity: "84%",
-        alerts: "03",
-        confidence: "97%",
-        status: "Operational",
-      });
+    try {
+      const result = await analyzeScenario(scenarioData);
 
+      setAnalysis(result);
+    } catch (err) {
+      console.error(err);
+    } finally {
       setLoading(false);
-    }, 1500);
+    }
   };
 
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900 p-8">
-      <h2 className="text-2xl font-bold text-white">
-        Stadium Situation Form
-      </h2>
+    <Card className="space-y-8">
 
-      <p className="mt-2 text-sm text-slate-400">
-        Enter the current stadium conditions to generate an AI operational
-        briefing.
-      </p>
+      {/* Header */}
 
-      <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+      <div className="flex items-center justify-between">
 
-        <div className="grid gap-6 md:grid-cols-2">
+        <div>
 
-          <Input
-            label="Venue"
-            name="venue"
-            placeholder="Estadio Azteca"
-            value={formData.venue}
-            onChange={handleChange}
-          />
+          <h2 className="text-2xl font-bold text-white">
+            AI Scenario Builder
+          </h2>
 
-          <Input
-            label="Match"
-            name="match"
-            placeholder="Brazil vs Spain"
-            value={formData.match}
-            onChange={handleChange}
-          />
+          <p className="mt-2 text-slate-400">
+            Enter a stadium scenario and let ArenaPilot AI generate an
+            operational briefing.
+          </p>
 
-          <Select
-            label="Crowd Density"
-            name="crowdDensity"
-            value={formData.crowdDensity}
-            onChange={handleChange}
-            options={["Low","Medium","High","Critical"]}
-          />
+        </div>
 
-          <Select
-            label="Weather"
-            name="weather"
-            value={formData.weather}
-            onChange={handleChange}
-            options={["Clear","Rain","Storm","Extreme Heat"]}
-          />
+        <div className="rounded-xl bg-cyan-500/10 p-4 text-cyan-400">
+          <FaMagic size={24} />
+        </div>
 
-          <Select
-            label="Transport Status"
-            name="transport"
-            value={formData.transport}
-            onChange={handleChange}
-            options={["Normal","Metro Delay","Heavy Traffic","Road Closure"]}
-          />
+      </div>
 
-          <Select
-            label="Accessibility"
-            name="accessibility"
-            value={formData.accessibility}
-            onChange={handleChange}
-            options={[
-              "Normal",
-              "Wheelchair Assistance",
-              "Medical Support",
-            ]}
-          />
+      {/* FORM STARTS BELOW */}
+      {/* ================= FIRST ROW ================= */}
 
-          <Select
-            label="Emergency Level"
-            name="emergency"
-            value={formData.emergency}
-            onChange={handleChange}
-            options={["Low","Medium","High","Critical"]}
-          />
+      <div className="grid gap-6 md:grid-cols-2">
 
-          <Select
-            label="Announcement Language"
-            name="language"
-            value={formData.language}
-            onChange={handleChange}
-            options={[
-              "English",
-              "Spanish",
-              "French",
-              "Portuguese",
-            ]}
-          />
+        {/* Stadium */}
+
+        <div>
+
+          <label className="mb-2 block text-sm font-medium text-slate-300">
+            Stadium
+          </label>
+
+          <div className="relative">
+
+            <FaFutbol className="absolute left-4 top-4 text-slate-500" />
+
+            <select
+              value={scenarioData.stadium || ""}
+              onChange={(e) =>
+                handleChange("stadium", e.target.value)
+              }
+              className="w-full rounded-xl border border-slate-700 bg-slate-950 py-3 pl-11 pr-4 text-white outline-none transition focus:border-cyan-500"
+            >
+              <option value="">Select Stadium</option>
+
+              {stadiums.map((stadium) => (
+                <option
+                  key={stadium}
+                  value={stadium}
+                >
+                  {stadium}
+                </option>
+              ))}
+
+            </select>
+
+          </div>
+
+          {errors.stadium && (
+            <p className="mt-2 text-sm text-red-400">
+              {errors.stadium}
+            </p>
+          )}
+
+        </div>
+
+        {/* Match */}
+
+        <div>
+
+          <label className="mb-2 block text-sm font-medium text-slate-300">
+            Match
+          </label>
+
+          <select
+            value={scenarioData.match || ""}
+            onChange={(e) =>
+              handleChange("match", e.target.value)
+            }
+            className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition focus:border-cyan-500"
+          >
+            <option value="">
+              Select Match
+            </option>
+
+            {matches.map((match) => (
+              <option
+                key={match}
+                value={match}
+              >
+                {match}
+              </option>
+            ))}
+
+          </select>
+
+          {errors.match && (
+            <p className="mt-2 text-sm text-red-400">
+              {errors.match}
+            </p>
+          )}
+
+        </div>
+
+      </div>
+
+      {/* ================= SECOND ROW ================= */}
+
+      <div className="grid gap-6 md:grid-cols-2">
+
+        <Input
+          label="Estimated Crowd Size"
+          type="number"
+          placeholder="e.g. 90000"
+          value={scenarioData.crowd || ""}
+          onChange={(e) =>
+            handleChange("crowd", e.target.value)
+          }
+          error={errors.crowd}
+        />
+
+        <div>
+
+          <label className="mb-2 block text-sm font-medium text-slate-300">
+            Weather
+          </label>
+
+          <div className="relative">
+
+            <FaCloudSun className="absolute left-4 top-4 text-slate-500" />
+
+            <select
+              value={scenarioData.weather || ""}
+              onChange={(e) =>
+                handleChange("weather", e.target.value)
+              }
+              className="w-full rounded-xl border border-slate-700 bg-slate-950 py-3 pl-11 pr-4 text-white outline-none transition focus:border-cyan-500"
+            >
+              <option value="">
+                Weather Condition
+              </option>
+
+              {weatherOptions.map((weather) => (
+                <option
+                  key={weather}
+                  value={weather}
+                >
+                  {weather}
+                </option>
+              ))}
+
+            </select>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      {/* ================= THIRD ROW ================= */}
+
+      <div className="grid gap-6 md:grid-cols-2">
+
+        <div>
+
+          <label className="mb-2 block text-sm font-medium text-slate-300">
+            Incident Type
+          </label>
+
+          <div className="relative">
+
+            <FaExclamationTriangle className="absolute left-4 top-4 text-slate-500" />
+
+            <select
+              value={scenarioData.incident || ""}
+              onChange={(e) =>
+                handleChange("incident", e.target.value)
+              }
+              className="w-full rounded-xl border border-slate-700 bg-slate-950 py-3 pl-11 pr-4 text-white outline-none transition focus:border-cyan-500"
+            >
+              <option value="">
+                Select Incident
+              </option>
+
+              {incidents.map((incident) => (
+                <option
+                  key={incident}
+                  value={incident}
+                >
+                  {incident}
+                </option>
+              ))}
+
+            </select>
+
+          </div>
+
+          {errors.incident && (
+            <p className="mt-2 text-sm text-red-400">
+              {errors.incident}
+            </p>
+          )}
 
         </div>
 
         <div>
+
           <label className="mb-2 block text-sm font-medium text-slate-300">
-            Additional Notes
+            Priority
           </label>
 
-          <textarea
-            rows={5}
-            name="notes"
-            value={formData.notes}
-            onChange={handleChange}
-            placeholder="Describe the current situation..."
-            className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition focus:border-blue-500"
-          />
+          <div className="relative">
+
+            <FaFlag className="absolute left-4 top-4 text-slate-500" />
+
+            <select
+              value={scenarioData.priority || ""}
+              onChange={(e) =>
+                handleChange("priority", e.target.value)
+              }
+              className="w-full rounded-xl border border-slate-700 bg-slate-950 py-3 pl-11 pr-4 text-white outline-none transition focus:border-cyan-500"
+            >
+              <option value="">
+                Select Priority
+              </option>
+
+              {priorities.map((priority) => (
+                <option
+                  key={priority}
+                  value={priority}
+                >
+                  {priority}
+                </option>
+              ))}
+
+            </select>
+
+          </div>
+
+          {errors.priority && (
+            <p className="mt-2 text-sm text-red-400">
+              {errors.priority}
+            </p>
+          )}
+
         </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full rounded-xl bg-linear-to-r from-blue-600 to-cyan-500 py-4 font-semibold text-white transition hover:opacity-90 disabled:opacity-60"
-        >
-          {loading ? "Generating AI Briefing..." : "Generate AI Operational Briefing"}
-        </button>
+      </div>
 
-      </form>
-    </div>
+      {/* ================= NOTES ================= */}
+
+      <div>
+
+        <label className="mb-2 block text-sm font-medium text-slate-300">
+          Additional Notes
+        </label>
+
+        <textarea
+          rows={5}
+          placeholder="Provide any additional operational information..."
+          value={scenarioData.notes || ""}
+          onChange={(e) =>
+            handleChange("notes", e.target.value)
+          }
+          className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition focus:border-cyan-500"
+        />
+
+      </div>
+
+      {/* ================= LIVE PREVIEW ================= */}
+
+      <div className="rounded-xl border border-cyan-500/20 bg-cyan-500/5 p-5">
+
+        <h3 className="mb-4 text-lg font-semibold text-cyan-300">
+          Live Scenario Preview
+        </h3>
+
+        <div className="grid gap-4 text-sm md:grid-cols-2">
+
+          <div>
+            <span className="text-slate-500">
+              Stadium
+            </span>
+
+            <p className="mt-1 text-white">
+              {scenarioData.stadium || "--"}
+            </p>
+          </div>
+
+          <div>
+            <span className="text-slate-500">
+              Match
+            </span>
+
+            <p className="mt-1 text-white">
+              {scenarioData.match || "--"}
+            </p>
+          </div>
+
+          <div>
+            <span className="text-slate-500">
+              Crowd
+            </span>
+
+            <p className="mt-1 text-white">
+              {scenarioData.crowd || "--"}
+            </p>
+          </div>
+
+          <div>
+            <span className="text-slate-500">
+              Incident
+            </span>
+
+            <p className="mt-1 text-white">
+              {scenarioData.incident || "--"}
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+      {/* ================= ACTION BAR ================= */}
+
+      <div className="flex flex-col gap-4 rounded-2xl border border-slate-800 bg-slate-900/60 p-5 lg:flex-row lg:items-center lg:justify-between">
+
+        <div>
+
+          <h3 className="text-lg font-semibold text-white">
+            Ready to Generate AI Briefing
+          </h3>
+
+          <p className="mt-1 text-sm text-slate-400">
+            ArenaPilot AI will analyze the scenario using the Rules Engine
+            and generate operational recommendations.
+          </p>
+
+        </div>
+
+        <Button
+          onClick={handleGenerate}
+          disabled={loading}
+          className="flex items-center justify-center gap-3 px-8 py-3"
+        >
+          {loading ? (
+            <>
+              <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+              Analyzing...
+            </>
+          ) : (
+            <>
+              <FaMagic />
+              Generate AI Briefing
+            </>
+          )}
+        </Button>
+
+      </div>
+
+      {/* ================= ANALYSIS STATUS ================= */}
+
+      {analysis && (
+
+        <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-5">
+
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+
+            <div>
+
+              <h3 className="text-lg font-bold text-emerald-400">
+                AI Analysis Completed
+              </h3>
+
+              <p className="mt-2 text-slate-300">
+                Your operational briefing has been generated successfully.
+                Review the AI Summary, Crowd Intelligence, Navigator,
+                and Operations tabs for detailed recommendations.
+              </p>
+
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+
+              <div className="rounded-xl bg-slate-950/60 p-4 text-center">
+
+                <p className="text-xs uppercase tracking-wide text-slate-500">
+                  Risk
+                </p>
+
+                <h3 className="mt-2 text-xl font-bold text-red-400">
+                  {analysis.risk}
+                </h3>
+
+              </div>
+
+              <div className="rounded-xl bg-slate-950/60 p-4 text-center">
+
+                <p className="text-xs uppercase tracking-wide text-slate-500">
+                  Confidence
+                </p>
+
+                <h3 className="mt-2 text-xl font-bold text-cyan-400">
+                  {analysis.confidence}%
+                </h3>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      )}
+
+    </Card>
   );
 };
-
-/* ---------- Reusable Components ---------- */
-
-function Input({ label, ...props }) {
-  return (
-    <div>
-      <label className="mb-2 block text-sm font-medium text-slate-300">
-        {label}
-      </label>
-
-      <input
-        {...props}
-        className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition focus:border-blue-500"
-      />
-    </div>
-  );
-}
-
-function Select({ label, options, ...props }) {
-  return (
-    <div>
-      <label className="mb-2 block text-sm font-medium text-slate-300">
-        {label}
-      </label>
-
-      <select
-        {...props}
-        className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition focus:border-blue-500"
-      >
-        {options.map((option) => (
-          <option key={option}>{option}</option>
-        ))}
-      </select>
-    </div>
-  );
-}
 
 export default ScenarioForm;

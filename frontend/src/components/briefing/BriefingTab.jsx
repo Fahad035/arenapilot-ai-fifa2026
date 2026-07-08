@@ -1,27 +1,45 @@
-import ExecutiveSummary from "./ExecutiveSummary";
-import RiskAssessment from "./RiskAssessment";
-import ActionPlan from "./ActionPlan";
-import PublicAnnouncement from "./PublicAnnouncement";
-import AIConfidence from "./AIConfidence";
-import NextActions from "./NextActions";
+import ExecutiveSummary from "../briefing/ExecutiveSummary";
+import AIResponse from "../briefing/AIResponse";
+import RecommendationCard from "../briefing/RecommendationCard";
+import IncidentPanel from "../briefing/IncidentPanel";
+import RulesEngineCard from "../briefing/RulesEngineCard";
+import AnnouncementCard from "../briefing/AnnouncementCard";
+import DownloadReport from "../briefing/DownloadReport";
 
 const BriefingTab = ({ analysis }) => {
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <ExecutiveSummary analysis={analysis} />
-        <RiskAssessment analysis={analysis} />
+      {/* Executive Summary */}
+
+      <ExecutiveSummary analysis={analysis} />
+
+      {/* AI Response */}
+
+      <AIResponse analysis={analysis} />
+
+      {/* Recommendations + Incident */}
+
+      <div className="grid gap-8 xl:grid-cols-2">
+
+        <RecommendationCard analysis={analysis} />
+
+        <IncidentPanel analysis={analysis} />
+
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <ActionPlan analysis={analysis} />
-        <PublicAnnouncement analysis={analysis} />
-      </div>
+      {/* Rules Engine */}
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <AIConfidence />
-        <NextActions />
+      <RulesEngineCard analysis={analysis} />
+
+      {/* Announcement + Report */}
+
+      <div className="grid gap-8 lg:grid-cols-2">
+
+        <AnnouncementCard analysis={analysis} />
+
+        <DownloadReport analysis={analysis} />
+
       </div>
 
     </div>
