@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 import {
   FaRoute,
@@ -14,42 +14,63 @@ import Card from "../ui/Card";
 import Button from "../ui/Button";
 
 const RoutePlanner = ({ analysis }) => {
-  const [start, setStart] = useState("Main Entrance");
-  const [destination, setDestination] = useState("Section A");
+  const [start, setStart] = useState("");
+  const [destination, setDestination] = useState("");
   const [accessible, setAccessible] = useState(false);
 
-  const route = useMemo(() => {
-    const congestion = analysis?.metrics?.congestion || 74;
+  const routeAnalysis = analysis?.routeAnalysis ?? {};
+  const recommendedGate = routeAnalysis?.recommendedGate ?? "Unavailable";
+  const estimatedTime = routeAnalysis?.estimatedTime;
+  const distance = routeAnalysis?.distance ?? "Unavailable";
+  const congestionMap = routeAnalysis?.congestionMap ?? {};
+  const congestionEntry = Object.entries(congestionMap).find(
+    ([key]) =>
+      key.toLowerCase().replace(/\s+/g, "") ===
+      recommendedGate.toLowerCase().replace(/\s+/g, "")
+  );
+  const congestion = congestionEntry?.[1] ?? analysis?.metrics?.congestion;
+  const alternativeRoutes = routeAnalysis?.alternativeRoutes ?? [];
+  const navigationSteps = routeAnalysis?.navigationSteps ?? [];
+  const checkpoints = routeAnalysis?.checkpoints ?? [];
+  const evacuationPlan = routeAnalysis?.evacuationPlan ?? [];
+  const routeOptions = alternativeRoutes
+    .map((route) => route?.gate)
+    .filter(Boolean);
+  const destinationOptions = checkpoints
+    .map((checkpoint) => checkpoint?.name)
+    .filter(Boolean);
 
-    let recommendedGate = "Gate D";
-    let walkingTime = "6 min";
-    let distance = "320 m";
-
-    if (congestion >= 85) {
-      recommendedGate = "Gate A";
-      walkingTime = "8 min";
-      distance = "470 m";
-    }
-
-    return {
-      gate: recommendedGate,
-      walkingTime,
-      distance,
-      congestion,
-      confidence: analysis?.confidence || 98,
-      risk: analysis?.risk || "Medium",
-    };
-  }, [analysis]);
-
-  const steps = [
-    "Start from Main Entrance.",
-    `Proceed towards ${route.gate}.`,
-    accessible
-      ? "Follow the accessible step-free pathway."
-      : "Use the primary spectator walkway.",
-    "Pass through the security checkpoint.",
-    `Continue to ${destination}.`,
-    "You have reached your destination.",
+  const summaryCards = [
+    {
+      label: "Best Gate",
+      value: recommendedGate,
+      icon: FaLocationDot,
+      color: "text-cyan-400",
+    },
+    {
+      label: "Walking Time",
+      value:
+        estimatedTime !== undefined && estimatedTime !== null
+          ? `${estimatedTime} min`
+          : "Unavailable",
+      icon: FaPersonWalking,
+      color: "text-emerald-400",
+    },
+    {
+      label: "Distance",
+      value: distance,
+      icon: FaClock,
+      color: "text-yellow-400",
+    },
+    {
+      label: "Congestion",
+      value:
+        congestion !== undefined && congestion !== null
+          ? `${congestion}%`
+          : "Unavailable",
+      icon: FaCircle,
+      color: "text-red-400",
+    },
   ];
 
   return (
@@ -110,11 +131,16 @@ const RoutePlanner = ({ analysis }) => {
               onChange={(e) => setStart(e.target.value)}
               className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white"
             >
-              <option>Main Entrance</option>
-              <option>North Gate</option>
-              <option>South Gate</option>
-              <option>Parking Zone</option>
-              <option>Metro Station</option>
+              <option value="">Select starting point</option>
+              {routeOptions.length > 0 ? (
+                routeOptions.map((gate) => (
+                  <option key={gate} value={gate}>
+                    {gate}
+                  </option>
+                ))
+              ) : (
+                <option value="">No route data available</option>
+              )}
             </select>
 
           </div>
@@ -130,11 +156,16 @@ const RoutePlanner = ({ analysis }) => {
               onChange={(e) => setDestination(e.target.value)}
               className="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white"
             >
-              <option>Section A</option>
-              <option>Section B</option>
-              <option>VIP Lounge</option>
-              <option>Food Court</option>
-              <option>Medical Center</option>
+              <option value="">Select destination</option>
+              {destinationOptions.length > 0 ? (
+                destinationOptions.map((checkpoint) => (
+                  <option key={checkpoint} value={checkpoint}>
+                    {checkpoint}
+                  </option>
+                ))
+              ) : (
+                <option value="">No checkpoint data available</option>
+              )}
             </select>
 
           </div>
@@ -190,61 +221,28 @@ const RoutePlanner = ({ analysis }) => {
 
             <div className="mt-8 grid gap-5 md:grid-cols-4">
 
-              <div className="rounded-xl bg-slate-900 p-5">
+              {summaryCards.map((card) => {
+                const Icon = card.icon;
 
-                <FaLocationDot className="mb-3 text-cyan-400"/>
+                return (
+                  <div
+                    key={card.label}
+                    className="rounded-xl bg-slate-900 p-5"
+                  >
 
-                <p className="text-sm text-slate-400">
-                  Best Gate
-                </p>
+                    <Icon className={`mb-3 ${card.color}`} />
 
-                <h4 className="mt-2 text-2xl font-bold text-white">
-                  {route.gate}
-                </h4>
+                    <p className="text-sm text-slate-400">
+                      {card.label}
+                    </p>
 
-              </div>
+                    <h4 className="mt-2 text-2xl font-bold text-white">
+                      {card.value}
+                    </h4>
 
-              <div className="rounded-xl bg-slate-900 p-5">
-
-                <FaPersonWalking className="mb-3 text-emerald-400"/>
-
-                <p className="text-sm text-slate-400">
-                  Walking Time
-                </p>
-
-                <h4 className="mt-2 text-2xl font-bold text-white">
-                  {route.walkingTime}
-                </h4>
-
-              </div>
-
-              <div className="rounded-xl bg-slate-900 p-5">
-
-                <FaClock className="mb-3 text-yellow-400"/>
-
-                <p className="text-sm text-slate-400">
-                  Distance
-                </p>
-
-                <h4 className="mt-2 text-2xl font-bold text-white">
-                  {route.distance}
-                </h4>
-
-              </div>
-
-              <div className="rounded-xl bg-slate-900 p-5">
-
-                <FaCircle className="mb-3 text-red-400"/>
-
-                <p className="text-sm text-slate-400">
-                  Congestion
-                </p>
-
-                <h4 className="mt-2 text-2xl font-bold text-white">
-                  {route.congestion}%
-                </h4>
-
-              </div>
+                  </div>
+                );
+              })}
 
             </div>
 
@@ -256,7 +254,7 @@ const RoutePlanner = ({ analysis }) => {
 
               <div className="space-y-4">
 
-                {steps.map((step, index) => (
+                {navigationSteps.map((step, index) => (
 
                   <div
                     key={index}
@@ -275,7 +273,7 @@ const RoutePlanner = ({ analysis }) => {
 
                     </div>
 
-                    {index !== steps.length - 1 && (
+                    {index !== navigationSteps.length - 1 && (
                       <FaArrowRight className="mt-2 text-cyan-400"/>
                     )}
 
@@ -284,6 +282,83 @@ const RoutePlanner = ({ analysis }) => {
                 ))}
 
               </div>
+
+              {checkpoints.length > 0 && (
+                <div className="mt-10">
+
+                  <h3 className="mb-5 text-xl font-bold text-white">
+                    Checkpoints
+                  </h3>
+
+                  <div className="space-y-4">
+
+                    {checkpoints.map((checkpoint, index) => (
+
+                      <div
+                        key={checkpoint?.name || index}
+                        className="flex items-start gap-4 rounded-xl border border-slate-800 bg-slate-900 p-4"
+                      >
+
+                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-cyan-500 text-sm font-bold text-white">
+                          {index + 1}
+                        </div>
+
+                        <div className="flex-1">
+
+                          <p className="leading-7 text-slate-300">
+                            {checkpoint?.name ?? "Checkpoint unavailable"}
+                          </p>
+
+                          <p className="mt-1 text-sm text-slate-500">
+                            {checkpoint?.status ?? "Status unavailable"}
+                          </p>
+
+                        </div>
+
+                      </div>
+
+                    ))}
+
+                  </div>
+
+                </div>
+              )}
+
+              {alternativeRoutes.length > 0 && (
+                <div className="mt-10 rounded-xl border border-slate-800 bg-slate-950 p-5">
+
+                  <h3 className="font-semibold text-white">
+                    Alternative Routes
+                  </h3>
+
+                  <div className="mt-3 space-y-3">
+                    {alternativeRoutes.map((route) => (
+                      <p key={route?.gate} className="leading-7 text-slate-300">
+                        {route?.gate ?? "Route unavailable"} - {route?.status ?? "Unavailable"} ({route?.load ?? "Unavailable"}%)
+                      </p>
+                    ))}
+                  </div>
+
+                </div>
+              )}
+
+              {evacuationPlan.length > 0 && (
+                <div className="mt-10 rounded-xl border border-yellow-500/20 bg-yellow-500/10 p-5">
+
+                  <h3 className="font-semibold text-yellow-300">
+                    Evacuation Plan
+                  </h3>
+
+                  <div className="mt-3 space-y-3">
+                    {evacuationPlan.map((item, index) => (
+                      <p key={index} className="leading-7 text-slate-300">
+                        {index + 1}. {item}
+                      </p>
+                    ))}
+                  </div>
+
+                </div>
+              )}
 
             </div>
 

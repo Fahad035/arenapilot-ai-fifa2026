@@ -10,7 +10,7 @@ const calculateRiskLevel = (score) => {
 const getRecommendations = (factors) => {
   const recommendations = [];
 
-  if (factors.crowd > 80) {
+  if (factors.crowd >= 80) {
     recommendations.push(
       "Redirect spectators to less congested entry gates."
     );
@@ -34,7 +34,7 @@ const getRecommendations = (factors) => {
     );
   }
 
-  if (recommendations.length === 0) {
+  if (!recommendations.length) {
     recommendations.push(
       "Current operational conditions are stable."
     );
@@ -44,14 +44,14 @@ const getRecommendations = (factors) => {
 };
 
 const analyzeRisk = (scenario) => {
-  let score = 0;
-
   const factors = {
     crowd: Number(scenario.crowd ?? 0),
     weather: scenario.weather ?? "Clear",
     medicalIncident: Boolean(scenario.medicalIncident),
     securityIncident: Boolean(scenario.securityIncident),
   };
+
+  let score = 0;
 
   score += factors.crowd * 0.5;
 
@@ -68,93 +68,87 @@ const analyzeRisk = (scenario) => {
       break;
   }
 
-  if (factors.medicalIncident) {
-    score += 15;
-  }
+  if (factors.medicalIncident) score += 15;
 
-  if (factors.securityIncident) {
-    score += 20;
-  }
+  if (factors.securityIncident) score += 20;
 
   score = Math.min(Math.round(score), 100);
 
+  const level = calculateRiskLevel(score);
+
+  const recommendations =
+    getRecommendations(factors);
+
   return {
-  score,
+    score,
 
-  level:
-    score >= 85
-      ? "Critical"
-      : score >= 65
-      ? "High"
-      : score >= 40
-      ? "Moderate"
-      : "Low",
+    level,
 
-  medicalRisk: medicalIncident
-    ? "High"
-    : "Low",
+    medicalRisk:
+      factors.medicalIncident ? 85 : 20,
 
-  securityRisk: securityIncident
-    ? "High"
-    : "Low",
+    securityScore:
+      factors.securityIncident ? 90 : 75,
 
-  weatherRisk: weather,
+    weatherRisk:
+      factors.weather,
 
-  recommendations,
+    recommendations,
 
-  breakdown: [
-    {
-      category: "Crowd",
-      score: crowd,
-    },
-    {
-      category: "Weather",
-      score:
-        weather === "Storm"
-          ? 90
-          : weather === "Rain"
-          ? 65
-          : weather === "Cloudy"
-          ? 35
-          : 10,
-    },
-    {
-      category: "Medical",
-      score: medicalIncident ? 85 : 20,
-    },
-    {
-      category: "Security",
-      score: securityIncident ? 90 : 25,
-    },
-  ],
+    breakdown: [
+      {
+        category: "Crowd",
+        score: factors.crowd,
+      },
+      {
+        category: "Weather",
+        score:
+          factors.weather === "Storm"
+            ? 90
+            : factors.weather === "Rain"
+            ? 65
+            : factors.weather === "Cloudy"
+            ? 35
+            : 10,
+      },
+      {
+        category: "Medical",
+        score:
+          factors.medicalIncident ? 85 : 20,
+      },
+      {
+        category: "Security",
+        score:
+          factors.securityIncident ? 90 : 25,
+      },
+    ],
 
-  executiveSummary:
-    score >= 70
-      ? "High operational risk. Immediate monitoring and intervention are recommended."
-      : score >= 40
-      ? "Moderate operational risk. Continue active monitoring and prepare response teams."
-      : "Low operational risk. Standard operating procedures are sufficient.",
+    executiveSummary:
+      score >= 70
+        ? "High operational risk. Immediate intervention recommended."
+        : score >= 40
+        ? "Moderate operational risk. Continue active monitoring."
+        : "Low operational risk. Normal operating procedures are sufficient.",
 
-  timeline: [
-    {
-      time: "T+0",
-      event: "Scenario received",
-    },
-    {
-      time: "T+15s",
-      event: "Crowd analysis completed",
-    },
-    {
-      time: "T+30s",
-      event: "Risk assessment completed",
-    },
-    {
-      time: "T+45s",
-      event: "Recommendations generated",
-    },
-  ],
-};
-
+    timeline: [
+      {
+        time: "T+0",
+        event: "Scenario received",
+      },
+      {
+        time: "T+15s",
+        event: "Crowd analysis completed",
+      },
+      {
+        time: "T+30s",
+        event: "Risk assessment completed",
+      },
+      {
+        time: "T+45s",
+        event: "Recommendations generated",
+      },
+    ],
+  };
 };
 
 export default analyzeRisk;

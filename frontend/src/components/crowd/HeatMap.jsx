@@ -8,51 +8,51 @@ import {
 import Card from "../ui/Card";
 
 const HeatMap = ({ analysis }) => {
-  const congestion = analysis?.metrics?.congestion || 74;
+  const density = analysis?.crowd?.density || {
+    north: 72,
+    south: 56,
+    east: 48,
+    west: 63,
+  };
 
   const zones = [
     {
-      name: "Gate A",
-      occupancy: 42,
-      status: "Normal",
+      name: "North Gate",
+      occupancy: density.north,
       icon: FaDoorOpen,
     },
     {
-      name: "Gate B",
-      occupancy: 67,
-      status: "Busy",
+      name: "South Gate",
+      occupancy: density.south,
       icon: FaDoorOpen,
     },
     {
-      name: "Gate C",
-      occupancy: congestion,
-      status:
-        congestion >= 80
-          ? "Critical"
-          : congestion >= 60
-          ? "Busy"
-          : "Normal",
+      name: "East Gate",
+      occupancy: density.east,
       icon: FaDoorOpen,
     },
     {
-      name: "Gate D",
-      occupancy: 31,
-      status: "Normal",
+      name: "West Gate",
+      occupancy: density.west,
       icon: FaDoorOpen,
     },
     {
       name: "VIP Lounge",
-      occupancy: 24,
-      status: "Normal",
+      occupancy: 28,
       icon: FaStar,
     },
     {
       name: "Parking",
-      occupancy: 58,
-      status: "Busy",
+      occupancy: 61,
       icon: FaParking,
     },
   ];
+
+  const getStatus = (value) => {
+    if (value >= 85) return "Critical";
+    if (value >= 65) return "Busy";
+    return "Normal";
+  };
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -82,6 +82,10 @@ const HeatMap = ({ analysis }) => {
     }
   };
 
+  const recommendedGate =
+    analysis?.routeAnalysis?.recommendedGate ||
+    "Gate D";
+
   return (
     <Card className="h-full">
 
@@ -104,7 +108,8 @@ const HeatMap = ({ analysis }) => {
       <div className="space-y-5">
 
         {zones.map((zone) => {
-          const colors = getStatusColor(zone.status);
+          const status = getStatus(zone.occupancy);
+          const colors = getStatusColor(status);
           const Icon = zone.icon;
 
           return (
@@ -145,12 +150,10 @@ const HeatMap = ({ analysis }) => {
                 <span
                   className={`rounded-full border px-3 py-1 text-xs font-semibold ${colors.badge}`}
                 >
-                  {zone.status}
+                  {status}
                 </span>
 
               </div>
-
-              {/* Progress */}
 
               <div className="mb-2 h-3 overflow-hidden rounded-full bg-slate-800">
 
@@ -181,7 +184,7 @@ const HeatMap = ({ analysis }) => {
 
       </div>
 
-      {/* Summary */}
+      {/* AI Insight */}
 
       <div className="mt-6 rounded-xl border border-cyan-500/20 bg-cyan-500/10 p-4">
 
@@ -190,9 +193,9 @@ const HeatMap = ({ analysis }) => {
         </h3>
 
         <p className="mt-2 text-sm leading-6 text-slate-300">
-          Gate C is approaching maximum operating capacity.
-          ArenaPilot recommends redirecting spectators toward
-          Gate D to reduce congestion and improve entry flow.
+          ArenaPilot recommends directing spectators through{" "}
+          <strong>{recommendedGate}</strong> to reduce congestion
+          and improve crowd movement across the stadium.
         </p>
 
       </div>

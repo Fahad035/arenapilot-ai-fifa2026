@@ -8,28 +8,9 @@ import {
 import Card from "../ui/Card";
 
 const RouteTimeline = ({ analysis }) => {
-  const steps = [
-    {
-      title: "Enter Stadium",
-      time: "0 min",
-    },
-    {
-      title: `Proceed to ${analysis?.route || "Gate D"}`,
-      time: "2 min",
-    },
-    {
-      title: "Security Screening",
-      time: "5 min",
-    },
-    {
-      title: "Main Concourse",
-      time: "8 min",
-    },
-    {
-      title: "Seat Section",
-      time: "10 min",
-    },
-  ];
+  const routeAnalysis = analysis?.routeAnalysis ?? {};
+  const steps = routeAnalysis?.navigationSteps ?? [];
+  const estimatedTime = routeAnalysis?.estimatedTime;
 
   return (
     <Card>
@@ -71,11 +52,11 @@ const RouteTimeline = ({ analysis }) => {
               <div className="flex items-center justify-between">
 
                 <h3 className="font-semibold text-white">
-                  {step.title}
+                  {step}
                 </h3>
 
                 <span className="rounded-full bg-slate-800 px-3 py-1 text-sm text-cyan-300">
-                  {step.time}
+                  Step {index + 1}
                 </span>
 
               </div>
@@ -105,7 +86,9 @@ const RouteTimeline = ({ analysis }) => {
         </div>
 
         <p className="mt-3 text-3xl font-bold text-emerald-400">
-          {analysis?.metrics?.waitTime || 10} Minutes
+          {estimatedTime !== undefined && estimatedTime !== null
+            ? `${estimatedTime} Minutes`
+            : "Unavailable"}
         </p>
 
         <p className="mt-2 text-slate-300">

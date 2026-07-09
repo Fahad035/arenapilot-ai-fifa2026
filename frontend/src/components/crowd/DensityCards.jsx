@@ -8,15 +8,15 @@ import {
 import Card from "../ui/Card";
 
 const DensityCards = ({ analysis }) => {
-  const metrics = analysis?.metrics || {};
+  const crowd = analysis?.crowd || {};
 
   const cards = [
     {
       title: "Live Attendance",
-      value: metrics.attendance
-        ? metrics.attendance.toLocaleString()
+      value: crowd.attendance
+        ? crowd.attendance.toLocaleString()
         : "92,580",
-      subtitle: "+6.2% from forecast",
+      subtitle: "Current Attendance",
       icon: FaUsers,
       color: "text-cyan-400",
       bg: "bg-cyan-500/10",
@@ -24,10 +24,11 @@ const DensityCards = ({ analysis }) => {
     },
     {
       title: "Crowd Density",
-      value: metrics.congestion
-        ? `${metrics.congestion}%`
-        : "74%",
-      subtitle: "Moderate",
+      value:
+        crowd.score !== undefined
+          ? `${crowd.score}%`
+          : "74%",
+      subtitle: crowd.level || "Moderate",
       icon: FaChartLine,
       color: "text-emerald-400",
       bg: "bg-emerald-500/10",
@@ -35,10 +36,10 @@ const DensityCards = ({ analysis }) => {
     },
     {
       title: "Average Wait",
-      value: metrics.waitTime
-        ? `${metrics.waitTime} min`
+      value: analysis?.routeAnalysis?.estimatedTime
+        ? `${analysis.routeAnalysis.estimatedTime} min`
         : "12 min",
-      subtitle: "Across all gates",
+      subtitle: "Recommended Route",
       icon: FaClock,
       color: "text-yellow-400",
       bg: "bg-yellow-500/10",
@@ -49,28 +50,31 @@ const DensityCards = ({ analysis }) => {
       value: analysis?.risk || "Medium",
       subtitle: "AI Assessment",
       icon: FaExclamationTriangle,
+
       color:
         analysis?.risk === "Critical"
           ? "text-red-400"
           : analysis?.risk === "High"
           ? "text-orange-400"
-          : analysis?.risk === "Medium"
+          : analysis?.risk === "Moderate"
           ? "text-yellow-400"
           : "text-emerald-400",
+
       bg:
         analysis?.risk === "Critical"
           ? "bg-red-500/10"
           : analysis?.risk === "High"
           ? "bg-orange-500/10"
-          : analysis?.risk === "Medium"
+          : analysis?.risk === "Moderate"
           ? "bg-yellow-500/10"
           : "bg-emerald-500/10",
+
       border:
         analysis?.risk === "Critical"
           ? "border-red-500/20"
           : analysis?.risk === "High"
           ? "border-orange-500/20"
-          : analysis?.risk === "Medium"
+          : analysis?.risk === "Moderate"
           ? "border-yellow-500/20"
           : "border-emerald-500/20",
     },
@@ -87,9 +91,7 @@ const DensityCards = ({ analysis }) => {
             className={`border ${card.border} transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-cyan-500/10`}
           >
             <div className="flex items-start justify-between">
-
               <div>
-
                 <p className="text-sm text-slate-400">
                   {card.title}
                 </p>
@@ -101,18 +103,14 @@ const DensityCards = ({ analysis }) => {
                 <p className={`mt-2 text-sm ${card.color}`}>
                   {card.subtitle}
                 </p>
-
               </div>
 
-              <div
-                className={`rounded-xl p-4 ${card.bg}`}
-              >
+              <div className={`rounded-xl p-4 ${card.bg}`}>
                 <Icon
                   size={24}
                   className={card.color}
                 />
               </div>
-
             </div>
           </Card>
         );

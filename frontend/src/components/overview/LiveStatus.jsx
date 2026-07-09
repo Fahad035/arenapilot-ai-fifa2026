@@ -9,45 +9,55 @@ import {
 
 import Card from "../ui/Card";
 
-const statusItems = [
-  {
-    title: "Gate Operations",
-    value: "Normal",
-    color: "text-emerald-400",
-    bg: "bg-emerald-500/10",
-    icon: FaShieldAlt,
-  },
-  {
-    title: "Medical Teams",
-    value: "Standby",
-    color: "text-blue-400",
-    bg: "bg-blue-500/10",
-    icon: FaHeartbeat,
-  },
-  {
-    title: "Security Units",
-    value: "Active",
-    color: "text-cyan-400",
-    bg: "bg-cyan-500/10",
-    icon: FaBroadcastTower,
-  },
-  {
-    title: "Network Health",
-    value: "99.8%",
-    color: "text-purple-400",
-    bg: "bg-purple-500/10",
-    icon: FaWifi,
-  },
-  {
-    title: "Weather",
-    value: "29°C Clear",
-    color: "text-yellow-400",
-    bg: "bg-yellow-500/10",
-    icon: FaCloudSun,
-  },
-];
 
-const LiveStatus = () => {
+const LiveStatus = ({ analysis }) => {
+  const statusItems = [
+    {
+      title: "Gate Operations",
+      value: analysis?.risk || "Normal",
+      color: "text-emerald-400",
+      bg: "bg-emerald-500/10",
+      icon: FaShieldAlt,
+    },
+
+    {
+      title: "Medical Risk",
+      value:
+        analysis?.metrics?.medicalRisk + "%" || "0%",
+      color: "text-blue-400",
+      bg: "bg-blue-500/10",
+      icon: FaHeartbeat,
+    },
+
+    {
+      title: "Security Score",
+      value:
+        analysis?.metrics?.securityScore + "%" || "0%",
+      color: "text-cyan-400",
+      bg: "bg-cyan-500/10",
+      icon: FaBroadcastTower,
+    },
+
+    {
+      title: "AI Confidence",
+      value:
+        analysis?.confidence + "%" || "98%",
+      color: "text-purple-400",
+      bg: "bg-purple-500/10",
+      icon: FaWifi,
+    },
+
+    {
+      title: "Weather",
+      value:
+        analysis?.analysis?.risk?.weatherRisk ??
+        "Clear",
+      color: "text-yellow-400",
+      bg: "bg-yellow-500/10",
+      icon: FaCloudSun,
+    },
+  ];
+
   return (
     <Card>
 

@@ -9,68 +9,7 @@ import {
 
 import Card from "../ui/Card";
 
-const operations = [
-  {
-    id: 1,
-    time: "10:12",
-    title: "Crowd Surge Detected",
-    description: "High pedestrian density near Gate C.",
-    severity: "High",
-    icon: FaExclamationTriangle,
-    color: "text-red-400",
-    bg: "bg-red-500/10",
-  },
-  {
-    id: 2,
-    time: "10:14",
-    title: "Medical Team Dispatched",
-    description: "Medical responders sent to Section B12.",
-    severity: "Medium",
-    icon: FaHeartbeat,
-    color: "text-blue-400",
-    bg: "bg-blue-500/10",
-  },
-  {
-    id: 3,
-    time: "10:15",
-    title: "AI Generated Alternate Route",
-    description: "Spectators redirected through Gate D.",
-    severity: "Info",
-    icon: FaRoute,
-    color: "text-cyan-400",
-    bg: "bg-cyan-500/10",
-  },
-  {
-    id: 4,
-    time: "10:17",
-    title: "Security Team Arrived",
-    description: "Additional officers reached congestion area.",
-    severity: "Normal",
-    icon: FaShieldAlt,
-    color: "text-emerald-400",
-    bg: "bg-emerald-500/10",
-  },
-  {
-    id: 5,
-    time: "10:19",
-    title: "Emergency Gate Opened",
-    description: "Gate D temporarily opened for crowd balancing.",
-    severity: "Normal",
-    icon: FaBroadcastTower,
-    color: "text-purple-400",
-    bg: "bg-purple-500/10",
-  },
-  {
-    id: 6,
-    time: "10:22",
-    title: "Operations Normalized",
-    description: "Crowd flow returned to acceptable levels.",
-    severity: "Resolved",
-    icon: FaCheckCircle,
-    color: "text-emerald-400",
-    bg: "bg-emerald-500/10",
-  },
-];
+
 
 const severityClasses = {
   High: "bg-red-500/20 text-red-300",
@@ -80,7 +19,69 @@ const severityClasses = {
   Resolved: "bg-blue-500/20 text-blue-300",
 };
 
-const OperationsFeed = () => {
+const OperationsFeed = ({ analysis }) => {
+  const operations = analysis?.timeline ?? [
+    {
+      id: 1,
+      time: "10:12",
+      title: "Crowd Surge Detected",
+      description: "High pedestrian density near Gate C.",
+      severity: "High",
+      icon: FaExclamationTriangle,
+      color: "text-red-400",
+      bg: "bg-red-500/10",
+    },
+    {
+      id: 2,
+      time: "10:14",
+      title: "Medical Team Dispatched",
+      description: "Medical responders sent to Section B12.",
+      severity: "Medium",
+      icon: FaHeartbeat,
+      color: "text-blue-400",
+      bg: "bg-blue-500/10",
+    },
+    {
+      id: 3,
+      time: "10:15",
+      title: "AI Generated Alternate Route",
+      description: "Spectators redirected through Gate D.",
+      severity: "Info",
+      icon: FaRoute,
+      color: "text-cyan-400",
+      bg: "bg-cyan-500/10",
+    },
+    {
+      id: 4,
+      time: "10:17",
+      title: "Security Team Arrived",
+      description: "Additional officers reached congestion area.",
+      severity: "Normal",
+      icon: FaShieldAlt,
+      color: "text-emerald-400",
+      bg: "bg-emerald-500/10",
+    },
+    {
+      id: 5,
+      time: "10:19",
+      title: "Emergency Gate Opened",
+      description: "Gate D temporarily opened for crowd balancing.",
+      severity: "Normal",
+      icon: FaBroadcastTower,
+      color: "text-purple-400",
+      bg: "bg-purple-500/10",
+    },
+    {
+      id: 6,
+      time: "10:22",
+      title: "Operations Normalized",
+      description: "Crowd flow returned to acceptable levels.",
+      severity: "Resolved",
+      icon: FaCheckCircle,
+      color: "text-emerald-400",
+      bg: "bg-emerald-500/10",
+    },
+  ];
   return (
     <Card>
 
@@ -162,9 +163,8 @@ const OperationsFeed = () => {
                     </div>
 
                     <span
-                      className={`mt-2 inline-block rounded-full px-3 py-1 text-xs font-medium ${
-                        severityClasses[event.severity]
-                      }`}
+                      className={`mt-2 inline-block rounded-full px-3 py-1 text-xs font-medium ${severityClasses[event.severity]
+                        }`}
                     >
                       {event.severity}
                     </span>

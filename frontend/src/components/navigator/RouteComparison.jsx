@@ -8,26 +8,9 @@ import {
 import Card from "../ui/Card";
 
 const RouteComparison = ({ analysis }) => {
-  const routes = [
-    {
-      name: "Gate A",
-      time: "8 min",
-      congestion: "High",
-      recommendation: false,
-    },
-    {
-      name: "Gate C",
-      time: "6 min",
-      congestion: "Low",
-      recommendation: true,
-    },
-    {
-      name: analysis?.route || "Gate D",
-      time: "7 min",
-      congestion: "Medium",
-      recommendation: false,
-    },
-  ];
+  const routeAnalysis = analysis?.routeAnalysis ?? {};
+  const recommendedGate = routeAnalysis?.recommendedGate ?? "Unavailable";
+  const routes = routeAnalysis?.alternativeRoutes ?? [];
 
   return (
     <Card>
@@ -91,7 +74,7 @@ const RouteComparison = ({ analysis }) => {
               >
 
                 <td className="py-5 font-semibold text-white">
-                  {route.name}
+                  {route?.gate ?? "Route unavailable"}
                 </td>
 
                 <td>
@@ -100,7 +83,7 @@ const RouteComparison = ({ analysis }) => {
 
                     <FaClock />
 
-                    {route.time}
+                    {route?.estimatedTime ?? route?.load ?? "Unavailable"}
 
                   </div>
 
@@ -112,7 +95,7 @@ const RouteComparison = ({ analysis }) => {
 
                     <FaUsers />
 
-                    {route.congestion}
+                    {route?.status ?? "Unavailable"}
 
                   </div>
 
@@ -120,7 +103,7 @@ const RouteComparison = ({ analysis }) => {
 
                 <td>
 
-                  {route.recommendation ? (
+                  {route?.gate === recommendedGate ? (
 
                     <span className="flex items-center gap-2 text-emerald-400">
 
@@ -159,9 +142,8 @@ const RouteComparison = ({ analysis }) => {
         </h3>
 
         <p className="mt-3 leading-7 text-slate-300">
-          ArenaPilot recommends Gate C because it currently has the
-          lowest pedestrian density, the shortest estimated walking
-          time, and maintains full accessibility compliance.
+          {routeAnalysis?.recommendation ??
+            "ArenaPilot recommends the least congested gate because it currently has the lowest pedestrian density, the shortest estimated walking time, and maintains full accessibility compliance."}
         </p>
 
       </div>

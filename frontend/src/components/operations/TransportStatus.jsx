@@ -1,53 +1,49 @@
 import Card from "../ui/Card";
 
-const TransportStatus = () => (
-<Card>
+const TransportStatus = ({ analysis }) => {
+	const items = [
+		["Metro", analysis?.route ?? "Unavailable"],
+		["Shuttle", analysis?.summary ?? "Unavailable"],
+		["Parking", analysis?.score !== undefined && analysis?.score !== null ? `${analysis.score}% Operational Load` : "Unavailable"],
+	];
 
-<h2 className="text-xl font-bold text-white">
-Transport Status
-</h2>
+	return (
+		<Card>
 
-<div className="mt-6 space-y-5">
+			<h2 className="text-xl font-bold text-white">
+				Transport Status
+			</h2>
 
-<div>
+			<div className="mt-6 space-y-5">
 
-<p className="text-slate-400">
-Metro
-</p>
+				{items.map(([label, value], index) => (
 
-<p className="text-yellow-400">
-Minor Delay
-</p>
+					<div key={label}>
 
-</div>
+						<p className="text-slate-400">
+							{label}
+						</p>
 
-<div>
+						<p
+							className={
+								index === 0
+									? "text-yellow-400"
+									: index === 1
+									? "text-green-400"
+									: "text-red-400"
+							}
+						>
+							{value}
+						</p>
 
-<p className="text-slate-400">
-Shuttle
-</p>
+					</div>
 
-<p className="text-green-400">
-Running Every 5 Minutes
-</p>
+				))}
 
-</div>
+			</div>
 
-<div>
-
-<p className="text-slate-400">
-Parking
-</p>
-
-<p className="text-red-400">
-88% Occupied
-</p>
-
-</div>
-
-</div>
-
-</Card>
-);
+		</Card>
+	);
+};
 
 export default TransportStatus;

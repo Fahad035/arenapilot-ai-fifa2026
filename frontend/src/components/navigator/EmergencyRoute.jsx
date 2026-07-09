@@ -8,30 +8,22 @@ import {
 
 import Card from "../ui/Card";
 
-const EmergencyRoutes = () => {
-  const emergencyRoutes = [
-    {
-      title: "North Evacuation",
-      destination: "Assembly Point A",
-      time: "4 min",
-      status: "Available",
-      icon: FaPersonRunning,
-    },
-    {
-      title: "South Evacuation",
-      destination: "Assembly Point B",
-      time: "6 min",
-      status: "Available",
-      icon: FaShield,
-    },
-    {
-      title: "Medical Route",
-      destination: "Emergency Medical Center",
-      time: "2 min",
-      status: "Priority",
-      icon: FaHospital,
-    },
-  ];
+const EmergencyRoutes = ({ analysis }) => {
+  const routeAnalysis = analysis?.routeAnalysis ?? {};
+  const evacuationPlan = routeAnalysis?.evacuationPlan ?? [];
+
+  const emergencyRoutes = evacuationPlan.map((item, index) => ({
+    title: `Evacuation Step ${index + 1}`,
+    destination: item,
+    time: `Plan ${index + 1}`,
+    status: index === 0 ? "Priority" : "Active",
+    icon:
+      index % 3 === 0
+        ? FaPersonRunning
+        : index % 3 === 1
+        ? FaShield
+        : FaHospital,
+  }));
 
   return (
     <Card>
@@ -128,10 +120,8 @@ const EmergencyRoutes = () => {
         </h3>
 
         <p className="mt-3 leading-7 text-slate-300">
-          In case of severe congestion or evacuation, ArenaPilot
-          automatically redirects spectators using the safest
-          available exit corridors while maintaining emergency
-          vehicle access and minimizing bottlenecks.
+          {routeAnalysis?.recommendation ??
+            "In case of severe congestion or evacuation, ArenaPilot automatically redirects spectators using the safest available exit corridors while maintaining emergency vehicle access and minimizing bottlenecks."}
         </p>
 
       </div>

@@ -1,50 +1,78 @@
 import Card from "../ui/Card";
 import Badge from "../ui/Badge";
 
-const incidents = [
-  {
-    title: "Gate C Congestion",
-    level: "High",
-  },
-  {
-    title: "Metro Delay",
-    level: "Medium",
-  },
-  {
-    title: "Medical Assistance",
-    level: "Low",
-  },
-];
+const getRiskLevel = (value) => {
+  if (value === undefined || value === null) return "Low";
 
-const LiveIncidents = () => (
-  <Card>
+  if (typeof value === "string") {
+    if (value.toLowerCase() === "storm") return "Critical";
+    if (value.toLowerCase() === "rain") return "Moderate";
+    return "Low";
+  }
 
-    <h2 className="text-xl font-bold text-white">
-      Live Incidents
-    </h2>
+  if (value >= 85) return "Critical";
+  if (value >= 65) return "High";
+  if (value >= 40) return "Moderate";
+  return "Low";
+};
 
-    <div className="mt-6 space-y-5">
+const badgeColorByRisk = {
+  Critical: "Critical",
+  High: "High",
+  Moderate: "Moderate",
+  Low: "Low",
+};
 
-      {incidents.map((incident) => (
+const LiveIncidents = ({ analysis }) => {
+  const incidents = [
+    {
+      title: "Overall Risk",
+      level: analysis?.risk,
+    },
+    {
+      title: "Medical Risk",
+      level: getRiskLevel(analysis?.medicalRisk),
+    },
+    {
+      title: "Security Risk",
+      level: getRiskLevel(analysis?.securityRisk),
+    },
+    {
+      title: "Weather Risk",
+      level: getRiskLevel(analysis?.weatherRisk),
+    },
+  ];
 
-        <div
-          key={incident.title}
-          className="flex justify-between"
-        >
+  return (
+    <Card>
 
-          <span>{incident.title}</span>
+      <h2 className="text-xl font-bold text-white">
+        Live Incidents
+      </h2>
 
-          <Badge color={incident.level}>
-            {incident.level}
-          </Badge>
+      <div className="mt-6 space-y-5">
 
-        </div>
+        {incidents.map((incident) => (
 
-      ))}
+          <div
+            key={incident.title}
+            className="flex justify-between"
+          >
 
-    </div>
+            <span>{incident.title}</span>
 
-  </Card>
-);
+            <Badge color={badgeColorByRisk[incident.level] ?? "Low"}>
+              {incident.level ?? "Low"}
+            </Badge>
+
+          </div>
+
+        ))}
+
+      </div>
+
+    </Card>
+  );
+};
 
 export default LiveIncidents;

@@ -11,20 +11,33 @@ import {
 import Card from "../ui/Card";
 
 const defaultData = [
-  { time: "09:30", crowd: 22 },
-  { time: "09:45", crowd: 28 },
-  { time: "10:00", crowd: 41 },
-  { time: "10:15", crowd: 58 },
-  { time: "10:30", crowd: 73 },
-  { time: "10:45", crowd: 82 },
-  { time: "11:00", crowd: 78 },
-  { time: "11:15", crowd: 69 },
+  { hour: "10 AM", density: 22 },
+  { hour: "11 AM", density: 38 },
+  { hour: "12 PM", density: 54 },
+  { hour: "1 PM", density: 68 },
+  { hour: "2 PM", density: 74 },
 ];
 
 const CrowdChart = ({ analysis }) => {
+  const trend =
+    analysis?.crowd?.hourlyTrend || defaultData;
+
   const current =
-    analysis?.metrics?.congestion ??
-    defaultData[defaultData.length - 1].crowd;
+    analysis?.crowd?.score ??
+    trend[trend.length - 1].density;
+
+  const peak = Math.max(
+    ...trend.map((item) => item.density)
+  );
+
+  const average = Math.round(
+    trend.reduce((sum, item) => sum + item.density, 0) /
+      trend.length
+  );
+
+  const prediction =
+    analysis?.crowd?.prediction?.next30Minutes ||
+    "Stable";
 
   return (
     <Card className="h-full">
@@ -40,7 +53,7 @@ const CrowdChart = ({ analysis }) => {
           </h2>
 
           <p className="mt-1 text-sm text-slate-400">
-            Live occupancy over the last hour
+            AI crowd prediction timeline
           </p>
 
         </div>
@@ -65,7 +78,7 @@ const CrowdChart = ({ analysis }) => {
 
         <ResponsiveContainer width="100%" height="100%">
 
-          <AreaChart data={defaultData}>
+          <AreaChart data={trend}>
 
             <defs>
 
@@ -98,7 +111,7 @@ const CrowdChart = ({ analysis }) => {
             />
 
             <XAxis
-              dataKey="time"
+              dataKey="hour"
               stroke="#94a3b8"
             />
 
@@ -115,12 +128,15 @@ const CrowdChart = ({ analysis }) => {
                 borderRadius: "12px",
                 color: "#fff",
               }}
-              formatter={(value) => [`${value}%`, "Density"]}
+              formatter={(value) => [
+                `${value}%`,
+                "Density",
+              ]}
             />
 
             <Area
               type="monotone"
-              dataKey="crowd"
+              dataKey="density"
               stroke="#06b6d4"
               strokeWidth={3}
               fill="url(#crowdGradient)"
@@ -138,7 +154,7 @@ const CrowdChart = ({ analysis }) => {
 
       </div>
 
-      {/* Footer Stats */}
+      {/* Footer */}
 
       <div className="mt-8 grid grid-cols-3 gap-4">
 
@@ -149,7 +165,7 @@ const CrowdChart = ({ analysis }) => {
           </p>
 
           <h3 className="mt-2 text-xl font-bold text-red-400">
-            82%
+            {peak}%
           </h3>
 
         </div>
@@ -161,7 +177,7 @@ const CrowdChart = ({ analysis }) => {
           </p>
 
           <h3 className="mt-2 text-xl font-bold text-emerald-400">
-            56%
+            {average}%
           </h3>
 
         </div>
@@ -173,7 +189,7 @@ const CrowdChart = ({ analysis }) => {
           </p>
 
           <h3 className="mt-2 text-xl font-bold text-cyan-400">
-            Stable
+            {prediction}
           </h3>
 
         </div>

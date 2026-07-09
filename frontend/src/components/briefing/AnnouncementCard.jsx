@@ -21,7 +21,9 @@ const templates = {
 };
 
 const AnnouncementCard = ({ analysis }) => {
-  const route = analysis?.route || "Gate D";
+  const route =
+    analysis?.analysis?.route?.recommendedGate ||
+    "Gate D";
 
   const [language, setLanguage] = useState("en");
   const [copied, setCopied] = useState(false);

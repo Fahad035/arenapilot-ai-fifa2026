@@ -13,15 +13,26 @@ import {
 import Card from "../ui/Card";
 
 const LiveNavigator = ({ analysis }) => {
-  const [eta, setEta] = useState(
-    analysis?.metrics?.waitTime || 10
+  const routeAnalysis = analysis?.routeAnalysis ?? {};
+  const recommendedGate = routeAnalysis?.recommendedGate ?? "Unavailable";
+  const estimatedTime = routeAnalysis?.estimatedTime ?? 10;
+  const congestionMap = routeAnalysis?.congestionMap ?? {};
+  const congestionEntry = Object.entries(congestionMap).find(
+    ([key]) =>
+      key.toLowerCase().replace(/\s+/g, "") ===
+      recommendedGate.toLowerCase().replace(/\s+/g, "")
   );
+  const congestion = congestionEntry?.[1] ?? analysis?.metrics?.congestion;
+
+  const [eta, setEta] = useState(estimatedTime);
 
   const [progress, setProgress] = useState(12);
 
   const [status, setStatus] = useState("Navigating");
 
-  const congestion = analysis?.metrics?.congestion || 74;
+  useEffect(() => {
+    setEta(estimatedTime);
+  }, [estimatedTime]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -85,7 +96,7 @@ const LiveNavigator = ({ analysis }) => {
           </p>
 
           <h3 className="mt-2 text-xl font-bold text-white">
-            {analysis?.route || "Gate D"}
+            {recommendedGate}
           </h3>
 
         </div>
@@ -178,10 +189,8 @@ const LiveNavigator = ({ analysis }) => {
         </div>
 
         <p className="mt-4 leading-7 text-slate-300">
-
-          {congestion >= 85
-            ? "Heavy congestion detected near Gate A. ArenaPilot recommends switching to Gate C for a faster and safer route."
-            : "Current route remains optimal based on verified crowd analytics and live operational conditions."}
+          {routeAnalysis?.recommendation ??
+            "Current route remains optimal based on verified crowd analytics and live operational conditions."}
 
         </p>
 

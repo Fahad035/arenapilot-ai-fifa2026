@@ -1,18 +1,28 @@
-import stadiumConfig from "../config/stadiumConfig.js";
-
 const analyzeTransport = (scenario) => {
   const attendance = Number(scenario.attendance ?? 0);
 
   let trafficLevel = "Low";
+  let score = 20;
 
   if (attendance > 60000) {
     trafficLevel = "Heavy";
+    score = 85;
   } else if (attendance > 35000) {
     trafficLevel = "Moderate";
+    score = 55;
   }
+
+  const recommendation =
+    trafficLevel === "Heavy"
+      ? "Increase shuttle frequency and deploy additional traffic officers."
+      : trafficLevel === "Moderate"
+      ? "Monitor parking occupancy and traffic flow."
+      : "Current transportation resources are sufficient.";
 
   return {
     score,
+
+    trafficLevel,
 
     recommendation,
 

@@ -1,45 +1,43 @@
 import Card from "../ui/Card";
 
-const staff = [
-  ["Security",42],
-  ["Medical",18],
-  ["Volunteers",55],
-  ["Transport",21],
-];
+const StaffDeployment = ({ analysis }) => {
+  const staff = [
+    ["Security", analysis?.securityRisk ?? "Unavailable"],
+    ["Medical", analysis?.medicalRisk ?? "Unavailable"],
+    ["Weather", analysis?.weatherRisk ?? "Unavailable"],
+    ["Route", analysis?.route ?? "Unavailable"],
+  ];
 
-const StaffDeployment=()=>{
+  return (
+    <Card>
 
-return(
+      <h2 className="text-xl font-bold text-white">
+        Staff Deployment
+      </h2>
 
-<Card>
+      <div className="mt-6 space-y-5">
 
-<h2 className="text-xl font-bold text-white">
-Staff Deployment
-</h2>
+        {staff.map(([name, count]) => (
 
-<div className="mt-6 space-y-5">
+          <div
+            key={name}
+            className="flex justify-between"
+          >
 
-{staff.map(([name,count])=>(
+            <span>{name}</span>
 
-<div
-key={name}
-className="flex justify-between"
->
+            <strong>{count}</strong>
 
-<span>{name}</span>
+          </div>
 
-<strong>{count}</strong>
+        ))}
 
-</div>
+      </div>
 
-))}
+    </Card>
 
-</div>
+  );
 
-</Card>
-
-)
-
-}
+};
 
 export default StaffDeployment;

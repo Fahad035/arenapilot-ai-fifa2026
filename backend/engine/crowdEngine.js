@@ -1,108 +1,146 @@
-import stadiumKnowledge from "../knowledge/stadiumKnowledge.js";
 import { CROWD_LEVELS } from "../config/constants.js";
 
-const getCrowdLevel = (percentage) => {
-  if (percentage >= 90) return CROWD_LEVELS.EXTREME;
-  if (percentage >= 70) return CROWD_LEVELS.HIGH;
-  if (percentage >= 40) return CROWD_LEVELS.MODERATE;
+const getCrowdLevel = (score) => {
+  if (score >= 90) return CROWD_LEVELS.EXTREME;
+  if (score >= 70) return CROWD_LEVELS.HIGH;
+  if (score >= 40) return CROWD_LEVELS.MODERATE;
   return CROWD_LEVELS.LOW;
 };
 
-const getEstimatedWait = (percentage) => {
-  if (percentage >= 90) return 18;
-  if (percentage >= 70) return 10;
-  if (percentage >= 40) return 5;
-  return 2;
+const getRecommendation = (level, bestGate) => {
+  switch (level) {
+    case CROWD_LEVELS.EXTREME:
+      return `Critical congestion detected. Immediately redirect spectators to ${bestGate}.`;
+
+    case CROWD_LEVELS.HIGH:
+      return `High congestion detected. Open additional access through ${bestGate}.`;
+
+    case CROWD_LEVELS.MODERATE:
+      return `Moderate crowd density. Continue monitoring ${bestGate}.`;
+
+    default:
+      return `Crowd flow is normal. ${bestGate} is operating efficiently.`;
+  }
 };
 
 const getBestGate = (crowdByGate) => {
-  let bestGate = null;
-  let lowestCrowd = Infinity;
+  let gate = "";
+  let min = Infinity;
 
-  for (const [gate, value] of Object.entries(crowdByGate)) {
-    if (value < lowestCrowd) {
-      lowestCrowd = value;
-      bestGate = gate;
+  for (const [name, value] of Object.entries(crowdByGate)) {
+    if (value < min) {
+      min = value;
+      gate = name;
     }
   }
 
-  return bestGate;
+  return gate;
 };
 
 export const analyzeCrowd = (scenario) => {
   const crowdByGate = {
-    "Gate A": Number(scenario.gateA ?? 85),
-    "Gate B": Number(scenario.gateB ?? 62),
-    "Gate C": Number(scenario.gateC ?? 48),
-    "Gate D": Number(scenario.gateD ?? 71),
+    "Gate A": Number(scenario.gateA ?? 25),
+    "Gate B": Number(scenario.gateB ?? 25),
+    "Gate C": Number(scenario.gateC ?? 25),
+    "Gate D": Number(scenario.gateD ?? 25),
   };
 
-  const averageCrowd =
+  const score = Math.round(
     Object.values(crowdByGate).reduce((a, b) => a + b, 0) /
-    Object.keys(crowdByGate).length;
+      Object.keys(crowdByGate).length
+  );
+
+  const level = getCrowdLevel(score);
 
   const bestGate = getBestGate(crowdByGate);
 
+  const recommendation = getRecommendation(level, bestGate);
+
   return {
-  attendance: scenario.attendance,
+    attendance: Number(scenario.attendance),
 
-  score,
+    score,
 
-  level,
+    level,
 
-  recommendation,
+    recommendation,
 
-  density: {
-    north: Math.min(100, Math.round(score + 8)),
-    south: Math.max(20, Math.round(score - 12)),
-    east: Math.round(score - 5),
-    west: Math.round(score + 4),
-  },
+    bestGate,
 
-  queue: [
-    {
-      gate: "Gate A",
-      people: scenario.gateA,
-      status:
-        scenario.gateA > 80 ? "Busy" : "Normal",
+    density: {
+      north: Math.min(100, score + 8),
+      south: Math.max(10, score - 12),
+      east: Math.max(10, score - 5),
+      west: Math.min(100, score + 4),
     },
-    {
-      gate: "Gate B",
-      people: scenario.gateB,
-      status:
-        scenario.gateB > 80 ? "Busy" : "Normal",
-    },
-    {
-      gate: "Gate C",
-      people: scenario.gateC,
-      status:
-        scenario.gateC > 80 ? "Busy" : "Normal",
-    },
-    {
-      gate: "Gate D",
-      people: scenario.gateD,
-      status:
-        scenario.gateD > 80 ? "Busy" : "Normal",
-    },
-  ],
 
-  hourlyTrend: [
-    { hour: "10 AM", density: Math.max(10, score - 20) },
-    { hour: "11 AM", density: Math.max(20, score - 10) },
-    { hour: "12 PM", density: score },
-    { hour: "1 PM", density: Math.min(100, score + 8) },
-    { hour: "2 PM", density: Math.max(15, score - 5) },
-  ],
+    queue: [
+      {
+        gate: "Gate A",
+        people: crowdByGate["Gate A"],
+        status:
+          crowdByGate["Gate A"] >= 80
+            ? "Busy"
+            : "Normal",
+      },
+      {
+        gate: "Gate B",
+        people: crowdByGate["Gate B"],
+        status:
+          crowdByGate["Gate B"] >= 80
+            ? "Busy"
+            : "Normal",
+      },
+      {
+        gate: "Gate C",
+        people: crowdByGate["Gate C"],
+        status:
+          crowdByGate["Gate C"] >= 80
+            ? "Busy"
+            : "Normal",
+      },
+      {
+        gate: "Gate D",
+        people: crowdByGate["Gate D"],
+        status:
+          crowdByGate["Gate D"] >= 80
+            ? "Busy"
+            : "Normal",
+      },
+    ],
 
-  prediction: {
-    next30Minutes:
-      score > 70
-        ? "Crowd density expected to increase."
-        : "Crowd expected to remain stable.",
+    hourlyTrend: [
+      {
+        hour: "10 AM",
+        density: Math.max(10, score - 20),
+      },
+      {
+        hour: "11 AM",
+        density: Math.max(15, score - 10),
+      },
+      {
+        hour: "12 PM",
+        density: score,
+      },
+      {
+        hour: "1 PM",
+        density: Math.min(100, score + 8),
+      },
+      {
+        hour: "2 PM",
+        density: Math.max(15, score - 5),
+      },
+    ],
 
-    confidence: 97,
-  },
+    prediction: {
+      next30Minutes:
+        score >= 70
+          ? "Crowd density expected to increase."
+          : "Crowd expected to remain stable.",
+
+      confidence: 97,
+    },
+  };
 };
 
-};
 export default analyzeCrowd;

@@ -15,7 +15,7 @@ const HistoryFilters = () => {
         options={[
           "All Risks",
           "Low",
-          "Medium",
+          "Moderate",
           "High",
           "Critical",
         ]}

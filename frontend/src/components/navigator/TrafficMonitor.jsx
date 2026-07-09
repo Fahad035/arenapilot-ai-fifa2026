@@ -8,34 +8,26 @@ import {
 import Card from "../ui/Card";
 
 const TrafficMonitor = ({ analysis }) => {
-  const congestion = analysis?.metrics?.congestion || 74;
+  const routeAnalysis = analysis?.routeAnalysis ?? {};
+  const congestionMap = routeAnalysis?.congestionMap ?? {};
+  const recommendedGate = routeAnalysis?.recommendedGate ?? "Unavailable";
 
-  const zones = [
-    {
-      name: "Gate A",
-      value: 88,
-    },
-    {
-      name: "Gate B",
-      value: 61,
-    },
-    {
-      name: "Gate C",
-      value: 42,
-    },
-    {
-      name: "Gate D",
-      value: congestion,
-    },
-    {
-      name: "Food Court",
-      value: 56,
-    },
-    {
-      name: "VIP Lounge",
-      value: 24,
-    },
-  ];
+  const zones = Object.entries(congestionMap).map(([key, value]) => ({
+    name: key
+      .replace(/([a-z])([A-Z])/g, "$1 $2")
+      .replace(/^gate/i, "Gate")
+      .trim(),
+    value,
+  }));
+
+  const mostCongestedZone =
+    zones.reduce((highest, zone) => {
+      if (!highest || Number(zone.value) > Number(highest.value)) {
+        return zone;
+      }
+
+      return highest;
+    }, null) ?? { name: "Unavailable", value: null };
 
   const color = (value) => {
     if (value >= 80) return "bg-red-500";
@@ -117,7 +109,7 @@ const TrafficMonitor = ({ analysis }) => {
           </div>
 
           <p className="mt-3 text-2xl font-bold text-emerald-400">
-            Gate C
+            {recommendedGate}
           </p>
 
         </div>
@@ -135,7 +127,7 @@ const TrafficMonitor = ({ analysis }) => {
           </div>
 
           <p className="mt-3 text-2xl font-bold text-red-400">
-            Gate A
+            {mostCongestedZone?.name ?? "Unavailable"}
           </p>
 
         </div>
@@ -155,9 +147,8 @@ const TrafficMonitor = ({ analysis }) => {
         </div>
 
         <p className="mt-3 leading-7 text-slate-300">
-          Live crowd analytics indicate increasing density near Gate A.
-          ArenaPilot recommends redirecting spectators through Gate C
-          and Gate D to balance pedestrian flow and reduce queue times.
+          {routeAnalysis?.recommendation ??
+            "Live crowd analytics indicate shifting density across stadium zones. ArenaPilot recommends redirecting spectators through the least congested route to balance pedestrian flow and reduce queue times."}
         </p>
 
       </div>

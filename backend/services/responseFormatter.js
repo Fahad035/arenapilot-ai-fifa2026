@@ -2,87 +2,67 @@ const formatResponse = ({ analysis, briefing }) => {
   const crowd = analysis.analysis.crowd;
   const risk = analysis.analysis.risk;
   const route = analysis.analysis.route;
-
-  // Build metrics expected by the current frontend
-  const metrics = {
-    attendance: crowd?.attendance ?? 0,
-    congestion: crowd?.score ?? 0,
-    waitTime: route?.estimatedTime ?? 0,
-    medicalRisk: risk?.medicalRisk ?? risk?.score ?? 0,
-    securityScore: Math.max(0, 100 - (risk?.score ?? 0)),
-  };
-
-  // Build recommendation list
-  const recommendations = [
-    crowd?.recommendation,
-    ...(risk?.recommendations || []),
-    route?.recommendation,
-  ].filter(Boolean);
-
-  // Build timeline
-  const timeline = [
-    {
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      event: "Scenario received",
-    },
-    {
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      event: "Crowd analysis completed",
-    },
-    {
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      event: "Risk assessment completed",
-    },
-    {
-      time: new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      event: "AI briefing generated",
-    },
-  ];
+  const transport = analysis.analysis.transport;
+  const accessibility = analysis.analysis.accessibility;
+  const sustainability = analysis.analysis.sustainability;
 
   return {
     success: true,
 
-    timestamp: new Date().toISOString(),
+    timestamp: analysis.timestamp,
 
     confidence: 98,
 
-    // ===== Existing frontend fields =====
-    risk: analysis.overallStatus,
+    risk:
+      risk.level ||
+      analysis.overallStatus,
 
     route:
-      route?.bestGate ||
-      route?.recommendedGate ||
-      route?.route ||
+      route.bestRoute ||
+      route.recommendedRoute ||
       "Gate A",
 
     summary: analysis.summary.join(" "),
 
-    recommendations,
+    recommendations:
+      risk.recommendations || [],
 
-    metrics,
+    metrics: {
+      attendance:
+        crowd.attendance || 0,
 
-    timeline,
+      congestion:
+        crowd.score || 0,
 
-    // ===== Keep new backend structure =====
-    dashboard: {
-      overallScore: analysis.overallScore,
-      overallStatus: analysis.overallStatus,
-      summary: analysis.summary,
+      waitTime:
+        transport.waitTime || 0,
+
+      medicalRisk:
+        risk.medicalRisk || 0,
+
+      securityScore:
+        risk.securityScore || 95,
     },
 
-    analysis: analysis.analysis,
+    timeline:
+      route.timeline || [],
+
+    dashboard: {
+      overallScore:
+        analysis.overallScore,
+
+      overallStatus:
+        analysis.overallStatus,
+    },
+
+    engines: {
+      crowd,
+      risk,
+      route,
+      transport,
+      accessibility,
+      sustainability,
+    },
 
     aiBriefing: briefing,
   };

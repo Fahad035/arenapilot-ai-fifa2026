@@ -9,14 +9,16 @@ import {
 import Card from "../ui/Card";
 
 const AccessibilityPanel = ({ analysis }) => {
-  const accessibleRoute =
-    analysis?.accessibleRoute || "Step-Free Route via Gate D";
+  const routeAnalysis = analysis?.routeAnalysis ?? {};
+  const accessibleRoute = routeAnalysis?.recommendedGate
+    ? `Step-Free Route via ${routeAnalysis.recommendedGate}`
+    : "Step-Free Route unavailable";
 
   const facilities = [
     {
       icon: FaWheelchair,
       title: "Accessible Entrance",
-      value: "Gate D",
+      value: routeAnalysis?.recommendedGate ?? "Unavailable",
       status: "Available",
     },
     {

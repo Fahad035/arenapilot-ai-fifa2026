@@ -1,31 +1,7 @@
 import Badge from "../ui/Badge";
 import Card from "../ui/Card";
 
-const rows = [
-  {
-    id: 1,
-    venue: "MetLife Stadium",
-    risk: "High",
-    crowd: "92%",
-    time: "10 mins ago",
-  },
-  {
-    id: 2,
-    venue: "SoFi Stadium",
-    risk: "Medium",
-    crowd: "68%",
-    time: "30 mins ago",
-  },
-  {
-    id: 3,
-    venue: "AT&T Stadium",
-    risk: "Low",
-    crowd: "42%",
-    time: "1 hour ago",
-  },
-];
-
-const HistoryTable = () => {
+const HistoryTable = ({ history = [] }) => {
   return (
     <Card>
 
@@ -41,11 +17,13 @@ const HistoryTable = () => {
 
             <tr className="border-b border-slate-700 text-left">
 
-              <th className="pb-4">Venue</th>
-              <th>Risk</th>
-              <th>Crowd</th>
-              <th>Generated</th>
-              <th>Action</th>
+              <th className="pb-4">Scenario Name</th>
+              <th>Attendance</th>
+              <th>Risk Level</th>
+              <th>Confidence</th>
+              <th>Recommended Route</th>
+              <th>Generated Summary</th>
+              <th>Timestamp</th>
 
             </tr>
 
@@ -53,7 +31,7 @@ const HistoryTable = () => {
 
           <tbody>
 
-            {rows.map((row) => (
+            {history.map((row) => (
 
               <tr
                 key={row.id}
@@ -61,33 +39,41 @@ const HistoryTable = () => {
               >
 
                 <td className="py-5">
-                  {row.venue}
+                  {row.scenarioName ?? "Unnamed Scenario"}
                 </td>
 
                 <td>
 
-                  <Badge color={row.risk}>
-                    {row.risk}
+                  {row.attendance !== undefined && row.attendance !== null
+                    ? row.attendance.toLocaleString()
+                    : "Unavailable"}
+
+                </td>
+
+                <td>
+                  <Badge color={row.risk ?? "Low"}>
+                    {row.risk ?? "Low"}
                   </Badge>
-
                 </td>
 
                 <td>
-                  {row.crowd}
+                  {row.confidence !== undefined && row.confidence !== null
+                    ? `${row.confidence}%`
+                    : "Unavailable"}
                 </td>
 
                 <td>
-                  {row.time}
+                  {row.recommendedRoute ?? "Unavailable"}
                 </td>
 
                 <td>
+                  {row.summary ?? "Unavailable"}
+                </td>
 
-                  <button
-                    className="rounded-lg bg-cyan-600 px-4 py-2 text-sm hover:bg-cyan-500"
-                  >
-                    View
-                  </button>
-
+                <td>
+                  {row.timestamp
+                    ? new Date(row.timestamp).toLocaleString()
+                    : "Unavailable"}
                 </td>
 
               </tr>

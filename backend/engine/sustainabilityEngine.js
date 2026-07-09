@@ -2,29 +2,51 @@ const analyzeSustainability = (scenario) => {
   const attendance = Number(scenario.attendance ?? 0);
 
   let carbonImpact = "Low";
+  let score = 20;
 
   if (attendance > 60000) {
     carbonImpact = "High";
+    score = 80;
   } else if (attendance > 30000) {
     carbonImpact = "Moderate";
+    score = 50;
   }
 
-  const suggestions = [];
+  const recommendations = [];
 
   if (carbonImpact === "High") {
-    suggestions.push("Increase public transport usage.");
+    recommendations.push(
+      "Increase public transport usage."
+    );
 
-    suggestions.push("Enable digital ticket verification.");
+    recommendations.push(
+      "Enable digital ticket verification."
+    );
 
-    suggestions.push("Deploy additional recycling stations.");
+    recommendations.push(
+      "Deploy additional recycling stations."
+    );
+  } else if (carbonImpact === "Moderate") {
+    recommendations.push(
+      "Encourage spectators to use public transport."
+    );
+
+    recommendations.push(
+      "Increase waste segregation."
+    );
   } else {
-    suggestions.push("Maintain current sustainability measures.");
+    recommendations.push(
+      "Maintain current sustainability measures."
+    );
   }
 
   return {
     score,
 
-    recommendation,
+    recommendation:
+      recommendations[0],
+
+    carbonImpact,
 
     carbonFootprint: {
       current: 18.4,
@@ -51,7 +73,8 @@ const analyzeSustainability = (scenario) => {
       unit: "Litres",
     },
 
-    sustainabilityScore: Math.max(0, 100 - score),
+    sustainabilityScore:
+      Math.max(0, 100 - score),
 
     greenInitiatives: [
       "Solar-powered lighting active.",
@@ -60,12 +83,7 @@ const analyzeSustainability = (scenario) => {
       "Electric shuttle buses available.",
     ],
 
-    recommendationsList: [
-      "Reduce lighting in unused sections.",
-      "Increase recycling bin coverage.",
-      "Encourage public transport usage.",
-      "Optimize HVAC scheduling.",
-    ],
+    recommendations,
 
     kpi: [
       {

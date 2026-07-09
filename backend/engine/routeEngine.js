@@ -7,7 +7,10 @@ const estimateWalkingTime = (crowd) => {
   return 5;
 };
 
-const findBestGate = (gateCrowd, accessibilityRequired) => {
+const findBestGate = (
+  gateCrowd,
+  accessibilityRequired
+) => {
   let selectedGate = null;
   let lowestCrowd = Infinity;
 
@@ -16,7 +19,10 @@ const findBestGate = (gateCrowd, accessibilityRequired) => {
 
     if (!gateInfo) continue;
 
-    if (accessibilityRequired && !gateInfo.accessible) {
+    if (
+      accessibilityRequired &&
+      !gateInfo.accessible
+    ) {
       continue;
     }
 
@@ -26,7 +32,7 @@ const findBestGate = (gateCrowd, accessibilityRequired) => {
     }
   }
 
-  return selectedGate;
+  return selectedGate || "Gate D";
 };
 
 const analyzeRoute = (scenario) => {
@@ -37,65 +43,68 @@ const analyzeRoute = (scenario) => {
     "Gate D": Number(scenario.gateD ?? 60),
   };
 
-  const accessibilityRequired = Boolean(scenario.accessibilityRequired);
+  const accessibilityRequired =
+    Boolean(scenario.accessibilityRequired);
 
-  const emergencyMode = Boolean(scenario.emergencyMode);
+  const emergencyMode =
+    Boolean(scenario.emergencyMode);
 
-  const bestGate = findBestGate(gateCrowd, accessibilityRequired);
+  const recommendedGate =
+    findBestGate(
+      gateCrowd,
+      accessibilityRequired
+    );
 
-  const gateInfo = stadiumKnowledge.gates[bestGate];
+  const gateInfo =
+    stadiumKnowledge.gates[recommendedGate];
 
-  const walkingTime = estimateWalkingTime(gateCrowd[bestGate]);
+  const walkingTime =
+    estimateWalkingTime(
+      gateCrowd[recommendedGate]
+    );
 
   return {
     recommendedGate,
 
-    recommendation: `Use ${recommendedGate} as the primary entrance to reduce congestion.`,
+    recommendation: emergencyMode
+      ? `Emergency mode active. Direct spectators through ${recommendedGate}.`
+      : `Use ${recommendedGate} as the recommended entry route.`,
 
-    estimatedTime:
-      recommendedGate === "Gate A"
-        ? 4
-        : recommendedGate === "Gate B"
-          ? 6
-          : recommendedGate === "Gate C"
-            ? 8
-            : 5,
+    estimatedTime: walkingTime,
 
-    alternativeRoutes: [
-      {
-        gate: "Gate A",
-        status: scenario.gateA > 80 ? "Busy" : "Open",
-        load: scenario.gateA,
-      },
-      {
-        gate: "Gate B",
-        status: scenario.gateB > 80 ? "Busy" : "Open",
-        load: scenario.gateB,
-      },
-      {
-        gate: "Gate C",
-        status: scenario.gateC > 80 ? "Busy" : "Open",
-        load: scenario.gateC,
-      },
-      {
-        gate: "Gate D",
-        status: scenario.gateD > 80 ? "Busy" : "Open",
-        load: scenario.gateD,
-      },
-    ],
+    distance:
+      gateInfo?.distance ?? "Unknown",
+
+    accessible:
+      gateInfo?.accessible ?? false,
+
+    emergencyMode,
+
+    alternativeRoutes: Object.entries(
+      gateCrowd
+    ).map(([gate, load]) => ({
+      gate,
+      load,
+      status:
+        load > 80
+          ? "Busy"
+          : load > 60
+          ? "Moderate"
+          : "Open",
+    })),
 
     congestionMap: {
-      gateA: scenario.gateA,
-      gateB: scenario.gateB,
-      gateC: scenario.gateC,
-      gateD: scenario.gateD,
+      gateA: gateCrowd["Gate A"],
+      gateB: gateCrowd["Gate B"],
+      gateC: gateCrowd["Gate C"],
+      gateD: gateCrowd["Gate D"],
     },
 
     evacuationPlan: [
-      "Open all emergency exits if congestion exceeds 90%.",
+      "Open emergency exits when congestion exceeds 90%.",
       "Guide spectators using digital signage.",
-      "Deploy security staff to major intersections.",
-      "Keep medical corridors unobstructed.",
+      "Deploy security personnel to intersections.",
+      "Maintain clear medical corridors.",
     ],
 
     checkpoints: [
@@ -109,7 +118,10 @@ const analyzeRoute = (scenario) => {
       },
       {
         name: "South Checkpoint",
-        status: scenario.gateC > 85 ? "Busy" : "Operational",
+        status:
+          gateCrowd["Gate C"] > 85
+            ? "Busy"
+            : "Operational",
       },
       {
         name: "West Checkpoint",
@@ -118,10 +130,10 @@ const analyzeRoute = (scenario) => {
     ],
 
     navigationSteps: [
-      `Proceed towards ${recommendedGate}.`,
+      `Proceed to ${recommendedGate}.`,
       "Follow illuminated route indicators.",
       "Avoid restricted security zones.",
-      "Continue to designated seating area.",
+      "Continue to your designated seating area.",
     ],
   };
 };

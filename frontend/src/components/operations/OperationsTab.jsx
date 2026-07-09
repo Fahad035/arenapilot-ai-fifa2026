@@ -6,25 +6,25 @@ import TransportStatus from "./TransportStatus";
 import AnnouncementGenerator from "./AnnouncementGenerator";
 import EventTimeline from "./EventTimeline";
 
-const OperationsTab = () => {
+const OperationsTab = ({ analysis }) => {
   return (
     <div className="space-y-6">
 
-      <KPICards />
+      <KPICards analysis={analysis} />
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <LiveIncidents />
-        <SystemHealth />
+        <LiveIncidents analysis={analysis} />
+        <SystemHealth analysis={analysis} />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <StaffDeployment />
-        <TransportStatus />
+        <StaffDeployment analysis={analysis} />
+        <TransportStatus analysis={analysis} />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <AnnouncementGenerator />
-        <EventTimeline />
+        <AnnouncementGenerator analysis={analysis} />
+        <EventTimeline analysis={analysis} />
       </div>
 
     </div>

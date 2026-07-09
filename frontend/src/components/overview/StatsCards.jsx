@@ -9,7 +9,9 @@ const StatsCards = ({ analysis }) => {
   const stats = [
     {
       title: "Attendance",
-      value: "92,580",
+      value:
+        analysis?.metrics?.attendance?.toLocaleString() ??
+        "0",
       change: "+8%",
       icon: FaUsers,
       color: "text-cyan-400",
@@ -18,7 +20,10 @@ const StatsCards = ({ analysis }) => {
     },
     {
       title: "Active Alerts",
-      value: analysis ? "03" : "00",
+      value:
+        analysis
+          ? analysis.recommendations?.length || "0"
+          : "00",
       change: "Live",
       icon: FaExclamationTriangle,
       color: "text-red-400",

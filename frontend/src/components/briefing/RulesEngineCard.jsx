@@ -9,10 +9,31 @@ import {
 import Card from "../ui/Card";
 
 const RulesEngineCard = ({ analysis }) => {
-  const congestion = analysis?.metrics?.congestion || 74;
-  const attendance = analysis?.metrics?.attendance || 92580;
-  const waitTime = analysis?.metrics?.waitTime || 12;
-  const route = analysis?.route || "Gate D";
+  const crowd = analysis?.crowd || {};
+  
+  const route = analysis?.route || {};
+
+  const attendance =
+    crowd.attendance || 92580;
+
+  const congestion =
+    crowd.score || 74;
+
+  const waitTime =
+    crowd.queue?.length
+      ? Math.round(
+          crowd.queue.reduce(
+            (sum, gate) => sum + gate.people,
+            0
+          ) /
+            crowd.queue.length /
+            20
+        )
+      : 12;
+
+  const recommendedRoute =
+    route.recommendedGate ||
+    "Gate D";
 
   const verifiedFacts = [
     {
@@ -29,14 +50,12 @@ const RulesEngineCard = ({ analysis }) => {
     },
     {
       label: "Recommended Route",
-      value: route,
+      value: recommendedRoute,
     },
   ];
 
   return (
     <Card className="space-y-8">
-
-      {/* Header */}
 
       <div>
 
@@ -45,18 +64,13 @@ const RulesEngineCard = ({ analysis }) => {
         </h2>
 
         <p className="mt-2 text-slate-400">
-          ArenaPilot verifies operational facts before sending
-          context to Gemini, reducing hallucinations and ensuring
-          recommendations are based on validated stadium data.
+          ArenaPilot validates operational facts using a deterministic
+          rules engine before generating AI insights.
         </p>
 
       </div>
 
-      {/* Flow */}
-
       <div className="grid gap-6 lg:grid-cols-3">
-
-        {/* Rules Engine */}
 
         <div className="rounded-2xl border border-blue-500/20 bg-blue-500/10 p-6">
 
@@ -77,7 +91,7 @@ const RulesEngineCard = ({ analysis }) => {
 
             <li>✓ Crowd threshold validation</li>
 
-            <li>✓ Queue time calculation</li>
+            <li>✓ Queue estimation</li>
 
             <li>✓ Safe route selection</li>
 
@@ -88,8 +102,6 @@ const RulesEngineCard = ({ analysis }) => {
           </ul>
 
         </div>
-
-        {/* Verified Facts */}
 
         <div className="rounded-2xl border border-emerald-500/20 bg-emerald-500/10 p-6">
 
@@ -109,12 +121,10 @@ const RulesEngineCard = ({ analysis }) => {
           <div className="space-y-4">
 
             {verifiedFacts.map((fact) => (
-
               <div
                 key={fact.label}
                 className="flex items-center justify-between rounded-lg bg-slate-900/70 p-3"
               >
-
                 <span className="text-slate-400">
                   {fact.label}
                 </span>
@@ -124,14 +134,11 @@ const RulesEngineCard = ({ analysis }) => {
                 </span>
 
               </div>
-
             ))}
 
           </div>
 
         </div>
-
-        {/* Gemini */}
 
         <div className="rounded-2xl border border-cyan-500/20 bg-cyan-500/10 p-6">
 
@@ -149,17 +156,14 @@ const RulesEngineCard = ({ analysis }) => {
           </div>
 
           <p className="leading-7 text-slate-300">
-            Gemini receives verified operational facts and
-            generates a concise executive briefing,
-            multilingual announcements and actionable
-            recommendations without inventing stadium data.
+            Gemini receives only validated operational facts and
+            produces executive briefings, multilingual announcements,
+            and actionable recommendations.
           </p>
 
         </div>
 
       </div>
-
-      {/* Pipeline */}
 
       <div className="rounded-2xl border border-slate-800 bg-slate-950 p-6">
 
@@ -167,10 +171,10 @@ const RulesEngineCard = ({ analysis }) => {
           Decision Pipeline
         </h3>
 
-        <div className="flex flex-col items-center justify-center gap-4 lg:flex-row">
+        <div className="flex flex-col items-center gap-4 lg:flex-row lg:justify-center">
 
           <div className="rounded-xl bg-slate-800 px-5 py-3 font-semibold text-white">
-            Scenario Input
+            Scenario
           </div>
 
           <FaArrowDown className="text-slate-500 lg:-rotate-90" />
@@ -194,14 +198,12 @@ const RulesEngineCard = ({ analysis }) => {
           <FaArrowDown className="text-slate-500 lg:-rotate-90" />
 
           <div className="rounded-xl bg-purple-500/20 px-5 py-3 font-semibold text-purple-300">
-            AI Briefing
+            Executive Briefing
           </div>
 
         </div>
 
       </div>
-
-      {/* Footer */}
 
       <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-5">
 
@@ -210,19 +212,16 @@ const RulesEngineCard = ({ analysis }) => {
           <FaCheckCircle className="text-emerald-400" />
 
           <h3 className="font-semibold text-white">
-            Why this matters
+            Trusted AI Architecture
           </h3>
 
         </div>
 
         <p className="mt-3 leading-7 text-slate-300">
-          By separating deterministic decision logic from
-          generative AI, ArenaPilot ensures that critical
-          operational facts remain accurate while Gemini is
-          responsible only for explanation, summarization and
-          natural-language communication. This architecture
-          improves transparency, reliability and trust in
-          high-impact event operations.
+          Operational facts are generated by deterministic rules,
+          while Gemini focuses on explanation, summarization, and
+          natural-language communication. This separation improves
+          transparency and reduces AI hallucinations.
         </p>
 
       </div>

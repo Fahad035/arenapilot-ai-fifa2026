@@ -7,38 +7,47 @@ import {
 import Card from "../ui/Card";
 
 const QueueTable = ({ analysis }) => {
-  const congestion = analysis?.metrics?.congestion || 74;
+  const queue =
+    analysis?.crowd?.queue || [
+      {
+        gate: "Gate A",
+        people: 65,
+        status: "Normal",
+      },
+      {
+        gate: "Gate B",
+        people: 78,
+        status: "Normal",
+      },
+      {
+        gate: "Gate C",
+        people: 92,
+        status: "Busy",
+      },
+      {
+        gate: "Gate D",
+        people: 54,
+        status: "Normal",
+      },
+    ];
 
-  const gates = [
-    {
-      gate: "Gate A",
-      queue: 120,
-      wait: 4,
-      predicted: 3,
-      status: "Normal",
-    },
-    {
-      gate: "Gate B",
-      queue: 265,
-      wait: 11,
-      predicted: 8,
-      status: "Busy",
-    },
-    {
-      gate: "Gate C",
-      queue: congestion > 80 ? 710 : 520,
-      wait: congestion > 80 ? 28 : 18,
-      predicted: congestion > 80 ? 24 : 15,
-      status: congestion > 80 ? "Critical" : "Busy",
-    },
-    {
-      gate: "Gate D",
-      queue: 96,
-      wait: 3,
-      predicted: 2,
-      status: "Normal",
-    },
-  ];
+  const gates = queue.map((item) => ({
+    gate: item.gate,
+    queue: item.people,
+    wait: Math.max(2, Math.round(item.people / 10)),
+    predicted: Math.max(1, Math.round(item.people / 14)),
+    status:
+      item.people >= 90
+        ? "Critical"
+        : item.people >= 75
+        ? "Busy"
+        : "Normal",
+  }));
+
+  const averageWait = Math.round(
+    gates.reduce((sum, gate) => sum + gate.wait, 0) /
+      gates.length
+  );
 
   const getBadge = (status) => {
     switch (status) {
@@ -181,7 +190,7 @@ const QueueTable = ({ analysis }) => {
 
       </div>
 
-      {/* Summary */}
+      {/* Footer */}
 
       <div className="mt-6 rounded-xl border border-slate-800 bg-slate-950 p-4">
 
@@ -192,7 +201,7 @@ const QueueTable = ({ analysis }) => {
           </span>
 
           <span className="text-xl font-bold text-cyan-400">
-            9 min
+            {averageWait} min
           </span>
 
         </div>

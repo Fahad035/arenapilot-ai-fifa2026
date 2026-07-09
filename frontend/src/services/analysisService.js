@@ -1,176 +1,94 @@
 import api from "./api";
 
-/**
- * Analyze a stadium scenario.
- * Currently falls back to mock data if the backend
- * is unavailable. Once the backend is ready,
- * only the API endpoint needs to work.
- */
-
 export const analyzeScenario = async (scenario) => {
-  try {
-    const response = await api.post("/analyze", scenario);
+  const { data } = await api.post("/analyze", scenario);
 
-    return response.data;
-  } catch (error) {
-    console.warn(
-      "Backend unavailable. Using mock analysis.",
-      error.message
-    );
-
-    // Simulate AI thinking
-    await new Promise((resolve) => setTimeout(resolve, 1800));
-
-    return generateMockAnalysis(scenario);
-  }
-};
-
-/**
- * Mock AI Response
- */
-
-function generateMockAnalysis(data) {
-  const crowd = Number(data.crowd || 0);
-
-  let risk = "Low";
-
-  if (crowd > 90000) risk = "Critical";
-  else if (crowd > 70000) risk = "High";
-  else if (crowd > 40000) risk = "Medium";
-
-  const routes = [
-    "Gate A",
-    "Gate B",
-    "Gate C",
-    "Gate D",
-    "North Exit",
-    "South Exit",
-  ];
-
-  const recommendations = [];
-
-  if (risk === "Critical") {
-    recommendations.push(
-      "Immediately open all emergency gates."
-    );
-
-    recommendations.push(
-      "Deploy additional police and medical teams."
-    );
-
-    recommendations.push(
-      "Broadcast multilingual evacuation guidance."
-    );
-
-    recommendations.push(
-      "Continuously monitor CCTV hotspots."
-    );
-  }
-
-  if (risk === "High") {
-    recommendations.push(
-      "Redirect spectators toward Gate D."
-    );
-
-    recommendations.push(
-      "Deploy crowd management volunteers."
-    );
-
-    recommendations.push(
-      "Increase security patrol frequency."
-    );
-
-    recommendations.push(
-      "Display dynamic route signage."
-    );
-  }
-
-  if (risk === "Medium") {
-    recommendations.push(
-      "Monitor congestion every 5 minutes."
-    );
-
-    recommendations.push(
-      "Prepare standby response teams."
-    );
-
-    recommendations.push(
-      "Keep alternate exits available."
-    );
-  }
-
-  if (risk === "Low") {
-    recommendations.push(
-      "Continue routine monitoring."
-    );
-
-    recommendations.push(
-      "Maintain normal staffing levels."
-    );
-  }
+  const analysis = data?.analysis ?? data?.engines ?? {};
+  const routeAnalysis =
+    analysis?.routeAnalysis ??
+    analysis?.route ??
+    data?.routeAnalysis ??
+    data?.route ??
+    {};
+  const dashboard = data?.dashboard ?? {};
+  const summary = data?.summary ?? dashboard?.summary ?? [];
+  const timeline = data?.timeline ?? analysis?.risk?.timeline ?? [];
 
   return {
-    success: true,
+    success: data?.success,
 
-    timestamp: new Date().toISOString(),
+    confidence: data?.confidence ?? 98,
 
-    confidence:
-      Math.floor(Math.random() * 4) + 96,
+    timestamp: data?.timestamp ?? null,
 
-    risk,
+    score:
+      dashboard?.overallScore ?? analysis?.risk?.score ?? null,
+
+    risk:
+      analysis?.risk?.level ?? data?.risk ?? "Medium",
 
     route:
-      routes[
-        Math.floor(Math.random() * routes.length)
-      ],
+      routeAnalysis?.recommendedGate ?? data?.route ?? null,
 
-    summary: `
-Crowd analysis indicates a ${risk.toLowerCase()} operational risk
-for ${data.stadium}. AI predicts congestion around
-${data.incident}. Recommended route is optimized
-to reduce pedestrian density and improve emergency
-response time.
-`,
+    summary:
+      Array.isArray(summary) ? summary.join(" ") : summary,
 
-    recommendations,
+    recommendations:
+      analysis?.risk?.recommendations ?? data?.recommendations ?? [],
+
+    medicalRisk:
+      analysis?.risk?.medicalRisk,
+
+    securityRisk:
+      analysis?.risk?.securityScore,
+
+    weatherRisk:
+      analysis?.risk?.weatherRisk,
 
     metrics: {
-      attendance: crowd,
+      attendance:
+        analysis?.crowd?.attendance,
 
       congestion:
-        Math.floor(Math.random() * 35) + 60,
+        analysis?.crowd?.score,
 
       waitTime:
-        Math.floor(Math.random() * 12) + 4,
+        routeAnalysis?.estimatedTime,
 
       medicalRisk:
-        Math.floor(Math.random() * 30) + 5,
+        analysis?.risk?.medicalRisk,
 
       securityScore:
-        Math.floor(Math.random() * 20) + 80,
+        analysis?.risk?.securityScore,
     },
 
-    timeline: [
-      {
-        time: "10:12",
-        event: "Crowd spike detected",
-      },
-      {
-        time: "10:15",
-        event: "AI started analysis",
-      },
-      {
-        time: "10:17",
-        event: "Alternative routes calculated",
-      },
-      {
-        time: "10:20",
-        event: "Operational briefing generated",
-      },
-    ],
-  };
-}
+    crowd:
+      analysis?.crowd,
 
-export default {
-  analyzeScenario,
+    riskAnalysis:
+      analysis?.risk,
+
+    routeAnalysis:
+      routeAnalysis,
+
+    accessibility:
+      analysis?.accessibility,
+
+    transport:
+      analysis?.transport,
+
+    sustainability:
+      analysis?.sustainability,
+
+    briefing:
+      data?.aiBriefing,
+
+    timeline,
+
+    overallStatus:
+      dashboard?.overallStatus,
+
+    overallScore:
+      dashboard?.overallScore,
+  };
 };

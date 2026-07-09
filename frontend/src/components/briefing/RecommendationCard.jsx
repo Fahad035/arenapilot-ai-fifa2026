@@ -8,6 +8,7 @@ import Card from "../ui/Card";
 
 const RecommendationCard = ({ analysis }) => {
   const recommendations =
+    analysis?.risk?.recommendations ||
     analysis?.recommendations || [
       "Open Gate D to reduce congestion.",
       "Deploy additional crowd marshals.",
@@ -17,9 +18,7 @@ const RecommendationCard = ({ analysis }) => {
 
   return (
     <Card>
-
       <div className="mb-6 flex items-center gap-3">
-
         <FaCircleCheck
           className="text-emerald-400"
           size={22}
@@ -28,28 +27,22 @@ const RecommendationCard = ({ analysis }) => {
         <h2 className="text-2xl font-bold text-white">
           Priority Actions
         </h2>
-
       </div>
 
       <div className="space-y-4">
-
         {recommendations.map((item, index) => (
-
           <div
             key={index}
             className="rounded-xl border border-emerald-500/20 bg-emerald-500/10 p-5 transition hover:border-emerald-400"
           >
-
             <div className="flex items-start gap-4">
 
               <div className="mt-1">
-
                 {index === 0 ? (
                   <FaTriangleExclamation className="text-red-400" />
                 ) : (
                   <FaArrowRight className="text-emerald-400" />
                 )}
-
               </div>
 
               <div>
@@ -65,13 +58,9 @@ const RecommendationCard = ({ analysis }) => {
               </div>
 
             </div>
-
           </div>
-
         ))}
-
       </div>
-
     </Card>
   );
 };

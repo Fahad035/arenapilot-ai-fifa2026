@@ -1,43 +1,68 @@
 import stadiumKnowledge from "../knowledge/stadiumKnowledge.js";
 
 const analyzeAccessibility = (scenario) => {
-  const accessibilityRequired = Boolean(scenario.accessibilityRequired);
+  const accessibilityRequired = Boolean(
+    scenario.accessibilityRequired
+  );
 
-  if (!accessibilityRequired) {
-    return {
-      required: false,
-      accessibleGate: null,
-      accessibleRoutes: [],
-      assistance: false,
-      recommendation: "No accessibility assistance required.",
-    };
-  }
-
-  const accessibleRoutes = Object.entries(stadiumKnowledge.gates)
+  const accessibleRoutes = Object.entries(
+    stadiumKnowledge.gates
+  )
     .filter(([, gate]) => gate.accessible)
     .map(([name]) => name);
 
+  const score = accessibilityRequired ? 95 : 100;
+
+  const recommendation = accessibilityRequired
+    ? "Accessible routes and assistance teams have been assigned."
+    : "No accessibility assistance required.";
+
   return {
+    required: accessibilityRequired,
+
     score,
 
     recommendation,
 
+    accessibleGate:
+      accessibleRoutes.length > 0
+        ? accessibleRoutes[0]
+        : null,
+
     wheelchairAccess: [
-      { gate: "Gate A", status: "Available" },
-      { gate: "Gate B", status: "Available" },
-      { gate: "Gate C", status: "Limited" },
-      { gate: "Gate D", status: "Available" },
+      {
+        gate: "Gate A",
+        status: "Available",
+      },
+      {
+        gate: "Gate B",
+        status: "Available",
+      },
+      {
+        gate: "Gate C",
+        status: "Limited",
+      },
+      {
+        gate: "Gate D",
+        status: "Available",
+      },
     ],
 
-    accessibleRoutes: [
-      "North Entrance → Elevator A → Level 1",
-      "East Entrance → Ramp B → VIP Seating",
-    ],
+    accessibleRoutes,
 
     elevators: [
-      { id: "Lift A", status: "Operational" },
-      { id: "Lift B", status: "Operational" },
-      { id: "Lift C", status: "Maintenance" },
+      {
+        id: "Lift A",
+        status: "Operational",
+      },
+      {
+        id: "Lift B",
+        status: "Operational",
+      },
+      {
+        id: "Lift C",
+        status: "Maintenance",
+      },
     ],
 
     assistancePoints: [

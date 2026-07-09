@@ -1,6 +1,5 @@
 import {
   FaLocationDot,
-  FaPersonWalking,
   FaFlagCheckered,
   FaDoorOpen,
   FaCircle,
@@ -9,29 +8,24 @@ import {
 import Card from "../ui/Card";
 
 const StadiumMap = ({ analysis }) => {
-  const gate = analysis?.route || "Gate D";
+  const routeAnalysis = analysis?.routeAnalysis ?? {};
+  const gate = routeAnalysis?.recommendedGate ?? "Recommended gate unavailable";
+  const checkpoints = routeAnalysis?.checkpoints ?? [];
 
   const locations = [
     {
-      title: "Main Entrance",
-      icon: FaPersonWalking,
-      color: "text-cyan-400",
-    },
-    {
       title: gate,
       icon: FaDoorOpen,
-      color: "text-emerald-400",
+      color: "text-cyan-400",
     },
-    {
-      title: "Security Check",
-      icon: FaCircle,
-      color: "text-yellow-400",
-    },
-    {
-      title: "Seat Section",
-      icon: FaFlagCheckered,
-      color: "text-purple-400",
-    },
+    ...checkpoints.map((checkpoint, index) => ({
+      title: checkpoint?.name ?? `Checkpoint ${index + 1}`,
+      icon: index % 2 === 0 ? FaCircle : FaFlagCheckered,
+      color:
+        checkpoint?.status === "Busy"
+          ? "text-yellow-400"
+          : "text-emerald-400",
+    })),
   ];
 
   return (
@@ -97,10 +91,8 @@ const StadiumMap = ({ analysis }) => {
         </h3>
 
         <p className="mt-3 leading-7 text-slate-300">
-          This route minimizes congestion by directing spectators through
-          verified low-density corridors while maintaining emergency access
-          compliance. The recommendation is continuously updated as live
-          operational data changes.
+          {routeAnalysis?.recommendation ??
+            "This route minimizes congestion by directing spectators through verified low-density corridors while maintaining emergency access compliance. The recommendation is continuously updated as live operational data changes."}
         </p>
 
       </div>
