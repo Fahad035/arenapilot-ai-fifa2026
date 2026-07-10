@@ -1,12 +1,12 @@
 import ChatWindow from "./ChatWindow";
 import SuggestedPrompts from "./SuggestedPrompts";
 
-const AIAssistantTab = () => {
+const AIAssistantTab = ({ analysis }) => {
   return (
     <div className="grid gap-6 lg:grid-cols-3">
 
       <div className="lg:col-span-2">
-        <ChatWindow />
+        <ChatWindow analysis={analysis} />
       </div>
 
       <SuggestedPrompts />

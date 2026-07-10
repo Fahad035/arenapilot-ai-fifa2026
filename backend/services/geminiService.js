@@ -1,9 +1,8 @@
-import model from "../config/gemini.js";
+import { getGeminiModel } from "../config/gemini.js";
 import briefingPrompt from "../prompts/briefingPrompt.js";
-import mockBriefing from "../mock/mockResponse.js";
+import mockBriefing from "../mock/mockChatResponse.js";
 
-const USE_MOCK =
-  process.env.USE_MOCK_AI === "true";
+const USE_MOCK = process.env.USE_MOCK_AI === "true";
 
 const generateBriefing = async (analysis) => {
   if (USE_MOCK) {
@@ -12,6 +11,7 @@ const generateBriefing = async (analysis) => {
   }
 
   try {
+    const model = getGeminiModel();
     const prompt = briefingPrompt(analysis);
 
     const result = await model.generateContent(prompt);

@@ -98,7 +98,37 @@ const ScenarioForm = ({
     setLoading(true);
 
     try {
-      const result = await analyzeScenario(scenarioData);
+
+      const payload = {
+        eventName: scenarioData.match,
+
+        eventType: "Football Match",
+
+        attendance: Number(scenarioData.crowd),
+
+        gateA: Math.round(Number(scenarioData.crowd) * 0.25),
+
+        gateB: Math.round(Number(scenarioData.crowd) * 0.25),
+
+        gateC: Math.round(Number(scenarioData.crowd) * 0.25),
+
+        gateD: Math.round(Number(scenarioData.crowd) * 0.25),
+
+        accessibilityRequired: false,
+
+        medicalIncident:
+          scenarioData.incident === "Medical Emergency",
+
+        securityIncident:
+          scenarioData.incident === "Security Threat",
+
+        emergencyMode:
+          scenarioData.priority === "Critical",
+      };
+
+      const result = await analyzeScenario(payload);
+
+      setAnalysis(result);
 
       setAnalysis(result);
     } catch (err) {

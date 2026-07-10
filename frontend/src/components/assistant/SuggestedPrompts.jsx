@@ -1,50 +1,54 @@
 import Card from "../ui/Card";
 
 const prompts = [
-
-"How can we reduce congestion at Gate C?",
-
-"Generate an emergency evacuation summary.",
-
-"Recommend a step-free route.",
-
-"Translate announcement into Spanish.",
-
-"Suggest transport alternatives.",
-
+  "How can we reduce congestion at Gate C?",
+  "Generate an emergency evacuation summary.",
+  "Recommend the safest spectator route.",
+  "Summarize the current stadium situation.",
+  "Suggest transport alternatives.",
 ];
 
-const SuggestedPrompts = () => {
+const SuggestedPrompts = ({ onPromptSelect }) => {
+  return (
+    <Card>
 
-return(
+      <h2 className="text-xl font-bold text-white">
+        Suggested Prompts
+      </h2>
 
-<Card>
+      <p className="mt-2 text-sm text-slate-400">
+        Ask ArenaPilot AI using predefined operational questions.
+      </p>
 
-<h2 className="text-xl font-bold text-white">
-Suggested Prompts
-</h2>
+      <div className="mt-5 space-y-3">
 
-<div className="mt-5 space-y-3">
+        {prompts.map((prompt) => (
 
-{prompts.map(prompt=>(
+          <button
+            key={prompt}
+            onClick={() => onPromptSelect?.(prompt)}
+            className="
+              w-full
+              rounded-xl
+              border
+              border-slate-700
+              bg-slate-900
+              p-4
+              text-left
+              transition
+              hover:border-cyan-500
+              hover:bg-slate-800
+            "
+          >
+            {prompt}
+          </button>
 
-<button
-key={prompt}
-className="w-full rounded-xl border border-slate-700 bg-slate-900 p-4 text-left hover:border-cyan-500"
->
+        ))}
 
-{prompt}
+      </div>
 
-</button>
-
-))}
-
-</div>
-
-</Card>
-
-)
-
-}
+    </Card>
+  );
+};
 
 export default SuggestedPrompts;

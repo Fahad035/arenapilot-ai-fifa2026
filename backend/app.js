@@ -8,6 +8,7 @@ import aiRoutes from "./routes/aiRoutes.js";
 import errorHandler from "./middleware/errorHandler.js";
 import sanitizeInput from "./middleware/sanitizeInput.js";
 import rateLimiter from "./middleware/rateLimiter.js";
+import chatRoutes from "./routes/chatRoutes.js";
 
 const app = express();
 
@@ -33,6 +34,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api", aiRoutes);
+
+app.use("/api/chat", chatRoutes);
 
 app.use(errorHandler);
 
