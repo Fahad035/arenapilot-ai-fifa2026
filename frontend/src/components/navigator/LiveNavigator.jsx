@@ -30,7 +30,9 @@ const LiveNavigator = ({ analysis }) => {
 
   const [status, setStatus] = useState("Navigating");
 
+  // Keep ETA in sync when estimatedTime changes.
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setEta(estimatedTime);
   }, [estimatedTime]);
 

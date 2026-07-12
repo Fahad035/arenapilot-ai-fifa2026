@@ -23,7 +23,7 @@ const HistoryTab = () => {
         if (mounted) {
           setHistory(records);
         }
-      } catch (error) {
+      } catch { 
         if (mounted) {
           setHistory([]);
         }

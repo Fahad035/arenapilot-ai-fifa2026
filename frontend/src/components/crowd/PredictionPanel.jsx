@@ -10,21 +10,18 @@ import {
 import Card from "../ui/Card";
 
 const PredictionPanel = ({ analysis }) => {
-  const risk =
-    analysis?.analysis?.risk?.level || "Moderate";
+  const risk = analysis?.risk ?? "Moderate";
 
-  const confidence = 97;
+  const confidence = analysis?.crowd?.prediction?.confidence ?? 97;
 
-  const prediction =
-    analysis?.analysis?.crowd?.prediction;
+  const prediction = analysis?.crowd?.prediction ?? null;
 
-  const recommendations =
-    analysis?.analysis?.risk?.recommendations || [
-      "No recommendations available.",
-    ];
+  const recommendations = analysis?.recommendations ??
+    analysis?.riskAnalysis?.recommendations ??
+    [];
 
-  const trend =
-    analysis?.analysis?.crowd?.hourlyTrend || [];
+  const trend = analysis?.crowd?.hourlyTrend ?? [];
+
 
   const peak =
     trend.length > 0

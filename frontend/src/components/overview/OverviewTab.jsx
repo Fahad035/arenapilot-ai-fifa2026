@@ -4,6 +4,8 @@ import QuickSummary from "./QuickSummary";
 import LiveStatus from "./LiveStatus";
 import OperationsFeed from "./OperationsFeed";
 
+import useLivePolling from "./useLivePolling";
+
 const OverviewTab = ({
   scenarioData,
   setScenarioData,
@@ -12,6 +14,12 @@ const OverviewTab = ({
   loading,
   setLoading,
 }) => {
+  // Poll for latest saved snapshot after analysis is generated.
+  useLivePolling({
+    enabled: !!analysis && !loading,
+    setAnalysis,
+    intervalMs: 4000,
+  });
   return (
     <div className="space-y-8">
 

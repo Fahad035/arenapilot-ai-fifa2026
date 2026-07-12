@@ -53,7 +53,8 @@ const ExecutiveSummary = ({ analysis }) => {
   const summary =
     analysis.summary ||
     analysis.risk?.executiveSummary ||
-    "ArenaPilot AI completed the operational assessment successfully.";
+    "";
+
 
   return (
     <Card className="space-y-8">

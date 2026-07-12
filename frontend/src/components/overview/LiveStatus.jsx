@@ -23,7 +23,9 @@ const LiveStatus = ({ analysis }) => {
     {
       title: "Medical Risk",
       value:
-        analysis?.metrics?.medicalRisk + "%" || "0%",
+        analysis?.metrics?.medicalRisk !== undefined
+          ? analysis.metrics.medicalRisk + "%"
+          : "0%",
       color: "text-blue-400",
       bg: "bg-blue-500/10",
       icon: FaHeartbeat,

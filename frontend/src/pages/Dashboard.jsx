@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import DashboardHeader from "../components/dashboard/DashboardHeader";
+import CommandCenterDashboardHeader from "../components/dashboard/CommandCenterDashboardHeader";
 import DashboardTabs from "../components/dashboard/DashboardTabs";
 
 // Feature Tabs
@@ -46,13 +46,13 @@ const Dashboard = () => {
 
     assistant: <AIAssistantTab analysis={analysis} />,
 
-    settings: <SettingsTab />,
+    settings: <SettingsTab analysis={analysis} />,
   };
 
   return (
     <div className="min-h-screen bg-slate-950 text-white">
 
-      <DashboardHeader />
+      <CommandCenterDashboardHeader analysis={analysis} />
 
       <div className="mx-auto flex max-w-[1800px] gap-6 px-6 py-8">
 

@@ -16,8 +16,10 @@ const AIResponse = ({ analysis }) => {
   const [copied, setCopied] = useState(false);
 
   const response =
+    analysis?.briefing ||
     analysis?.aiBriefing ||
-    "Run a stadium scenario analysis to generate an AI operational briefing.";
+    "";
+
 
   useEffect(() => {
     let index = 0;

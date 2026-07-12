@@ -7,29 +7,7 @@ import {
 import Card from "../ui/Card";
 
 const QueueTable = ({ analysis }) => {
-  const queue =
-    analysis?.crowd?.queue || [
-      {
-        gate: "Gate A",
-        people: 65,
-        status: "Normal",
-      },
-      {
-        gate: "Gate B",
-        people: 78,
-        status: "Normal",
-      },
-      {
-        gate: "Gate C",
-        people: 92,
-        status: "Busy",
-      },
-      {
-        gate: "Gate D",
-        people: 54,
-        status: "Normal",
-      },
-    ];
+  const queue = analysis?.crowd?.queue ?? [];
 
   const gates = queue.map((item) => ({
     gate: item.gate,

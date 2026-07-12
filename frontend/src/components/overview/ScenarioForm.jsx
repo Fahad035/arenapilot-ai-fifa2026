@@ -129,8 +129,6 @@ const ScenarioForm = ({
       const result = await analyzeScenario(payload);
 
       setAnalysis(result);
-
-      setAnalysis(result);
     } catch (err) {
       console.error(err);
     } finally {

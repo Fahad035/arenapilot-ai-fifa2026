@@ -3,6 +3,7 @@ import api from "./api";
 export const analyzeScenario = async (scenario) => {
   const { data } = await api.post("/analyze", scenario);
 
+  // backend returns engines + risk/metrics/timeline via formatResponse
   const analysis = data?.analysis ?? data?.engines ?? {};
   const routeAnalysis =
     analysis?.routeAnalysis ??

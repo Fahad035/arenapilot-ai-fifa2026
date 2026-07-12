@@ -1,4 +1,4 @@
-import { FaGithub, FaHeart } from 'react-icons/fa';
+import { FaGithub } from 'react-icons/fa';
 
 const Footer = () => {
   return (
@@ -23,10 +23,6 @@ const Footer = () => {
 
           <span className="flex items-center gap-2">
             Built with
-            <FaHeart
-              size={15}
-              className="fill-red-500 text-red-500"
-            />
             React + Gemini
           </span>
 

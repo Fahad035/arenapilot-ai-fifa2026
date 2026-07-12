@@ -1,11 +1,6 @@
 import { useEffect, useState } from "react";
-import {
-  FaMapMarkerAlt,
-  FaBell,
-  FaRobot,
-  FaCloudSun,
-  FaCircle,
-} from "react-icons/fa";
+import { FaMapMarkerAlt, FaBell, FaCloudSun, FaCircle } from "react-icons/fa";
+import Logo from "../common/Logo";
 
 const DashboardHeader = () => {
   const [time, setTime] = useState("");
@@ -36,23 +31,10 @@ const DashboardHeader = () => {
         {/* Left */}
         <div>
 
-          <div className="mb-3 flex items-center gap-3">
-
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-cyan-500/15 text-cyan-400">
-              <FaRobot size={18} />
-            </span>
-
-            <div>
-              <h1 className="text-3xl font-bold tracking-tight text-white">
-                ArenaPilot AI
-              </h1>
-
-              <p className="text-sm text-slate-400">
-                Intelligent FIFA World Cup Operations Center
-              </p>
-            </div>
-
+          <div className="mb-3">
+            <Logo />
           </div>
+
 
           <div className="flex flex-wrap items-center gap-4 text-sm">
 

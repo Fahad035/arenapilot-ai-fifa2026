@@ -8,14 +8,22 @@ import {
 import Card from "../ui/Card";
 
 const DensityCards = ({ analysis }) => {
-  const crowd = analysis?.crowd || {};
+  const crowd = analysis?.crowd;
+
+  const waitTime =
+    analysis?.metrics?.waitTime ??
+    analysis?.routeAnalysis?.estimatedTime ??
+    null;
+
+  const riskLevel = analysis?.risk ?? "Medium";
 
   const cards = [
     {
       title: "Live Attendance",
-      value: crowd.attendance
-        ? crowd.attendance.toLocaleString()
-        : "92,580",
+      value:
+        crowd?.attendance !== undefined
+          ? crowd.attendance.toLocaleString()
+          : "--",
       subtitle: "Current Attendance",
       icon: FaUsers,
       color: "text-cyan-400",
@@ -25,10 +33,10 @@ const DensityCards = ({ analysis }) => {
     {
       title: "Crowd Density",
       value:
-        crowd.score !== undefined
+        crowd?.score !== undefined
           ? `${crowd.score}%`
-          : "74%",
-      subtitle: crowd.level || "Moderate",
+          : "--",
+      subtitle: crowd?.level ?? "--",
       icon: FaChartLine,
       color: "text-emerald-400",
       bg: "bg-emerald-500/10",
@@ -36,9 +44,7 @@ const DensityCards = ({ analysis }) => {
     },
     {
       title: "Average Wait",
-      value: analysis?.routeAnalysis?.estimatedTime
-        ? `${analysis.routeAnalysis.estimatedTime} min`
-        : "12 min",
+      value: waitTime !== null ? `${waitTime} min` : "--",
       subtitle: "Recommended Route",
       icon: FaClock,
       color: "text-yellow-400",
@@ -47,36 +53,36 @@ const DensityCards = ({ analysis }) => {
     },
     {
       title: "Risk Level",
-      value: analysis?.risk || "Medium",
+      value: riskLevel,
       subtitle: "AI Assessment",
       icon: FaExclamationTriangle,
 
       color:
-        analysis?.risk === "Critical"
+        riskLevel === "Critical"
           ? "text-red-400"
-          : analysis?.risk === "High"
-          ? "text-orange-400"
-          : analysis?.risk === "Moderate"
-          ? "text-yellow-400"
-          : "text-emerald-400",
+          : riskLevel === "High"
+            ? "text-orange-400"
+            : riskLevel === "Moderate"
+              ? "text-yellow-400"
+              : "text-emerald-400",
 
       bg:
-        analysis?.risk === "Critical"
+        riskLevel === "Critical"
           ? "bg-red-500/10"
-          : analysis?.risk === "High"
-          ? "bg-orange-500/10"
-          : analysis?.risk === "Moderate"
-          ? "bg-yellow-500/10"
-          : "bg-emerald-500/10",
+          : riskLevel === "High"
+            ? "bg-orange-500/10"
+            : riskLevel === "Moderate"
+              ? "bg-yellow-500/10"
+              : "bg-emerald-500/10",
 
       border:
-        analysis?.risk === "Critical"
+        riskLevel === "Critical"
           ? "border-red-500/20"
-          : analysis?.risk === "High"
-          ? "border-orange-500/20"
-          : analysis?.risk === "Moderate"
-          ? "border-yellow-500/20"
-          : "border-emerald-500/20",
+          : riskLevel === "High"
+            ? "border-orange-500/20"
+            : riskLevel === "Moderate"
+              ? "border-yellow-500/20"
+              : "border-emerald-500/20",
     },
   ];
 
