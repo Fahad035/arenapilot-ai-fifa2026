@@ -98,21 +98,32 @@ const ScenarioForm = ({
     setLoading(true);
 
     try {
+      // Map frontend weather options to backend enum values
+      const weatherMap = {
+        Sunny: "Clear",
+        Cloudy: "Cloudy",
+        Rainy: "Rain",
+        Windy: "Storm",
+      };
+
+      // Ensure gate values are within backend validator range: 0..100
+      const gateAPct = 25;
+      const gateBPct = 25;
+      const gateCPct = 25;
+      const gateDPct = 25;
 
       const payload = {
         eventName: scenarioData.match,
-
         eventType: "Football Match",
 
         attendance: Number(scenarioData.crowd),
 
-        gateA: Math.round(Number(scenarioData.crowd) * 0.25),
+        weather: weatherMap[scenarioData.weather] ?? "Clear",
 
-        gateB: Math.round(Number(scenarioData.crowd) * 0.25),
-
-        gateC: Math.round(Number(scenarioData.crowd) * 0.25),
-
-        gateD: Math.round(Number(scenarioData.crowd) * 0.25),
+        gateA: gateAPct,
+        gateB: gateBPct,
+        gateC: gateCPct,
+        gateD: gateDPct,
 
         accessibilityRequired: false,
 
