@@ -50,25 +50,49 @@ const HistoryStats = ({ history = [] }) => {
     },
   ];
 
+  const getIcon = (title) => {
+    switch (title) {
+      case "Total Analyses":
+        return "🧾";
+      case "Critical Alerts":
+        return "🚨";
+      case "Average Risk":
+        return "🎯";
+      case "AI Reports":
+        return "🤖";
+      default:
+        return "📊";
+    }
+  };
+
   return (
     <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-
       {stats.map((item) => (
+        <Card
+          key={item.title}
+          className="relative overflow-hidden"
+        >
+          <div className="absolute -right-10 -top-10 h-28 w-28 rounded-full bg-blue-500/10 blur-2xl" />
+          <div className="relative">
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-sm font-semibold text-slate-200">
+                {item.title}
+              </p>
+              <span className="text-lg" aria-hidden="true">
+                {getIcon(item.title)}
+              </span>
+            </div>
 
-        <Card key={item.title}>
+            <h2 className="mt-3 text-3xl font-bold tracking-tight text-white md:text-4xl">
+              {item.value}
+            </h2>
 
-          <p className="text-sm text-slate-400">
-            {item.title}
-          </p>
-
-          <h2 className="mt-3 text-3xl font-bold text-white">
-            {item.value}
-          </h2>
-
+            <p className="mt-1 text-xs text-slate-400">
+              Latest snapshot
+            </p>
+          </div>
         </Card>
-
       ))}
-
     </div>
   );
 };

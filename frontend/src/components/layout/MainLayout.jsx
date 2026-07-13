@@ -4,8 +4,13 @@ import Footer from "./Footer";
 
 const MainLayout = () => {
   return (
-    <div className="flex min-h-screen flex-col bg-slate-950 text-slate-100">
-
+    <div
+      className="flex min-h-screen flex-col"
+      style={{
+        background: "var(--bg)",
+        color: "var(--fg)",
+      }}
+    >
       <Navbar />
 
       <main className="flex-1">
@@ -13,7 +18,6 @@ const MainLayout = () => {
       </main>
 
       <Footer />
-
     </div>
   );
 };

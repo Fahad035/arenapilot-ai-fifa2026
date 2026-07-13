@@ -8,7 +8,7 @@ import {
   FaBroadcastTower,
   FaHistory,
   FaComments,
-  FaCog,
+  FaBell,
   FaChevronLeft,
   FaChevronRight,
 } from "react-icons/fa";
@@ -21,7 +21,7 @@ const tabs = [
   { id: "operations", label: "Operations", icon: FaBroadcastTower },
   { id: "history", label: "History", icon: FaHistory },
   { id: "assistant", label: "AI Assistant", icon: FaComments },
-  { id: "settings", label: "Settings", icon: FaCog },
+  { id: "alert", label: "Alert", icon: FaBell },
 ];
 
 const DashboardTabs = ({

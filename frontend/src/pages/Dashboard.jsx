@@ -11,7 +11,7 @@ import NavigatorTab from "../components/navigator/NavigatorTab";
 import OperationsTab from "../components/operations/OperationsTab";
 import HistoryTab from "../components/history/HistoryTab";
 import AIAssistantTab from "../components/assistant/AIAssistantTab";
-import SettingsTab from "../components/settings/SettingsTab";
+import SettingsTab from "../components/alerts/SettingsTab";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -50,12 +50,16 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
-
+    <div
+      className="min-h-screen"
+      style={{
+        background: "var(--bg)",
+        color: "var(--fg)",
+      }}
+    >
       <CommandCenterDashboardHeader analysis={analysis} />
 
       <div className="mx-auto flex max-w-[1800px] gap-6 px-6 py-8">
-
         <DashboardTabs
           activeTab={activeTab}
           setActiveTab={setActiveTab}
@@ -66,9 +70,7 @@ const Dashboard = () => {
         <main className="min-w-0 flex-1 transition-all duration-300">
           {tabComponents[activeTab]}
         </main>
-
       </div>
-
     </div>
   );
 };

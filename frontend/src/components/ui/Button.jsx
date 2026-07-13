@@ -5,13 +5,13 @@ const variants = {
     "bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:opacity-90",
 
   secondary:
-    "bg-slate-800 text-white hover:bg-slate-700",
+    "bg-[var(--button-bg)] text-[var(--button-fg)] hover:bg-[var(--button-hover-bg)]",
 
   danger:
-    "bg-red-600 text-white hover:bg-red-700",
+    "bg-[var(--danger-bg)] text-[var(--danger-fg)] hover:bg-[var(--danger-hover-bg)]",
 
   outline:
-    "border border-slate-700 text-white hover:bg-slate-800",
+    "border border-[var(--button-border)] text-[var(--button-fg)] hover:bg-[var(--button-hover-bg)]",
 };
 
 const Button = ({

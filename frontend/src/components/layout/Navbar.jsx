@@ -4,24 +4,12 @@ import Logo from "../common/Logo";
 
 const navLinks = [
   {
-    name: "Home",
+    name: "Platform",
     path: "/",
   },
   {
     name: "Dashboard",
     path: "/dashboard",
-  },
-  {
-    name: "Analysis",
-    path: "/analysis",
-  },
-  {
-    name: "History",
-    path: "/history",
-  },
-  {
-    name: "About",
-    path: "/about",
   },
 ];
 
