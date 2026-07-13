@@ -1,19 +1,28 @@
-import LanguageSelector from "./LanguageSelector";
-import ThemeSelector from "./ThemeSelector";
-import AccessibilitySettings from "./AccessibilitySettings";
-import NotificationSettings from "./NotificationSettings";
+import AlertSummaryCards from "./AlertSummaryCards";
+import LiveAlertsList from "./LiveAlertsList";
+import EmergencyActions from "./EmergencyActions";
+import AlertStatistics from "./AlertStatistics";
+import AlertHistoryTable from "./AlertHistoryTable";
 
-const SettingsTab = () => {
+const SettingsTab = ({ analysis }) => {
   return (
-    <div className="grid gap-6 lg:grid-cols-2">
+    <div className="space-y-8">
 
-      <LanguageSelector />
+      <AlertSummaryCards analysis={analysis} />
 
-      <ThemeSelector />
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
 
-      <AccessibilitySettings />
+        <div className="xl:col-span-2">
+          <LiveAlertsList analysis={analysis} />
+        </div>
 
-      <NotificationSettings />
+        <AlertStatistics analysis={analysis} />
+
+      </div>
+
+      <EmergencyActions analysis={analysis} />
+
+      <AlertHistoryTable analysis={analysis} />
 
     </div>
   );

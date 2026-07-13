@@ -11,6 +11,7 @@ import OperationsTab from "../components/operations/OperationsTab";
 import HistoryTab from "../components/history/HistoryTab";
 import AIAssistantTab from "../components/assistant/AIAssistantTab";
 import AlertTab from "../components/alerts/SettingsTab";
+import AlertTicker from "../components/alerts/AlertTicker";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -84,7 +85,7 @@ const Dashboard = () => {
           activeTab={activeTab}
           analysis={analysis}
         />
-
+        <AlertTicker analysis={analysis} />
         <main className="p-8">
           {tabComponents[activeTab]}
         </main>
