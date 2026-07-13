@@ -1,8 +1,74 @@
-import { useEffect, useState } from "react";
-import { FaMapMarkerAlt, FaBell, FaCloudSun, FaCircle } from "react-icons/fa";
-import Logo from "../common/Logo";
+import { useEffect, useMemo, useState } from "react";
 
-const DashboardHeader = () => {
+import {
+  FaBell,
+  FaCircle,
+  FaMapMarkerAlt,
+} from "react-icons/fa";
+
+
+import dashboardConfig from "../../data/dashboardConfig";
+
+const colorClasses = {
+  emerald: {
+    border: "border-emerald-500/20",
+    bg: "bg-emerald-500/10",
+    text: "text-emerald-400",
+  },
+
+  cyan: {
+    border: "border-cyan-500/20",
+    bg: "bg-cyan-500/10",
+    text: "text-cyan-400",
+  },
+
+  red: {
+    border: "border-red-500/20",
+    bg: "bg-red-500/10",
+    text: "text-red-400",
+  },
+
+  orange: {
+    border: "border-orange-500/20",
+    bg: "bg-orange-500/10",
+    text: "text-orange-400",
+  },
+
+  yellow: {
+    border: "border-yellow-500/20",
+    bg: "bg-yellow-500/10",
+    text: "text-yellow-400",
+  },
+
+  purple: {
+    border: "border-purple-500/20",
+    bg: "bg-purple-500/10",
+    text: "text-purple-400",
+  },
+
+  blue: {
+    border: "border-blue-500/20",
+    bg: "bg-blue-500/10",
+    text: "text-blue-400",
+  },
+
+  slate: {
+    border: "border-slate-700",
+    bg: "bg-slate-900/70",
+    text: "text-white",
+  },
+
+  green: {
+    border: "border-emerald-500/20",
+    bg: "bg-emerald-500/10",
+    text: "text-emerald-400",
+  },
+};
+
+const DashboardHeader = ({
+  activeTab,
+  analysis,
+}) => {
   const [time, setTime] = useState("");
 
   useEffect(() => {
@@ -19,26 +85,160 @@ const DashboardHeader = () => {
 
     updateClock();
 
-    const interval = setInterval(updateClock, 1000);
+    const interval = setInterval(
+      updateClock,
+      1000
+    );
 
     return () => clearInterval(interval);
   }, []);
 
+  const current =
+    dashboardConfig[activeTab] ??
+    dashboardConfig.overview;
+
+  const cards = useMemo(() => {
+    return current.cards.map((card) => {
+      let value = card.value;
+
+      switch (card.id) {
+        case "time":
+          value = time;
+          break;
+
+        case "attendance":
+          value =
+            analysis?.metrics?.attendance ??
+            card.value;
+          break;
+
+        case "density":
+          value =
+            analysis?.metrics?.crowdDensity ??
+            card.value;
+          break;
+
+        case "capacity":
+          value =
+            analysis?.metrics?.capacity ??
+            card.value;
+          break;
+
+        case "congestion":
+          value =
+            analysis?.analysis?.risk?.level ??
+            card.value;
+          break;
+
+        case "confidence":
+          value =
+            analysis?.confidence ??
+            card.value;
+          break;
+
+        case "risk":
+          value =
+            analysis?.risk ??
+            card.value;
+          break;
+
+        case "recommendation":
+          value =
+            analysis?.route ??
+            card.value;
+          break;
+
+        case "generated":
+          value = "Just Now";
+          break;
+
+        case "gate":
+          value =
+            analysis?.route ??
+            card.value;
+          break;
+
+        case "routeTime":
+          value =
+            analysis?.routeAnalysis
+              ?.estimatedTime ??
+            card.value;
+          break;
+
+        case "accessibility":
+          value =
+            analysis?.analysis
+              ?.accessibility?.status ??
+            card.value;
+          break;
+
+        case "traffic":
+          value =
+            analysis?.analysis
+              ?.traffic?.status ??
+            card.value;
+          break;
+
+        case "medical":
+          value =
+            analysis?.metrics
+              ?.medicalRisk ??
+            card.value;
+          break;
+
+        case "security":
+          value =
+            analysis?.metrics
+              ?.securityScore ??
+            card.value;
+          break;
+
+        case "weather":
+          value =
+            analysis?.analysis?.weather ??
+            card.value;
+          break;
+
+        default:
+          break;
+      }
+
+      return {
+        ...card,
+        value,
+      };
+    });
+  }, [analysis, current, time]);
+
   return (
-    <header className="border-b border-slate-800 bg-slate-950/90 backdrop-blur-xl">
-      <div className="mx-auto flex max-w-7xl flex-col gap-6 px-6 py-6 lg:flex-row lg:items-center lg:justify-between">
+    <header className="sticky top-0 z-30 border-b border-slate-800 bg-slate-950/90 backdrop-blur-xl">
+
+      <div className="flex items-center justify-between px-6 py-3">
 
         {/* Left */}
+
         <div>
 
-          <div className="mb-3">
-            <Logo />
+          <div className="flex items-center gap-4">
+
+
+            <div>
+
+              <h1 className="text-xl font-bold tracking-tight text-white">
+                {current.title}
+              </h1>
+
+              <p className="mt-1 text-sm text-slate-400">
+                {current.subtitle}
+              </p>
+
+            </div>
+
           </div>
 
+          <div className="mt-5 flex flex-wrap items-center gap-3">
 
-          <div className="flex flex-wrap items-center gap-4 text-sm">
-
-            <div className="flex items-center gap-2 rounded-full border border-cyan-500/20 bg-cyan-500/10 px-4 py-2 text-cyan-300">
+            <div className="flex items-center gap-2 rounded-full border border-cyan-500/20 bg-cyan-500/10 px-4 py-2 text-sm text-cyan-300">
 
               <FaMapMarkerAlt />
 
@@ -46,21 +246,15 @@ const DashboardHeader = () => {
 
             </div>
 
-            <div className="flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-4 py-2 text-emerald-300">
+            <div className="flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-4 py-2 text-sm text-emerald-300">
 
-              <FaCircle className="text-[10px]" />
+              <FaCircle className="animate-pulse text-[10px]" />
 
               Live Operations
 
             </div>
 
-            <div className="flex items-center gap-2 rounded-full border border-yellow-500/20 bg-yellow-500/10 px-4 py-2 text-yellow-300">
-
-              <FaCloudSun />
-
-              29°C Clear
-
-            </div>
+            
 
           </div>
 
@@ -68,63 +262,52 @@ const DashboardHeader = () => {
 
         {/* Right */}
 
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+        <div className="flex gap-2">
 
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/60 px-5 py-4">
+          {cards.map((card) => {
 
-            <p className="text-xs uppercase tracking-wide text-slate-500">
-              AI Status
-            </p>
+            const theme =
+              colorClasses[card.color] ??
+              colorClasses.slate;
 
-            <h3 className="mt-2 text-lg font-bold text-emerald-400">
-              Online
-            </h3>
+            return (
 
-          </div>
+              <div
+                key={card.id}
+                className={`min-w-42.5 rounded-2xl border ${theme.border} ${theme.bg} px-3 py-1.5 transition duration-300 hover:scale-[1.02]`}
+              >
 
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/60 px-5 py-4">
+                <p className="text-xs uppercase tracking-widest text-slate-500">
 
-            <p className="text-xs uppercase tracking-wide text-slate-500">
-              Active Alerts
-            </p>
+                  {card.title}
 
-            <h3 className="mt-2 flex items-center gap-2 text-lg font-bold text-red-400">
+                </p>
 
-              <FaBell />
+                <div className="mt-3 flex items-center gap-3">
 
-              03
+                  {card.id === "alerts" ||
+                    card.id === "critical" ? (
+                    <FaBell className={theme.text} />
+                  ) : null}
 
-            </h3>
+                  <h3
+                    className={`text-xl font-bold ${theme.text}`}
+                  >
+                    {card.value}
+                  </h3>
 
-          </div>
+                </div>
 
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/60 px-5 py-4">
+              </div>
 
-            <p className="text-xs uppercase tracking-wide text-slate-500">
-              Crowd Status
-            </p>
+            );
 
-            <h3 className="mt-2 text-lg font-bold text-cyan-400">
-              Moderate
-            </h3>
-
-          </div>
-
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/60 px-5 py-4">
-
-            <p className="text-xs uppercase tracking-wide text-slate-500">
-              Local Time
-            </p>
-
-            <h3 className="mt-2 text-lg font-bold text-white">
-              {time}
-            </h3>
-
-          </div>
+          })}
 
         </div>
 
       </div>
+
     </header>
   );
 };

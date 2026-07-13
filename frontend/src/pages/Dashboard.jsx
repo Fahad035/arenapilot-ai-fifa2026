@@ -1,9 +1,8 @@
 import { useState } from "react";
 
-import CommandCenterDashboardHeader from "../components/dashboard/CommandCenterDashboardHeader";
+import DashboardHeader from "../components/dashboard/DashboardHeader";
 import DashboardTabs from "../components/dashboard/DashboardTabs";
 
-// Feature Tabs
 import OverviewTab from "../components/overview/OverviewTab";
 import CrowdTab from "../components/crowd/CrowdTab";
 import BriefingTab from "../components/briefing/BriefingTab";
@@ -11,15 +10,20 @@ import NavigatorTab from "../components/navigator/NavigatorTab";
 import OperationsTab from "../components/operations/OperationsTab";
 import HistoryTab from "../components/history/HistoryTab";
 import AIAssistantTab from "../components/assistant/AIAssistantTab";
-import SettingsTab from "../components/alerts/SettingsTab";
+import AlertTab from "../components/alerts/SettingsTab";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+
+  const [sidebarCollapsed, setSidebarCollapsed] =
+    useState(false);
 
   const [scenarioData, setScenarioData] = useState({});
+
   const [analysis, setAnalysis] = useState(null);
+
   const [history] = useState([]);
+
   const [loading, setLoading] = useState(false);
 
   const tabComponents = {
@@ -38,39 +42,55 @@ const Dashboard = () => {
 
     briefing: <BriefingTab analysis={analysis} />,
 
-    navigator: <NavigatorTab analysis={analysis} />,
+    navigator: (
+      <NavigatorTab analysis={analysis} />
+    ),
 
-    operations: <OperationsTab analysis={analysis} />,
+    operations: (
+      <OperationsTab analysis={analysis} />
+    ),
 
-    history: <HistoryTab history={history} />,
+    history: (
+      <HistoryTab history={history} />
+    ),
 
-    assistant: <AIAssistantTab analysis={analysis} />,
+    assistant: (
+      <AIAssistantTab analysis={analysis} />
+    ),
 
-    settings: <SettingsTab analysis={analysis} />,
+    alert: (
+      <AlertTab analysis={analysis} />
+    ),
   };
 
   return (
-    <div
-      className="min-h-screen"
-      style={{
-        background: "var(--bg)",
-        color: "var(--fg)",
-      }}
-    >
-      <CommandCenterDashboardHeader analysis={analysis} />
+    <div className="min-h-screen bg-slate-950 text-white">
 
-      <div className="mx-auto flex max-w-[1800px] gap-6 px-6 py-8">
-        <DashboardTabs
+      {/* Fixed Sidebar */}
+      <DashboardTabs
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        collapsed={sidebarCollapsed}
+        setCollapsed={setSidebarCollapsed}
+      />
+
+      {/* Everything on the right */}
+      <div
+        className={`transition-all duration-300 ${sidebarCollapsed ? "ml-24" : "ml-72"
+          }`}
+      >
+
+        <DashboardHeader
           activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          collapsed={sidebarCollapsed}
-          setCollapsed={setSidebarCollapsed}
+          analysis={analysis}
         />
 
-        <main className="min-w-0 flex-1 transition-all duration-300">
+        <main className="p-8">
           {tabComponents[activeTab]}
         </main>
+
       </div>
+
     </div>
   );
 };
