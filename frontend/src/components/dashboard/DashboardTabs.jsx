@@ -140,7 +140,7 @@ const DashboardTabs = ({
 
                 {!collapsed && (
                   <span
-                    className={`relative z-10 ml-4 font-medium ${active
+                    className={`relative z-10 ml-4 font-body font-medium ${active
                       ? "text-white"
                       : "text-slate-300"
                       }`}

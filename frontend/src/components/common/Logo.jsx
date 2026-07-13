@@ -75,11 +75,11 @@ const Logo = ({ collapsed = false }) => {
 
       {!collapsed && (
         <div className="leading-tight">
-          <h1 className="text-xl font-bold tracking-tight text-white transition-colors group-hover:text-cyan-400">
+          <h1 className="text-xl font-logo tracking-tight text-white transition-colors group-hover:text-cyan-400">
             ArenaPilot
           </h1>
 
-          <p className="text-sm text-slate-400">
+          <p className="font-body text-sm text-slate-400">
             AI Operations Copilot
           </p>
         </div>

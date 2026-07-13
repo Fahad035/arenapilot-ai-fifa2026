@@ -1,7 +1,46 @@
 @import "tailwindcss";
 
+
+/* Entire App */
+
 html {
+  font-family: "Manrope", sans-serif;
   scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Manrope", sans-serif;
+  background: #070b18;
+  color: white;
+}
+
+/* Headings */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Sora", sans-serif;
+  font-weight: 700;
+}
+
+/* Numbers */
+
+.kpi,
+.metric,
+.stats,
+.number,
+code {
+  font-family: "JetBrains Mono", monospace;
+}
+
+/* Smooth */
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 :root {

@@ -224,11 +224,11 @@ const DashboardHeader = ({
 
             <div>
 
-              <h1 className="text-xl font-bold tracking-tight text-white">
+              <h1 className="font-heading text-xl font-bold tracking-tight text-white">
                 {current.title}
               </h1>
 
-              <p className="mt-1 text-sm text-slate-400">
+              <p className=" font-body mt-1 text-sm text-slate-400">
                 {current.subtitle}
               </p>
 
@@ -291,7 +291,7 @@ const DashboardHeader = ({
                   ) : null}
 
                   <h3
-                    className={`text-xl font-bold ${theme.text}`}
+                    className={`text-xl font-mono ${theme.text}`}
                   >
                     {card.value}
                   </h3>

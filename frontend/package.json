@@ -10,6 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fontsource/jetbrains-mono": "^5.2.8",
+    "@fontsource/manrope": "^5.2.8",
+    "@fontsource/sora": "^5.2.8",
+    "@fontsource/space-grotesk": "^5.2.10",
     "@tailwindcss/vite": "^4.3.2",
     "axios": "^1.18.1",
     "clsx": "^2.1.1",

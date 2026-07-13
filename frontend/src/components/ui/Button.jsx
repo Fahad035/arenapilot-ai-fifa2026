@@ -24,7 +24,7 @@ const Button = ({
     <button
       {...props}
       className={clsx(
-        "rounded-xl px-5 py-3 font-semibold transition duration-200 disabled:opacity-50",
+        "font-body rounded-xl px-5 py-3 font-semibold transition duration-200 disabled:opacity-50",
         variants[variant],
         className
       )}
