@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 
-import DashboardHeader from "../src/components/dashboard/DashboardHeader";
+import DashboardHeader from "../components/dashboard/DashboardHeader";
 
 describe("DashboardHeader", () => {
 

@@ -5,7 +5,7 @@ import {
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import ScenarioForm from "../src/components/overview/ScenarioForm";
+import ScenarioForm from "../components/overview/ScenarioForm";
 
 // API Mock
 vi.mock("../src/services/analyzeScenario", () => ({

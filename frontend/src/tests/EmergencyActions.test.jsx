@@ -8,7 +8,7 @@ import {
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import EmergencyActions from "../src/components/alerts/EmergencyActions";
+import EmergencyActions from "../components/alerts/EmergencyActions";
 
 describe("EmergencyActions", () => {
   const onEvacuate = vi.fn();

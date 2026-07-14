@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 
-import OverviewTab from "../src/components/overview/OverviewTab";
+import OverviewTab from "../components/overview/OverviewTab";
 
 // Mock child components
 vi.mock("../src/components/overview/ScenarioForm", () => ({

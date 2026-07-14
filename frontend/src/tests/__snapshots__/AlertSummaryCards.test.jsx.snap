@@ -1,0 +1,182 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`AlertSummaryCards > matches snapshot 1`] = `
+<div>
+  <div
+    class="grid gap-6 md:grid-cols-2 xl:grid-cols-4"
+  >
+    <div
+      class="rounded-2xl border p-6 shadow-lg border border-red-500/20 bg-linear-to-br from-red-500/10 to-red-500/5"
+      style="border-color: var(--card-border); background: var(--card-bg); color: var(--fg);"
+    >
+      <div
+        class="flex items-start justify-between"
+      >
+        <div>
+          <p
+            class="text-sm text-slate-400"
+          >
+            Critical Alerts
+          </p>
+          <h2
+            class="mt-3 font-mono text-4xl font-bold text-white"
+          >
+            0
+          </h2>
+          <p
+            class="mt-2 text-sm text-slate-500"
+          >
+            Immediate attention required
+          </p>
+        </div>
+        <div
+          class="rounded-2xl border border-white/10 bg-slate-900/60 p-4 text-red-400"
+        >
+          <svg
+            fill="currentColor"
+            height="22"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 576 512"
+            width="22"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M569.517 440.013C587.975 472.007 564.806 512 527.94 512H48.054c-36.937 0-59.999-40.055-41.577-71.987L246.423 23.985c18.467-32.009 64.72-31.951 83.154 0l239.94 416.028zM288 354c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"
+            />
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div
+      class="rounded-2xl border p-6 shadow-lg border border-orange-500/20 bg-linear-to-br from-orange-500/10 to-orange-500/5"
+      style="border-color: var(--card-border); background: var(--card-bg); color: var(--fg);"
+    >
+      <div
+        class="flex items-start justify-between"
+      >
+        <div>
+          <p
+            class="text-sm text-slate-400"
+          >
+            High Priority
+          </p>
+          <h2
+            class="mt-3 font-mono text-4xl font-bold text-white"
+          >
+            0
+          </h2>
+          <p
+            class="mt-2 text-sm text-slate-500"
+          >
+            Requires monitoring
+          </p>
+        </div>
+        <div
+          class="rounded-2xl border border-white/10 bg-slate-900/60 p-4 text-orange-400"
+        >
+          <svg
+            fill="currentColor"
+            height="22"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 448 512"
+            width="22"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M224 512c35.32 0 63.97-28.65 63.97-64H160.03c0 35.35 28.65 64 63.97 64zm215.39-149.71c-19.32-20.76-55.47-51.99-55.47-154.29 0-77.7-54.48-139.9-127.94-155.16V32c0-17.67-14.32-32-31.98-32s-31.98 14.33-31.98 32v20.84C118.56 68.1 64.08 130.3 64.08 208c0 102.3-36.15 133.53-55.47 154.29-6 6.45-8.66 14.16-8.61 21.71.11 16.4 12.98 32 32.1 32h383.8c19.12 0 32-15.6 32.1-32 .05-7.55-2.61-15.27-8.61-21.71z"
+            />
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div
+      class="rounded-2xl border p-6 shadow-lg border border-cyan-500/20 bg-linear-to-br from-cyan-500/10 to-cyan-500/5"
+      style="border-color: var(--card-border); background: var(--card-bg); color: var(--fg);"
+    >
+      <div
+        class="flex items-start justify-between"
+      >
+        <div>
+          <p
+            class="text-sm text-slate-400"
+          >
+            Monitoring
+          </p>
+          <h2
+            class="mt-3 font-mono text-4xl font-bold text-white"
+          >
+            12
+          </h2>
+          <p
+            class="mt-2 text-sm text-slate-500"
+          >
+            Medium Risk
+          </p>
+        </div>
+        <div
+          class="rounded-2xl border border-white/10 bg-slate-900/60 p-4 text-cyan-400"
+        >
+          <svg
+            fill="currentColor"
+            height="22"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 512 512"
+            width="22"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M466.5 83.7l-192-80a48.15 48.15 0 0 0-36.9 0l-192 80C27.7 91.1 16 108.6 16 128c0 198.5 114.5 335.7 221.5 380.3 11.8 4.9 25.1 4.9 36.9 0C360.1 472.6 496 349.3 496 128c0-19.4-11.7-36.9-29.5-44.3zM256.1 446.3l-.1-381 175.9 73.3c-3.3 151.4-82.1 261.1-175.8 307.7z"
+            />
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div
+      class="rounded-2xl border p-6 shadow-lg border border-emerald-500/20 bg-linear-to-br from-emerald-500/10 to-emerald-500/5"
+      style="border-color: var(--card-border); background: var(--card-bg); color: var(--fg);"
+    >
+      <div
+        class="flex items-start justify-between"
+      >
+        <div>
+          <p
+            class="text-sm text-slate-400"
+          >
+            Resolved
+          </p>
+          <h2
+            class="mt-3 font-mono text-4xl font-bold text-white"
+          >
+            8
+          </h2>
+          <p
+            class="mt-2 text-sm text-slate-500"
+          >
+            Today's incidents
+          </p>
+        </div>
+        <div
+          class="rounded-2xl border border-white/10 bg-slate-900/60 p-4 text-emerald-400"
+        >
+          <svg
+            fill="currentColor"
+            height="22"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 512 512"
+            width="22"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.628 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"
+            />
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 
-import AlertHistoryTable from "../src/components/alerts/AlertHistoryTable";
+import AlertHistoryTable from "../components/alerts/AlertHistoryTable";
 
 const mockHistory = [
   {

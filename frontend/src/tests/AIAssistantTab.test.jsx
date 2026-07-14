@@ -2,7 +2,7 @@ import { describe, it, expect, vi,beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import AIAssistantTab from "../src/components/assistant/AIAssistantTab";
+import AIAssistantTab from "../components/assistant/AIAssistantTab";
 
 describe("AIAssistantTab", () => {
   const analysis = {

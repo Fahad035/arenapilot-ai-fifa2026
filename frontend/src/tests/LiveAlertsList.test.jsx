@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 
-import LiveAlertsList from "../src/components/alerts/LiveAlertsList";
+import LiveAlertsList from "../components/alerts/LiveAlertsList";
 
 const mockAlerts = [
   {

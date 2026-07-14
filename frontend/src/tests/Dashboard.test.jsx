@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import { fireEvent, screen } from "@testing-library/react";
 import renderWithRouter from "./renderWithRouter";
 
-import Dashboard from "../src/pages/Dashboard";
+import Dashboard from "../pages/Dashboard";
 
 // Mock all tab components
 vi.mock("../src/components/overview/OverviewTab", () => ({

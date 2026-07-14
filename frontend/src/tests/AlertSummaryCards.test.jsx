@@ -1,7 +1,7 @@
     import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 
-import AlertSummaryCards from "../src/components/alerts/AlertSummaryCards";
+import AlertSummaryCards from "../components/alerts/AlertSummaryCards";
 
 const mockAlerts = [
   {
