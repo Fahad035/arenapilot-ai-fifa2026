@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+
 import {
   FaRoute,
   FaPersonWalking,
@@ -8,17 +9,22 @@ import {
   FaArrowRight,
   FaCircle,
   FaLocationDot,
+  FaWandMagic,
 } from "react-icons/fa6";
 
 import Card from "../ui/Card";
 import Button from "../ui/Button";
+import { analyzeScenario } from "../../services/analysisService";
 
 const RoutePlanner = ({ analysis }) => {
   const [start, setStart] = useState("");
   const [destination, setDestination] = useState("");
   const [accessible, setAccessible] = useState(false);
+  const [generatedRouteAnalysis, setGeneratedRouteAnalysis] = useState(null);
 
-  const routeAnalysis = analysis?.routeAnalysis ?? {};
+
+  const routeAnalysis =
+    generatedRouteAnalysis ?? analysis?.routeAnalysis ?? {};
   const recommendedGate = routeAnalysis?.recommendedGate ?? "Unavailable";
   const estimatedTime = routeAnalysis?.estimatedTime;
   const distance = routeAnalysis?.distance ?? "Unavailable";
@@ -41,6 +47,8 @@ const RoutePlanner = ({ analysis }) => {
     .filter(Boolean);
 
   const summaryCards = [
+    // generatedRouteAnalysis can override values displayed in this component
+  
     {
       label: "Best Gate",
       value: recommendedGate,
@@ -186,7 +194,43 @@ const RoutePlanner = ({ analysis }) => {
 
           </label>
 
-          <Button className="w-full">
+          <Button
+            className="w-full"
+            onClick={async () => {
+              if (!start || !destination) return;
+
+              // Payload shape must match backend scenarioValidator
+              // We reuse the same analysis pipeline as ScenarioForm.
+              const payload = {
+                eventName: destination,
+                eventType: "Football Match",
+
+                // Backend expects attendance number between 0..80000
+                attendance: 50000,
+
+                // Backend expects weather enum; RoutePlanner doesn't collect weather,
+                // so use Clear by default.
+                weather: "Clear",
+
+                // We don't model A/B/C/D split in RoutePlanner UI.
+                // Use a balanced distribution.
+                gateA: 25,
+                gateB: 25,
+                gateC: 25,
+                gateD: 25,
+
+                accessibilityRequired: accessible,
+
+                medicalIncident: false,
+                securityIncident: false,
+                emergencyMode: false,
+              };
+
+              const result = await analyzeScenario(payload);
+              setGeneratedRouteAnalysis(result?.routeAnalysis ?? null);
+            }}
+          >
+            <FaWandMagic />
             Generate Smart Route
           </Button>
 

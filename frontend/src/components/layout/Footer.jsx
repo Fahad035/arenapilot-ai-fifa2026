@@ -18,7 +18,7 @@ const Footer = () => {
 
         <div className="flex items-center gap-5">
           <a
-            href="https://github.com/"
+            href="https://github.com/Fahad035/arenapilot-ai-fifa2026"
             target="_blank"
             rel="noreferrer"
             className="transition hover:text-white"

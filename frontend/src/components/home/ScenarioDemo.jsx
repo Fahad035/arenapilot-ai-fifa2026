@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   AlertTriangle,
   Bus,
@@ -6,6 +7,7 @@ import {
   Languages,
   Users,
   Sparkles,
+  ArrowRight,
 } from "lucide-react";
 
 const scenarios = [
@@ -117,11 +119,10 @@ const ScenarioDemo = () => {
                 <button
                   key={scenario.id}
                   onClick={() => setSelected(scenario)}
-                  className={`w-full rounded-2xl border p-5 text-left transition ${
-                    active
+                  className={`w-full rounded-2xl border p-5 text-left transition ${active
                       ? "border-blue-500 bg-blue-500/10"
                       : "border-slate-800 bg-slate-900 hover:border-blue-500/40"
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center gap-4">
 
@@ -166,11 +167,15 @@ const ScenarioDemo = () => {
               {selected.response}
             </pre>
 
-            <button
-              className="mt-8 rounded-xl bg-blue-600 px-6 py-3 font-semibold transition hover:bg-blue-700"
+            <Link
+              to="/dashboard"
+              className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-7 py-4 font-semibold transition hover:bg-blue-700"
             >
-              Try Full Dashboard →
-            </button>
+              Try Full Dashboard
+
+              <ArrowRight size={18} />
+
+            </Link>
 
           </div>
 
