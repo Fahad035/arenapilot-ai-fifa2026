@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { analyzeCrowd } from "../services/crowdEngine.js";
+import { analyzeCrowd } from "../engine/crowdEngine.js";
 
 describe("Crowd Engine", () => {
   it("should analyze low attendance", () => {
