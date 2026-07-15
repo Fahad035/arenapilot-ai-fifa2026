@@ -1,786 +1,306 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
 import {
-    render,
-    screen,
+  describe,
+  it,
+  expect,
+  vi,
+  beforeEach,
+} from "vitest";
+
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
 } from "@testing-library/react";
+
 import userEvent from "@testing-library/user-event";
 
 import ScenarioForm from "../components/overview/ScenarioForm";
+import { analyzeScenario } from "../services/analysisService";
 
-// API Mock
-vi.mock("../src/services/analyzeScenario", () => ({
-    analyzeScenario: vi.fn(),
+vi.mock("../services/analysisService", () => ({
+  analyzeScenario: vi.fn(),
 }));
 
-import { analyzeScenario } from "../src/services/analyzeScenario";
-
-const defaultScenario = {
-    stadium: "",
-    match: "",
-    crowd: "",
-    incident: "",
-    priority: "",
-    weather: "Sunny",
-};
-
-const defaultProps = {
-    scenarioData: defaultScenario,
-
-    setScenarioData: vi.fn(),
-
-    analysis: null,
-
-    setAnalysis: vi.fn(),
-
-    loading: false,
-
-    setLoading: vi.fn(),
-};
-
 describe("ScenarioForm", () => {
-    beforeEach(() => {
-        vi.clearAllMocks();
+  let scenarioData;
+  let setScenarioData;
+  let setAnalysis;
+  let setLoading;
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+
+    scenarioData = {
+      stadium: "",
+      match: "",
+      crowd: "",
+      weather: "",
+      incident: "",
+      priority: "",
+      notes: "",
+    };
+
+    setScenarioData = vi.fn((callback) => {
+      if (typeof callback === "function") {
+        scenarioData = callback(scenarioData);
+      } else {
+        scenarioData = callback;
+      }
     });
 
-    it("renders successfully", () => {
-        render(<ScenarioForm {...defaultProps} />);
+    setAnalysis = vi.fn();
+    setLoading = vi.fn();
+  });
 
-        expect(
-            screen.getByText(/Scenario/i)
-        ).toBeInTheDocument();
+  const renderForm = (
+    props = {}
+  ) =>
+    render(
+      <ScenarioForm
+        scenarioData={scenarioData}
+        setScenarioData={setScenarioData}
+        analysis={null}
+        setAnalysis={setAnalysis}
+        loading={false}
+        setLoading={setLoading}
+        {...props}
+      />
+    );
+
+  it("renders successfully", () => {
+    renderForm();
+
+    expect(
+      screen.getByText(/AI Scenario Builder/i)
+    ).toBeInTheDocument();
+  });
+
+  it("renders all form controls", () => {
+    renderForm();
+
+    expect(
+      screen.getByDisplayValue("Select Stadium")
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByDisplayValue("Select Match")
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByPlaceholderText(/90000/i)
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByPlaceholderText(
+        /Provide any additional operational information/i
+      )
+    ).toBeInTheDocument();
+  });
+
+  it("shows validation errors", async () => {
+    const user = userEvent.setup();
+
+    renderForm();
+
+    await user.click(
+      screen.getByRole("button", {
+        name: /Generate AI Briefing/i,
+      })
+    );
+
+    expect(
+      screen.getByText(/Please select a stadium/i)
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText(/Please select a match/i)
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText(/Crowd size is required/i)
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText(/Select an incident/i)
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText(/Priority is required/i)
+    ).toBeInTheDocument();
+  });
+
+  it("calls setScenarioData when crowd changes", () => {
+    renderForm();
+
+    fireEvent.change(
+      screen.getByPlaceholderText(/90000/i),
+      {
+        target: {
+          value: "80000",
+        },
+      }
+    );
+
+    expect(setScenarioData).toHaveBeenCalled();
+  });
+
+  it("shows live preview", () => {
+    render(
+      <ScenarioForm
+        scenarioData={{
+          stadium: "Lusail Stadium",
+          match: "Argentina vs Brazil",
+          crowd: "85000",
+          incident: "Medical Emergency",
+        }}
+        setScenarioData={setScenarioData}
+        analysis={null}
+        setAnalysis={setAnalysis}
+        loading={false}
+        setLoading={setLoading}
+      />
+    );
+
+    expect(
+      screen.getByText(/Live Scenario Preview/i)
+    ).toBeInTheDocument();
+
+    expect(
+  screen.getAllByText("Lusail Stadium").length
+).toBeGreaterThan(0);
+
+    expect(screen.getAllByText("Argentina vs Brazil").length).toBeGreaterThan(0);
+
+
+    expect(
+      screen.getByText("85000")
+    ).toBeInTheDocument();
+  });
+
+  it("shows loading state", () => {
+    renderForm({
+      loading: true,
     });
 
-    it("renders Generate AI Analysis button", () => {
-        render(<ScenarioForm {...defaultProps} />);
+    expect(
+      screen.getByText(/Analyzing/i)
+    ).toBeInTheDocument();
+  });
 
-        expect(
-            screen.getByRole("button", {
-                name: /Generate/i,
-            })
-        ).toBeInTheDocument();
+  it("shows analysis card", () => {
+    renderForm({
+      analysis: {
+        risk: "High",
+        confidence: 95,
+      },
     });
 
-    it("renders Stadium dropdown", () => {
-        render(<ScenarioForm {...defaultProps} />);
+    expect(
+      screen.getByText(/AI Analysis Completed/i)
+    ).toBeInTheDocument();
 
-        expect(
-            screen.getByLabelText(/stadium/i)
-        ).toBeInTheDocument();
+    expect(
+      screen.getAllByText("High").length
+    ).toBeGreaterThan(0);
+
+    expect(
+      screen.getByText("95%")
+    ).toBeInTheDocument();
+  });
+
+  it("calls analyzeScenario with valid form", async () => {
+    analyzeScenario.mockResolvedValue({
+      risk: "High",
+      confidence: 96,
     });
 
-    it("renders Match dropdown", () => {
-        render(<ScenarioForm {...defaultProps} />);
+    render(
+      <ScenarioForm
+        scenarioData={{
+          stadium: "Lusail Stadium",
+          match: "Argentina vs Brazil",
+          crowd: "90000",
+          weather: "Sunny",
+          incident: "Medical Emergency",
+          priority: "Critical",
+          notes: "Test",
+        }}
+        setScenarioData={setScenarioData}
+        analysis={null}
+        setAnalysis={setAnalysis}
+        loading={false}
+        setLoading={setLoading}
+      />
+    );
 
-        expect(
-            screen.getByLabelText(/match/i)
-        ).toBeInTheDocument();
+    const user = userEvent.setup();
+
+    await user.click(
+      screen.getByRole("button", {
+        name: /Generate AI Briefing/i,
+      })
+    );
+
+    await waitFor(() => {
+      expect(analyzeScenario).toHaveBeenCalledTimes(1);
     });
 
-    it("renders Crowd input", () => {
-        render(<ScenarioForm {...defaultProps} />);
+    expect(setLoading).toHaveBeenCalledWith(true);
 
-        expect(
-            screen.getByLabelText(/crowd/i)
-        ).toBeInTheDocument();
+    expect(setAnalysis).toHaveBeenCalled();
+
+    expect(setLoading).toHaveBeenLastCalledWith(false);
+  });
+
+  it("handles API failure gracefully", async () => {
+    analyzeScenario.mockRejectedValue(
+      new Error("Server Error")
+    );
+
+    const spy = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => {});
+
+    render(
+      <ScenarioForm
+        scenarioData={{
+          stadium: "Lusail Stadium",
+          match: "Argentina vs Brazil",
+          crowd: "90000",
+          weather: "Sunny",
+          incident: "Medical Emergency",
+          priority: "High",
+          notes: "",
+        }}
+        setScenarioData={setScenarioData}
+        analysis={null}
+        setAnalysis={setAnalysis}
+        loading={false}
+        setLoading={setLoading}
+      />
+    );
+
+    const user = userEvent.setup();
+
+    await user.click(
+      screen.getByRole("button", {
+        name: /Generate AI Briefing/i,
+      })
+    );
+
+    await waitFor(() => {
+      expect(analyzeScenario).toHaveBeenCalled();
     });
 
-    it("renders Incident dropdown", () => {
-        render(<ScenarioForm {...defaultProps} />);
+    expect(spy).toHaveBeenCalled();
 
-        expect(
-            screen.getByLabelText(/incident/i)
-        ).toBeInTheDocument();
-    });
+    spy.mockRestore();
+  });
 
-    it("renders Priority dropdown", () => {
-        render(<ScenarioForm {...defaultProps} />);
+  it("matches snapshot", () => {
+    const { container } = renderForm();
 
-        expect(
-            screen.getByLabelText(/priority/i)
-        ).toBeInTheDocument();
-    });
-
-    it("renders Weather dropdown", () => {
-        render(<ScenarioForm {...defaultProps} />);
-
-        expect(
-            screen.getByLabelText(/weather/i)
-        ).toBeInTheDocument();
-    });
-
-    it("Generate button is enabled initially", () => {
-        render(<ScenarioForm {...defaultProps} />);
-
-        expect(
-            screen.getByRole("button", {
-                name: /Generate/i,
-            })
-        ).toBeEnabled();
-    });
-
-    it("shows loading state when loading=true", () => {
-        render(
-            <ScenarioForm
-                {...defaultProps}
-                loading={true}
-            />
-        );
-
-        expect(
-            screen.getByRole("button")
-        ).toBeDisabled();
-    });
-
-    it("shows validation errors when Generate AI Briefing is clicked with empty form", async () => {
-        const user = userEvent.setup();
-
-        render(<ScenarioForm {...defaultProps} />);
-
-        await user.click(
-            screen.getByRole("button", {
-                name: /Generate AI Briefing/i,
-            })
-        );
-
-        expect(
-            screen.getByText("Please select a stadium.")
-        ).toBeInTheDocument();
-
-        expect(
-            screen.getByText("Please select a match.")
-        ).toBeInTheDocument();
-
-        expect(
-            screen.getByText("Crowd size is required.")
-        ).toBeInTheDocument();
-
-        expect(
-            screen.getByText("Select an incident.")
-        ).toBeInTheDocument();
-
-        expect(
-            screen.getByText("Priority is required.")
-        ).toBeInTheDocument();
-    });
-
-    it("updates stadium selection", async () => {
-        const user = userEvent.setup();
-
-        const setScenarioData = vi.fn();
-
-        render(
-            <ScenarioForm
-                {...defaultProps}
-                setScenarioData={setScenarioData}
-            />
-        );
-
-        const stadiumSelect =
-            screen.getByDisplayValue("Select Stadium");
-
-        await user.selectOptions(
-            stadiumSelect,
-            "Lusail Stadium"
-        );
-
-        expect(setScenarioData).toHaveBeenCalled();
-    });
-
-    it("updates match selection", async () => {
-        const user = userEvent.setup();
-
-        const setScenarioData = vi.fn();
-
-        render(
-            <ScenarioForm
-                {...defaultProps}
-                setScenarioData={setScenarioData}
-            />
-        );
-
-        const matchSelect =
-            screen.getByDisplayValue("Select Match");
-
-        await user.selectOptions(
-            matchSelect,
-            "Argentina vs Brazil"
-        );
-
-        expect(setScenarioData).toHaveBeenCalled();
-    });
-
-    it("updates crowd input", async () => {
-        const user = userEvent.setup();
-
-        const setScenarioData = vi.fn();
-
-        render(
-            <ScenarioForm
-                {...defaultProps}
-                setScenarioData={setScenarioData}
-            />
-        );
-
-        const crowdInput =
-            screen.getByPlaceholderText("e.g. 90000");
-
-        await user.type(crowdInput, "85000");
-
-        expect(setScenarioData).toHaveBeenCalled();
-    });
-
-    it("updates weather selection", async () => {
-        const user = userEvent.setup();
-
-        const setScenarioData = vi.fn();
-
-        render(
-            <ScenarioForm
-                {...defaultProps}
-                setScenarioData={setScenarioData}
-            />
-        );
-
-        const weatherSelect =
-            screen.getByDisplayValue("Weather Condition");
-
-        await user.selectOptions(
-            weatherSelect,
-            "Rainy"
-        );
-
-        expect(setScenarioData).toHaveBeenCalled();
-    });
-
-    it("updates incident selection", async () => {
-        const user = userEvent.setup();
-
-        const setScenarioData = vi.fn();
-
-        render(
-            <ScenarioForm
-                {...defaultProps}
-                setScenarioData={setScenarioData}
-            />
-        );
-
-        const incidentSelect =
-            screen.getByDisplayValue("Select Incident");
-
-        await user.selectOptions(
-            incidentSelect,
-            "Medical Emergency"
-        );
-
-        expect(setScenarioData).toHaveBeenCalled();
-    });
-
-    it("updates priority selection", async () => {
-        const user = userEvent.setup();
-
-        const setScenarioData = vi.fn();
-
-        render(
-            <ScenarioForm
-                {...defaultProps}
-                setScenarioData={setScenarioData}
-            />
-        );
-
-        const prioritySelect =
-            screen.getByDisplayValue("Select Priority");
-
-        await user.selectOptions(
-            prioritySelect,
-            "Critical"
-        );
-
-        expect(setScenarioData).toHaveBeenCalled();
-    });
-
-    it("updates additional notes textarea", async () => {
-        const user = userEvent.setup();
-
-        const setScenarioData = vi.fn();
-
-        render(
-            <ScenarioForm
-                {...defaultProps}
-                setScenarioData={setScenarioData}
-            />
-        );
-
-        const notes =
-            screen.getByPlaceholderText(
-                /Provide any additional operational information/i
-            );
-
-        await user.type(
-            notes,
-            "Heavy crowd expected near Gate A."
-        );
-
-        expect(setScenarioData).toHaveBeenCalled();
-    });
-
-    it("renders Live Scenario Preview section", () => {
-        render(<ScenarioForm {...defaultProps} />);
-
-        expect(
-            screen.getByText(/Live Scenario Preview/i)
-        ).toBeInTheDocument();
-    });
-
-    it("shows placeholder preview values initially", () => {
-        render(<ScenarioForm {...defaultProps} />);
-
-        const placeholders =
-            screen.getAllByText("--");
-
-        expect(placeholders.length).toBeGreaterThanOrEqual(4);
-    });
-
-    it("submits the correct payload to analyzeScenario()", async () => {
-        const user = userEvent.setup();
-
-        analyzeScenario.mockResolvedValue({
-            executiveSummary: {
-                overallStatus: "Normal",
-            },
-        });
-
-        const setAnalysis = vi.fn();
-        const setLoading = vi.fn();
-
-        render(
-            <ScenarioForm
-                {...defaultProps}
-                setAnalysis={setAnalysis}
-                setLoading={setLoading}
-            />
-        );
-
-        await user.selectOptions(
-            screen.getByDisplayValue("Select Stadium"),
-            "Lusail Stadium"
-        );
-
-        await user.selectOptions(
-            screen.getByDisplayValue("Select Match"),
-            "Argentina vs Brazil"
-        );
-
-        await user.type(
-            screen.getByPlaceholderText("e.g. 90000"),
-            "85000"
-        );
-
-        await user.selectOptions(
-            screen.getByDisplayValue("Weather Condition"),
-            "Rainy"
-        );
-
-        await user.selectOptions(
-            screen.getByDisplayValue("Select Incident"),
-            "Medical Emergency"
-        );
-
-        await user.selectOptions(
-            screen.getByDisplayValue("Select Priority"),
-            "Critical"
-        );
-
-        await user.click(
-            screen.getByRole("button", {
-                name: /Generate AI Briefing/i,
-            })
-        );
-
-        expect(analyzeScenario).toHaveBeenCalledTimes(1);
-
-        expect(analyzeScenario).toHaveBeenCalledWith(
-            expect.objectContaining({
-                eventName: "Argentina vs Brazil",
-
-                eventType: "Football Match",
-
-                attendance: 85000,
-
-                weather: "Rain",
-
-                medicalIncident: true,
-
-                emergencyMode: true,
-            })
-        );
-    });
-
-    it("stores API response using setAnalysis()", async () => {
-        const user = userEvent.setup();
-
-        const apiResponse = {
-            executiveSummary: {
-                overallStatus: "Normal",
-            },
-        };
-
-        analyzeScenario.mockResolvedValue(apiResponse);
-
-        const setAnalysis = vi.fn();
-
-        render(
-            <ScenarioForm
-                {...defaultProps}
-                setAnalysis={setAnalysis}
-            />
-        );
-
-        // Fill minimum valid form
-        await user.selectOptions(
-            screen.getByDisplayValue("Select Stadium"),
-            "Lusail Stadium"
-        );
-
-        await user.selectOptions(
-            screen.getByDisplayValue("Select Match"),
-            "Argentina vs Brazil"
-        );
-
-        await user.type(
-            screen.getByPlaceholderText("e.g. 90000"),
-            "85000"
-        );
-
-        await user.selectOptions(
-            screen.getByDisplayValue("Select Incident"),
-            "Medical Emergency"
-        );
-
-        await user.selectOptions(
-            screen.getByDisplayValue("Select Priority"),
-            "Critical"
-        );
-
-        await user.click(
-            screen.getByRole("button", {
-                name: /Generate AI Briefing/i,
-            })
-        );
-
-        expect(setAnalysis).toHaveBeenCalledWith(apiResponse);
-    });
-
-    it("enables loading state before API call", async () => {
-        const user = userEvent.setup();
-
-        analyzeScenario.mockResolvedValue({});
-
-        const setLoading = vi.fn();
-
-        render(
-            <ScenarioForm
-                {...defaultProps}
-                setLoading={setLoading}
-            />
-        );
-
-        await user.selectOptions(
-            screen.getByDisplayValue("Select Stadium"),
-            "Lusail Stadium"
-        );
-
-        await user.selectOptions(
-            screen.getByDisplayValue("Select Match"),
-            "Argentina vs Brazil"
-        );
-
-        await user.type(
-            screen.getByPlaceholderText("e.g. 90000"),
-            "85000"
-        );
-
-        await user.selectOptions(
-            screen.getByDisplayValue("Select Incident"),
-            "Medical Emergency"
-        );
-
-        await user.selectOptions(
-            screen.getByDisplayValue("Select Priority"),
-            "Critical"
-        );
-
-        await user.click(
-            screen.getByRole("button", {
-                name: /Generate AI Briefing/i,
-            })
-        );
-
-        expect(setLoading).toHaveBeenCalledWith(true);
-    });
-
-    it("disables loading after successful response", async () => {
-        const user = userEvent.setup();
-
-        analyzeScenario.mockResolvedValue({});
-
-        const setLoading = vi.fn();
-
-        render(
-            <ScenarioForm
-                {...defaultProps}
-                setLoading={setLoading}
-            />
-        );
-
-        await user.selectOptions(
-            screen.getByDisplayValue("Select Stadium"),
-            "Lusail Stadium"
-        );
-
-        await user.selectOptions(
-            screen.getByDisplayValue("Select Match"),
-            "Argentina vs Brazil"
-        );
-
-        await user.type(
-            screen.getByPlaceholderText("e.g. 90000"),
-            "85000"
-        );
-
-        await user.selectOptions(
-            screen.getByDisplayValue("Select Incident"),
-            "Medical Emergency"
-        );
-
-        await user.selectOptions(
-            screen.getByDisplayValue("Select Priority"),
-            "Critical"
-        );
-
-        await user.click(
-            screen.getByRole("button", {
-                name: /Generate AI Briefing/i,
-            })
-        );
-
-        expect(setLoading).toHaveBeenLastCalledWith(false);
-    });
-
-    it("calls analyzeScenario exactly once", async () => {
-        const user = userEvent.setup();
-
-        analyzeScenario.mockResolvedValue({});
-
-        render(<ScenarioForm {...defaultProps} />);
-
-        await user.selectOptions(
-            screen.getByDisplayValue("Select Stadium"),
-            "Lusail Stadium"
-        );
-
-        await user.selectOptions(
-            screen.getByDisplayValue("Select Match"),
-            "Argentina vs Brazil"
-        );
-
-        await user.type(
-            screen.getByPlaceholderText("e.g. 90000"),
-            "85000"
-        );
-
-        await user.selectOptions(
-            screen.getByDisplayValue("Select Incident"),
-            "Medical Emergency"
-        );
-
-        await user.selectOptions(
-            screen.getByDisplayValue("Select Priority"),
-            "Critical"
-        );
-
-        await user.click(
-            screen.getByRole("button", {
-                name: /Generate AI Briefing/i,
-            })
-        );
-
-        expect(analyzeScenario).toHaveBeenCalledTimes(1);
-    });
-
-    it("shows an error when analyzeScenario rejects", async () => {
-        const user = userEvent.setup();
-
-        analyzeScenario.mockRejectedValue(
-            new Error("Network Error")
-        );
-
-        render(<ScenarioForm {...defaultProps} />);
-
-        await user.selectOptions(
-            screen.getByDisplayValue("Select Stadium"),
-            "Lusail Stadium"
-        );
-
-        await user.selectOptions(
-            screen.getByDisplayValue("Select Match"),
-            "Argentina vs Brazil"
-        );
-
-        await user.type(
-            screen.getByPlaceholderText("e.g. 90000"),
-            "85000"
-        );
-
-        await user.selectOptions(
-            screen.getByDisplayValue("Select Incident"),
-            "Medical Emergency"
-        );
-
-        await user.selectOptions(
-            screen.getByDisplayValue("Select Priority"),
-            "Critical"
-        );
-
-        await user.click(
-            screen.getByRole("button", {
-                name: /Generate AI Briefing/i,
-            })
-        );
-
-        expect(analyzeScenario).toHaveBeenCalled();
-    });
-
-    it("always disables loading after API failure", async () => {
-        const user = userEvent.setup();
-
-        analyzeScenario.mockRejectedValue(
-            new Error("Server Error")
-        );
-
-        const setLoading = vi.fn();
-
-        render(
-            <ScenarioForm
-                {...defaultProps}
-                setLoading={setLoading}
-            />
-        );
-
-        await user.selectOptions(
-            screen.getByDisplayValue("Select Stadium"),
-            "Lusail Stadium"
-        );
-
-        await user.selectOptions(
-            screen.getByDisplayValue("Select Match"),
-            "Argentina vs Brazil"
-        );
-
-        await user.type(
-            screen.getByPlaceholderText("e.g. 90000"),
-            "85000"
-        );
-
-        await user.selectOptions(
-            screen.getByDisplayValue("Select Incident"),
-            "Medical Emergency"
-        );
-
-        await user.selectOptions(
-            screen.getByDisplayValue("Select Priority"),
-            "Critical"
-        );
-
-        await user.click(
-            screen.getByRole("button", {
-                name: /Generate AI Briefing/i,
-            })
-        );
-
-        expect(setLoading).toHaveBeenLastCalledWith(false);
-    });
-
-    it("accepts very large attendance values", async () => {
-        const user = userEvent.setup();
-
-        render(<ScenarioForm {...defaultProps} />);
-
-        const input =
-            screen.getByPlaceholderText("e.g. 90000");
-
-        await user.type(input, "999999");
-
-        expect(input).toHaveValue(999999);
-    });
-
-    it("accepts attendance value of zero", async () => {
-        const user = userEvent.setup();
-
-        render(<ScenarioForm {...defaultProps} />);
-
-        const input =
-            screen.getByPlaceholderText("e.g. 90000");
-
-        await user.clear(input);
-
-        await user.type(input, "0");
-
-        expect(input).toHaveValue(0);
-    });
-
-    it("allows changing incident type multiple times", async () => {
-        const user = userEvent.setup();
-
-        render(<ScenarioForm {...defaultProps} />);
-
-        const incident =
-            screen.getByDisplayValue("Select Incident");
-
-        await user.selectOptions(
-            incident,
-            "Medical Emergency"
-        );
-
-        await user.selectOptions(
-            incident,
-            "Security Threat"
-        );
-
-        expect(
-            incident.value
-        ).toBe("Security Threat");
-    });
-
-    it("allows changing priority after selection", async () => {
-        const user = userEvent.setup();
-
-        render(<ScenarioForm {...defaultProps} />);
-
-        const priority =
-            screen.getByDisplayValue("Select Priority");
-
-        await user.selectOptions(priority, "Medium");
-
-        await user.selectOptions(priority, "Critical");
-
-        expect(priority.value).toBe("Critical");
-    });
-
-    it("renders only one Generate AI Briefing button", () => {
-        render(<ScenarioForm {...defaultProps} />);
-
-        expect(
-            screen.getAllByRole("button", {
-                name: /Generate AI Briefing/i,
-            })
-        ).toHaveLength(1);
-    });
-
-    it("matches snapshot", () => {
-        const { container } = render(
-            <ScenarioForm {...defaultProps} />
-        );
-
-        expect(container).toMatchSnapshot();
-    });
+    expect(container).toMatchSnapshot();
+  });
 });

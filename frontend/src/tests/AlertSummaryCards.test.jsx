@@ -1,84 +1,80 @@
-    import { describe, it, expect } from "vitest";
+import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 
 import AlertSummaryCards from "../components/alerts/AlertSummaryCards";
 
-const mockAlerts = [
-  {
-    id: 1,
-    severity: "Critical",
-    title: "Medical Emergency",
-  },
-  {
-    id: 2,
-    severity: "High",
-    title: "Gate Congestion",
-  },
-  {
-    id: 3,
-    severity: "Medium",
-    title: "Weather Advisory",
-  },
-  {
-    id: 4,
-    severity: "Low",
-    title: "Parking Update",
-  },
-];
+const analysis = {
+  overallRisk: "High",
+
+  activeIncidents: [
+    {
+      severity: "Critical",
+    },
+    {
+      severity: "High",
+    },
+    {
+      severity: "High",
+    },
+  ],
+
+  resolvedAlerts: 5,
+
+  monitoringSystems: 12,
+};
 
 describe("AlertSummaryCards", () => {
-
   it("renders successfully", () => {
-    render(<AlertSummaryCards alerts={mockAlerts} />);
+    render(<AlertSummaryCards analysis={analysis} />);
 
     expect(
-      screen.getByText(/Critical Alerts/i)
+      screen.getByText("Critical Alerts")
     ).toBeInTheDocument();
   });
 
-  it("shows total alerts", () => {
-    render(<AlertSummaryCards alerts={mockAlerts} />);
+  it("shows critical alert count", () => {
+    render(<AlertSummaryCards analysis={analysis} />);
 
     expect(
-      screen.getByText("4")
+      screen.getByText("1")
     ).toBeInTheDocument();
   });
 
-  it("shows Critical Alerts card", () => {
-    render(<AlertSummaryCards alerts={mockAlerts} />);
+  it("shows high priority count", () => {
+    render(<AlertSummaryCards analysis={analysis} />);
 
     expect(
-      screen.getByText(/Critical Alerts/i)
-    ).toBeVisible();
+      screen.getByText("2")
+    ).toBeInTheDocument();
   });
 
-  it("shows High Priority card", () => {
-    render(<AlertSummaryCards alerts={mockAlerts} />);
+  it("shows monitoring systems", () => {
+    render(<AlertSummaryCards analysis={analysis} />);
 
     expect(
-      screen.getByText(/High Priority/i)
-    ).toBeVisible();
+      screen.getByText("12")
+    ).toBeInTheDocument();
   });
 
-  it("shows Medium Priority card", () => {
-    render(<AlertSummaryCards alerts={mockAlerts} />);
+  it("shows resolved alerts", () => {
+    render(<AlertSummaryCards analysis={analysis} />);
 
     expect(
-      screen.getByText(/Medium Priority/i)
-    ).toBeVisible();
+      screen.getByText("5")
+    ).toBeInTheDocument();
   });
 
-  it("shows Low Priority card", () => {
-    render(<AlertSummaryCards alerts={mockAlerts} />);
+  it("shows High Risk subtitle", () => {
+    render(<AlertSummaryCards analysis={analysis} />);
 
     expect(
-      screen.getByText(/Low Priority/i)
-    ).toBeVisible();
+      screen.getByText("High Risk")
+    ).toBeInTheDocument();
   });
 
-  it("renders four statistic cards", () => {
+  it("renders all four cards", () => {
     const { container } = render(
-      <AlertSummaryCards alerts={mockAlerts} />
+      <AlertSummaryCards analysis={analysis} />
     );
 
     const cards =
@@ -87,20 +83,31 @@ describe("AlertSummaryCards", () => {
     expect(cards.length).toBeGreaterThanOrEqual(4);
   });
 
-  it("renders empty state", () => {
-    render(<AlertSummaryCards alerts={[]} />);
+  it("renders default values when analysis is missing", () => {
+    render(<AlertSummaryCards analysis={null} />);
 
     expect(
-      screen.getByText("0")
+      screen.getByText("Critical Alerts")
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText("High Priority")
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText("Monitoring")
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText("Resolved")
     ).toBeInTheDocument();
   });
 
   it("matches snapshot", () => {
     const { container } = render(
-      <AlertSummaryCards alerts={mockAlerts} />
+      <AlertSummaryCards analysis={analysis} />
     );
 
     expect(container).toMatchSnapshot();
   });
-
 });

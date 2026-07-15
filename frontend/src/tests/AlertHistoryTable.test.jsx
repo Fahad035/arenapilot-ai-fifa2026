@@ -3,120 +3,161 @@ import { render, screen } from "@testing-library/react";
 
 import AlertHistoryTable from "../components/alerts/AlertHistoryTable";
 
-const mockHistory = [
-  {
-    id: 1,
-    time: "07:15 PM",
-    title: "Medical Emergency",
-    severity: "Critical",
-    location: "Gate A",
-    status: "Resolved",
-  },
-  {
-    id: 2,
-    time: "06:58 PM",
-    title: "Crowd Congestion",
-    severity: "High",
-    location: "North Entrance",
-    status: "Resolved",
-  },
-  {
-    id: 3,
-    time: "06:42 PM",
-    title: "Weather Advisory",
-    severity: "Medium",
-    location: "Venue",
-    status: "Closed",
-  },
-];
+const analysis = {
+  alertHistory: [
+    {
+      id: 1,
+      time: "07:15 PM",
+      category: "Medical Emergency",
+      severity: "Critical",
+      status: "Resolved",
+      action: "Medical Team Dispatched",
+    },
+    {
+      id: 2,
+      time: "06:58 PM",
+      category: "Crowd Congestion",
+      severity: "High",
+      status: "Monitoring",
+      action: "Opened Gate C",
+    },
+    {
+      id: 3,
+      time: "06:42 PM",
+      category: "Weather Advisory",
+      severity: "Medium",
+      status: "Investigating",
+      action: "Public Announcement",
+    },
+  ],
+};
 
 describe("AlertHistoryTable", () => {
-
-  it("renders successfully", () => {
-    render(<AlertHistoryTable history={mockHistory} />);
+  it("renders title", () => {
+    render(<AlertHistoryTable analysis={analysis} />);
 
     expect(
-      screen.getByText(/Alert History/i)
+      screen.getByText("Alert History")
     ).toBeInTheDocument();
   });
 
-  it("renders all history rows", () => {
-    render(<AlertHistoryTable history={mockHistory} />);
+  it("renders categories", () => {
+    render(<AlertHistoryTable analysis={analysis} />);
 
     expect(
-      screen.getByText("Medical Emergency")
-    ).toBeInTheDocument();
+      screen.getAllByText("Medical Emergency").length
+    ).toBeGreaterThan(0);
 
     expect(
-      screen.getByText("Crowd Congestion")
-    ).toBeInTheDocument();
+      screen.getAllByText("Crowd Congestion").length
+    ).toBeGreaterThan(0);
 
     expect(
-      screen.getByText("Weather Advisory")
-    ).toBeInTheDocument();
+      screen.getAllByText("Weather Advisory").length
+    ).toBeGreaterThan(0);
   });
 
-  it("shows timestamps", () => {
-    render(<AlertHistoryTable history={mockHistory} />);
-
-    expect(screen.getByText("07:15 PM")).toBeInTheDocument();
-    expect(screen.getByText("06:58 PM")).toBeInTheDocument();
-  });
-
-  it("shows severity labels", () => {
-    render(<AlertHistoryTable history={mockHistory} />);
-
-    expect(screen.getByText("Critical")).toBeInTheDocument();
-    expect(screen.getByText("High")).toBeInTheDocument();
-    expect(screen.getByText("Medium")).toBeInTheDocument();
-  });
-
-  it("shows locations", () => {
-    render(<AlertHistoryTable history={mockHistory} />);
-
-    expect(screen.getByText("Gate A")).toBeInTheDocument();
-    expect(screen.getByText("North Entrance")).toBeInTheDocument();
-  });
-
-  it("shows status", () => {
-    render(<AlertHistoryTable history={mockHistory} />);
-
-    expect(screen.getAllByText("Resolved")).toHaveLength(2);
-    expect(screen.getByText("Closed")).toBeInTheDocument();
-  });
-
-  it("renders empty state", () => {
-    render(<AlertHistoryTable history={[]} />);
+  it("renders severity badges", () => {
+    render(<AlertHistoryTable analysis={analysis} />);
 
     expect(
-      screen.getByText(/No Alert History/i)
-    ).toBeInTheDocument();
+      screen.getAllByText("Critical").length
+    ).toBeGreaterThan(0);
+
+    expect(
+      screen.getAllByText("High").length
+    ).toBeGreaterThan(0);
+
+    expect(
+      screen.getAllByText("Medium").length
+    ).toBeGreaterThan(0);
+  });
+
+  it("renders statuses", () => {
+    render(<AlertHistoryTable analysis={analysis} />);
+
+    expect(
+      screen.getAllByText("Resolved").length
+    ).toBeGreaterThan(0);
+
+    expect(
+      screen.getAllByText("Monitoring").length
+    ).toBeGreaterThan(0);
+
+    expect(
+      screen.getAllByText("Investigating").length
+    ).toBeGreaterThan(0);
+  });
+
+  it("renders AI actions", () => {
+    render(<AlertHistoryTable analysis={analysis} />);
+
+    expect(
+      screen.getAllByText("Medical Team Dispatched").length
+    ).toBeGreaterThan(0);
+
+    expect(
+      screen.getAllByText("Opened Gate C").length
+    ).toBeGreaterThan(0);
+
+    expect(
+      screen.getAllByText("Public Announcement").length
+    ).toBeGreaterThan(0);
+  });
+
+  it("renders timestamps", () => {
+    render(<AlertHistoryTable analysis={analysis} />);
+
+    expect(
+      screen.getAllByText("07:15 PM").length
+    ).toBeGreaterThan(0);
+
+    expect(
+      screen.getAllByText("06:58 PM").length
+    ).toBeGreaterThan(0);
+
+    expect(
+      screen.getAllByText("06:42 PM").length
+    ).toBeGreaterThan(0);
   });
 
   it("renders table headers", () => {
-    render(<AlertHistoryTable history={mockHistory} />);
+    render(<AlertHistoryTable analysis={analysis} />);
 
-    expect(screen.getByText(/Time/i)).toBeInTheDocument();
-    expect(screen.getByText(/Alert/i)).toBeInTheDocument();
-    expect(screen.getByText(/Severity/i)).toBeInTheDocument();
-    expect(screen.getByText(/Location/i)).toBeInTheDocument();
-    expect(screen.getByText(/Status/i)).toBeInTheDocument();
+    expect(screen.getByText("Time")).toBeInTheDocument();
+    expect(screen.getByText("Category")).toBeInTheDocument();
+    expect(screen.getByText("Severity")).toBeInTheDocument();
+    expect(screen.getByText("Status")).toBeInTheDocument();
+    expect(screen.getByText("AI Action")).toBeInTheDocument();
   });
 
-  it("renders three rows", () => {
-    render(<AlertHistoryTable history={mockHistory} />);
+  it("renders record count", () => {
+    render(<AlertHistoryTable analysis={analysis} />);
 
     expect(
-      screen.getAllByRole("row").length
-    ).toBeGreaterThanOrEqual(4);
+      screen.getByText("3 Records")
+    ).toBeInTheDocument();
+  });
+
+  it("renders footer", () => {
+    render(<AlertHistoryTable analysis={analysis} />);
+
+    expect(
+      screen.getByText("ArenaPilot AI Incident Log")
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText(
+        /Every alert is automatically stored/i
+      )
+    ).toBeInTheDocument();
   });
 
   it("matches snapshot", () => {
     const { container } = render(
-      <AlertHistoryTable history={mockHistory} />
+      <AlertHistoryTable analysis={analysis} />
     );
 
     expect(container).toMatchSnapshot();
   });
-
 });

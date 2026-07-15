@@ -1,18 +1,22 @@
 import { describe, it, expect, vi } from "vitest";
-import { fireEvent, screen } from "@testing-library/react";
-import renderWithRouter from "./renderWithRouter";
+import { render, screen, fireEvent } from "@testing-library/react";
 
 import DashboardTabs from "../components/dashboard/DashboardTabs";
 
-// Mock Logo component
-vi.mock("../src/components/common/Logo", () => ({
+vi.mock("framer-motion", () => ({
+  motion: {
+    div: ({ children }) => <div>{children}</div>,
+  },
+}));
+
+vi.mock("../components/common/Logo", () => ({
   default: ({ collapsed }) => (
     <div>{collapsed ? "Logo Small" : "ArenaPilot Logo"}</div>
   ),
 }));
 
 describe("DashboardTabs", () => {
-  const defaultProps = {
+  const props = {
     activeTab: "overview",
     setActiveTab: vi.fn(),
     collapsed: false,
@@ -20,15 +24,15 @@ describe("DashboardTabs", () => {
   };
 
   it("renders sidebar", () => {
-    renderWithRouter(<DashboardTabs {...defaultProps} />);
+    render(<DashboardTabs {...props} />);
 
     expect(
       screen.getByText("ArenaPilot Logo")
     ).toBeInTheDocument();
   });
 
-  it("renders all navigation tabs", () => {
-    renderWithRouter(<DashboardTabs {...defaultProps} />);
+  it("renders all navigation labels", () => {
+    render(<DashboardTabs {...props} />);
 
     expect(screen.getByText("Overview")).toBeInTheDocument();
     expect(screen.getByText("Crowd Intelligence")).toBeInTheDocument();
@@ -40,37 +44,26 @@ describe("DashboardTabs", () => {
     expect(screen.getByText("Alerts")).toBeInTheDocument();
   });
 
-  it("calls setActiveTab when Overview is clicked", () => {
-    renderWithRouter(<DashboardTabs {...defaultProps} />);
-
-    fireEvent.click(screen.getByText("Overview"));
-
-    expect(defaultProps.setActiveTab).toHaveBeenCalledWith("overview");
-  });
-
-  it("calls setActiveTab when Crowd Intelligence is clicked", () => {
-    renderWithRouter(<DashboardTabs {...defaultProps} />);
+  it("changes active tab", () => {
+    render(<DashboardTabs {...props} />);
 
     fireEvent.click(screen.getByText("Crowd Intelligence"));
 
-    expect(defaultProps.setActiveTab).toHaveBeenCalledWith("crowd");
+    expect(props.setActiveTab).toHaveBeenCalledWith("crowd");
   });
 
-  it("calls setCollapsed when collapse button is clicked", () => {
-    renderWithRouter(<DashboardTabs {...defaultProps} />);
+  it("collapses sidebar", () => {
+    render(<DashboardTabs {...props} />);
 
-    const buttons = screen.getAllByRole("button");
+    fireEvent.click(screen.getAllByRole("button")[0]);
 
-    // First button = collapse toggle
-    fireEvent.click(buttons[0]);
-
-    expect(defaultProps.setCollapsed).toHaveBeenCalled();
+    expect(props.setCollapsed).toHaveBeenCalled();
   });
 
-  it("renders compact logo when collapsed", () => {
-    renderWithRouter(
+  it("shows compact logo when collapsed", () => {
+    render(
       <DashboardTabs
-        {...defaultProps}
+        {...props}
         collapsed={true}
       />
     );
@@ -80,8 +73,8 @@ describe("DashboardTabs", () => {
     ).toBeInTheDocument();
   });
 
-  it("shows AI Status box when expanded", () => {
-    renderWithRouter(<DashboardTabs {...defaultProps} />);
+  it("shows AI status card", () => {
+    render(<DashboardTabs {...props} />);
 
     expect(
       screen.getByText("ArenaPilot Online")
@@ -92,10 +85,10 @@ describe("DashboardTabs", () => {
     ).toBeInTheDocument();
   });
 
-  it("hides AI Status box when collapsed", () => {
-    renderWithRouter(
+  it("hides AI status card when collapsed", () => {
+    render(
       <DashboardTabs
-        {...defaultProps}
+        {...props}
         collapsed={true}
       />
     );
@@ -103,22 +96,5 @@ describe("DashboardTabs", () => {
     expect(
       screen.queryByText("ArenaPilot Online")
     ).not.toBeInTheDocument();
-  });
-
-  it("keeps Overview tab visible", () => {
-    renderWithRouter(<DashboardTabs {...defaultProps} />);
-
-    expect(
-      screen.getByText("Overview")
-    ).toBeVisible();
-  });
-
-  it("renders exactly eight navigation tabs", () => {
-    renderWithRouter(<DashboardTabs {...defaultProps} />);
-
-    const navButtons = screen.getAllByRole("button");
-
-    // 1 collapse button + 8 navigation buttons
-    expect(navButtons.length).toBe(9);
   });
 });

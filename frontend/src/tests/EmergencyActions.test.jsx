@@ -1,147 +1,112 @@
-import {
-  describe,
-  it,
-  expect,
-  vi,
-  beforeEach,
-} from "vitest";
+import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 
 import EmergencyActions from "../components/alerts/EmergencyActions";
 
 describe("EmergencyActions", () => {
-  const onEvacuate = vi.fn();
-  const onMedical = vi.fn();
-  const onSecurity = vi.fn();
-  const onBroadcast = vi.fn();
-
-  const defaultProps = {
-    onEvacuate,
-    onMedical,
-    onSecurity,
-    onBroadcast,
+  const analysis = {
+    recommendations: [
+      "Deploy Additional Stewards",
+      "Open Gate C",
+      "Dispatch Medical Team",
+    ],
   };
 
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
-
   it("renders successfully", () => {
-    render(<EmergencyActions {...defaultProps} />);
+    render(<EmergencyActions analysis={analysis} />);
 
     expect(
-      screen.getByText(/Emergency Actions/i)
+      screen.getByText(/AI Recommended Actions/i)
     ).toBeInTheDocument();
   });
 
-  it("renders Evacuate button", () => {
-    render(<EmergencyActions {...defaultProps} />);
+  it("renders AI Active badge", () => {
+    render(<EmergencyActions analysis={analysis} />);
 
     expect(
-      screen.getByRole("button", {
-        name: /Evacuate/i,
-      })
+      screen.getByText(/AI Active/i)
     ).toBeInTheDocument();
   });
 
-  it("renders Medical Response button", () => {
-    render(<EmergencyActions {...defaultProps} />);
+  it("renders recommendation cards", () => {
+    render(<EmergencyActions analysis={analysis} />);
 
     expect(
-      screen.getByRole("button", {
-        name: /Medical/i,
-      })
+      screen.getByText("Deploy Additional Stewards")
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText("Open Gate C")
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText("Dispatch Medical Team")
     ).toBeInTheDocument();
   });
 
-  it("renders Security Dispatch button", () => {
-    render(<EmergencyActions {...defaultProps} />);
+  it("renders Execute buttons", () => {
+    render(<EmergencyActions analysis={analysis} />);
 
     expect(
-      screen.getByRole("button", {
-        name: /Security/i,
-      })
+      screen.getAllByRole("button", {
+        name: /Execute/i,
+      }).length
+    ).toBe(3);
+  });
+
+  it("shows Ready to Execute text", () => {
+    render(<EmergencyActions analysis={analysis} />);
+
+    expect(
+      screen.getAllByText(/Ready to Execute/i).length
+    ).toBe(3);
+  });
+
+  it("renders priority badges", () => {
+    render(<EmergencyActions analysis={analysis} />);
+
+    expect(
+      screen.getByText("High")
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getAllByText("Medium").length
+    ).toBeGreaterThanOrEqual(2);
+  });
+
+  it("renders default actions when analysis is null", () => {
+    render(<EmergencyActions analysis={null} />);
+
+    expect(
+      screen.getByText("Deploy Additional Stewards")
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText("Increase CCTV Monitoring")
     ).toBeInTheDocument();
   });
 
-  it("renders Broadcast Alert button", () => {
-    render(<EmergencyActions {...defaultProps} />);
+  it("renders default Execute buttons", () => {
+    render(<EmergencyActions analysis={null} />);
 
     expect(
-      screen.getByRole("button", {
-        name: /Broadcast/i,
-      })
-    ).toBeInTheDocument();
+      screen.getAllByRole("button", {
+        name: /Execute/i,
+      }).length
+    ).toBe(5);
   });
 
-  it("calls onEvacuate when clicked", async () => {
-    const user = userEvent.setup();
-
-    render(<EmergencyActions {...defaultProps} />);
-
-    await user.click(
-      screen.getByRole("button", {
-        name: /Evacuate/i,
-      })
-    );
-
-    expect(onEvacuate).toHaveBeenCalledTimes(1);
-  });
-
-  it("calls onMedical when clicked", async () => {
-    const user = userEvent.setup();
-
-    render(<EmergencyActions {...defaultProps} />);
-
-    await user.click(
-      screen.getByRole("button", {
-        name: /Medical/i,
-      })
-    );
-
-    expect(onMedical).toHaveBeenCalledTimes(1);
-  });
-
-  it("calls onSecurity when clicked", async () => {
-    const user = userEvent.setup();
-
-    render(<EmergencyActions {...defaultProps} />);
-
-    await user.click(
-      screen.getByRole("button", {
-        name: /Security/i,
-      })
-    );
-
-    expect(onSecurity).toHaveBeenCalledTimes(1);
-  });
-
-  it("calls onBroadcast when clicked", async () => {
-    const user = userEvent.setup();
-
-    render(<EmergencyActions {...defaultProps} />);
-
-    await user.click(
-      screen.getByRole("button", {
-        name: /Broadcast/i,
-      })
-    );
-
-    expect(onBroadcast).toHaveBeenCalledTimes(1);
-  });
-
-  it("renders all four emergency buttons", () => {
-    render(<EmergencyActions {...defaultProps} />);
+  it("renders five default recommendation cards", () => {
+    render(<EmergencyActions analysis={null} />);
 
     expect(
-      screen.getAllByRole("button").length
-    ).toBeGreaterThanOrEqual(4);
+      screen.getAllByText(/Ready to Execute/i).length
+    ).toBe(5);
   });
 
   it("matches snapshot", () => {
     const { container } = render(
-      <EmergencyActions {...defaultProps} />
+      <EmergencyActions analysis={analysis} />
     );
 
     expect(container).toMatchSnapshot();

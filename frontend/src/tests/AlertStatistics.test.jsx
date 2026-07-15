@@ -3,81 +3,129 @@ import { render, screen } from "@testing-library/react";
 
 import AlertStatistics from "../components/alerts/AlertStatistics";
 
-const mockStats = {
-  totalAlerts: 18,
-  critical: 2,
-  high: 5,
-  medium: 7,
-  low: 4,
-  resolved: 12,
-  active: 6,
-  averageResponseTime: "2.4 min",
-  todayIncidents: 18,
-  yesterdayIncidents: 14,
+const analysis = {
+  alerts: [{}, {}, {}, {}],
+  confidence: "96%",
 };
 
 describe("AlertStatistics", () => {
-  it("renders successfully", () => {
-    render(<AlertStatistics stats={mockStats} />);
+  it("renders title", () => {
+    render(<AlertStatistics analysis={analysis} />);
 
     expect(
-      screen.getByText(/Alert Statistics/i)
+      screen.getByText("Alert Statistics")
     ).toBeInTheDocument();
   });
 
-  it("shows total alerts", () => {
-    render(<AlertStatistics stats={mockStats} />);
-
-    expect(screen.getByText("18")).toBeInTheDocument();
-  });
-
-  it("shows critical alerts", () => {
-    render(<AlertStatistics stats={mockStats} />);
-
-    expect(screen.getByText("2")).toBeInTheDocument();
-  });
-
-  it("shows high alerts", () => {
-    render(<AlertStatistics stats={mockStats} />);
-
-    expect(screen.getByText("5")).toBeInTheDocument();
-  });
-
-  it("shows medium alerts", () => {
-    render(<AlertStatistics stats={mockStats} />);
-
-    expect(screen.getByText("7")).toBeInTheDocument();
-  });
-
-  it("shows low alerts", () => {
-    render(<AlertStatistics stats={mockStats} />);
-
-    expect(screen.getByText("4")).toBeInTheDocument();
-  });
-
-  it("shows resolved alerts", () => {
-    render(<AlertStatistics stats={mockStats} />);
-
-    expect(screen.getByText("12")).toBeInTheDocument();
-  });
-
-  it("shows active alerts", () => {
-    render(<AlertStatistics stats={mockStats} />);
-
-    expect(screen.getByText("6")).toBeInTheDocument();
-  });
-
-  it("shows response time", () => {
-    render(<AlertStatistics stats={mockStats} />);
+  it("renders Today's Alerts", () => {
+    render(<AlertStatistics analysis={analysis} />);
 
     expect(
-      screen.getByText("2.4 min")
+      screen.getByText("Today's Alerts")
     ).toBeInTheDocument();
+
+    expect(
+      screen.getByText("4")
+    ).toBeInTheDocument();
+  });
+
+  it("renders Average Response", () => {
+    render(<AlertStatistics analysis={analysis} />);
+
+    expect(
+      screen.getByText("Average Response")
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText("01:42")
+    ).toBeInTheDocument();
+  });
+
+  it("renders AI Confidence", () => {
+    render(<AlertStatistics analysis={analysis} />);
+
+    expect(
+      screen.getByText("AI Confidence")
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText("96%")
+    ).toBeInTheDocument();
+  });
+
+  it("renders Monitoring", () => {
+    render(<AlertStatistics analysis={analysis} />);
+
+    expect(
+      screen.getByText("Monitoring")
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText("Live")
+    ).toBeInTheDocument();
+  });
+
+  it("renders AI Health Score", () => {
+    render(<AlertStatistics analysis={analysis} />);
+
+    expect(
+      screen.getByText("AI Health Score")
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText("98%")
+    ).toBeInTheDocument();
+  });
+
+  it("renders monitoring status", () => {
+    render(<AlertStatistics analysis={analysis} />);
+
+    expect(
+      screen.getByText("ArenaPilot AI Monitoring")
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText(
+        "All monitoring services are operational."
+      )
+    ).toBeInTheDocument();
+  });
+
+  it("renders Last Scan", () => {
+    render(<AlertStatistics analysis={analysis} />);
+
+    expect(
+      screen.getByText("Last Scan")
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText("Just Now")
+    ).toBeInTheDocument();
+  });
+
+  it("renders four statistic cards", () => {
+    render(<AlertStatistics analysis={analysis} />);
+
+    expect(
+      screen.getByText("Today's Alerts")
+    ).toBeVisible();
+
+    expect(
+      screen.getByText("Average Response")
+    ).toBeVisible();
+
+    expect(
+      screen.getByText("AI Confidence")
+    ).toBeVisible();
+
+    expect(
+      screen.getByText("Monitoring")
+    ).toBeVisible();
   });
 
   it("matches snapshot", () => {
     const { container } = render(
-      <AlertStatistics stats={mockStats} />
+      <AlertStatistics analysis={analysis} />
     );
 
     expect(container).toMatchSnapshot();

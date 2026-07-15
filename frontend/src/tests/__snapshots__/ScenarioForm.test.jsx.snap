@@ -1,0 +1,451 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ScenarioForm > matches snapshot 1`] = `
+<div>
+  <div
+    class="rounded-2xl border p-6 shadow-lg space-y-8"
+    style="border-color: var(--card-border); background: var(--card-bg); color: var(--fg);"
+  >
+    <div
+      class="flex items-center justify-between"
+    >
+      <div>
+        <h2
+          class="text-2xl font-bold text-white"
+        >
+          AI Scenario Builder
+        </h2>
+        <p
+          class="mt-2 text-slate-400"
+        >
+          Enter a stadium scenario and let ArenaPilot AI generate an operational briefing.
+        </p>
+      </div>
+      <div
+        class="rounded-xl bg-cyan-500/10 p-4 text-cyan-400"
+      >
+        <svg
+          fill="currentColor"
+          height="24"
+          stroke="currentColor"
+          stroke-width="0"
+          viewBox="0 0 512 512"
+          width="24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M224 96l16-32 32-16-32-16-16-32-16 32-32 16 32 16 16 32zM80 160l26.66-53.33L160 80l-53.34-26.67L80 0 53.34 53.33 0 80l53.34 26.67L80 160zm352 128l-26.66 53.33L352 368l53.34 26.67L432 448l26.66-53.33L512 368l-53.34-26.67L432 288zm70.62-193.77L417.77 9.38C411.53 3.12 403.34 0 395.15 0c-8.19 0-16.38 3.12-22.63 9.38L9.38 372.52c-12.5 12.5-12.5 32.76 0 45.25l84.85 84.85c6.25 6.25 14.44 9.37 22.62 9.37 8.19 0 16.38-3.12 22.63-9.37l363.14-363.15c12.5-12.48 12.5-32.75 0-45.24zM359.45 203.46l-50.91-50.91 86.6-86.6 50.91 50.91-86.6 86.6z"
+          />
+        </svg>
+      </div>
+    </div>
+    <div
+      class="grid gap-6 md:grid-cols-2"
+    >
+      <div>
+        <label
+          class="mb-2 block text-sm font-medium text-slate-300"
+        >
+          Stadium
+        </label>
+        <div
+          class="relative"
+        >
+          <svg
+            class="absolute left-4 top-4 text-slate-500"
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 512 512"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zm-48 0l-.003-.282-26.064 22.741-62.679-58.5 16.454-84.355 34.303 3.072c-24.889-34.216-60.004-60.089-100.709-73.141l13.651 31.939L256 139l-74.953-41.525 13.651-31.939c-40.631 13.028-75.78 38.87-100.709 73.141l34.565-3.073 16.192 84.355-62.678 58.5-26.064-22.741-.003.282c0 43.015 13.497 83.952 38.472 117.991l7.704-33.897 85.138 10.447 36.301 77.826-29.902 17.786c40.202 13.122 84.29 13.148 124.572 0l-29.902-17.786 36.301-77.826 85.138-10.447 7.704 33.897C442.503 339.952 456 299.015 456 256zm-248.102 69.571l-29.894-91.312L256 177.732l77.996 56.527-29.622 91.312h-96.476z"
+            />
+          </svg>
+          <select
+            class="w-full rounded-xl border border-slate-700 bg-slate-950 py-3 pl-11 pr-4 text-white outline-none transition focus:border-cyan-500"
+          >
+            <option
+              value=""
+            >
+              Select Stadium
+            </option>
+            <option
+              value="Lusail Stadium"
+            >
+              Lusail Stadium
+            </option>
+            <option
+              value="Al Bayt Stadium"
+            >
+              Al Bayt Stadium
+            </option>
+            <option
+              value="974 Stadium"
+            >
+              974 Stadium
+            </option>
+            <option
+              value="Al Janoub Stadium"
+            >
+              Al Janoub Stadium
+            </option>
+            <option
+              value="Education City Stadium"
+            >
+              Education City Stadium
+            </option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label
+          class="mb-2 block text-sm font-medium text-slate-300"
+        >
+          Match
+        </label>
+        <select
+          class="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition focus:border-cyan-500"
+        >
+          <option
+            value=""
+          >
+            Select Match
+          </option>
+          <option
+            value="Argentina vs Brazil"
+          >
+            Argentina vs Brazil
+          </option>
+          <option
+            value="England vs France"
+          >
+            England vs France
+          </option>
+          <option
+            value="Germany vs Spain"
+          >
+            Germany vs Spain
+          </option>
+          <option
+            value="Portugal vs Italy"
+          >
+            Portugal vs Italy
+          </option>
+          <option
+            value="Netherlands vs Belgium"
+          >
+            Netherlands vs Belgium
+          </option>
+        </select>
+      </div>
+    </div>
+    <div
+      class="grid gap-6 md:grid-cols-2"
+    >
+      <div>
+        <label
+          class="mb-2 block text-sm font-medium"
+          style="color: var(--muted);"
+        >
+          Estimated Crowd Size
+        </label>
+        <input
+          class="w-full rounded-xl border px-4 py-3 outline-none transition focus:border-blue-500 "
+          placeholder="e.g. 90000"
+          style="border-color: var(--input-border); background: var(--input-bg); color: var(--fg);"
+          type="number"
+          value=""
+        />
+      </div>
+      <div>
+        <label
+          class="mb-2 block text-sm font-medium text-slate-300"
+        >
+          Weather
+        </label>
+        <div
+          class="relative"
+        >
+          <svg
+            class="absolute left-4 top-4 text-slate-500"
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 640 512"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M575.2 325.7c.2-1.9.8-3.7.8-5.6 0-35.3-28.7-64-64-64-12.6 0-24.2 3.8-34.1 10-17.6-38.8-56.5-66-101.9-66-61.8 0-112 50.1-112 112 0 3 .7 5.8.9 8.7-49.6 3.7-88.9 44.7-88.9 95.3 0 53 43 96 96 96h272c53 0 96-43 96-96 0-42.1-27.2-77.4-64.8-90.4zm-430.4-22.6c-43.7-43.7-43.7-114.7 0-158.3 43.7-43.7 114.7-43.7 158.4 0 9.7 9.7 16.9 20.9 22.3 32.7 9.8-3.7 20.1-6 30.7-7.5L386 81.1c4-11.9-7.3-23.1-19.2-19.2L279 91.2 237.5 8.4C232-2.8 216-2.8 210.4 8.4L169 91.2 81.1 61.9C69.3 58 58 69.3 61.9 81.1l29.3 87.8-82.8 41.5c-11.2 5.6-11.2 21.5 0 27.1l82.8 41.4-29.3 87.8c-4 11.9 7.3 23.1 19.2 19.2l76.1-25.3c6.1-12.4 14-23.7 23.6-33.5-13.1-5.4-25.4-13.4-36-24zm-4.8-79.2c0 40.8 29.3 74.8 67.9 82.3 8-4.7 16.3-8.8 25.2-11.7 5.4-44.3 31-82.5 67.4-105C287.3 160.4 258 140 224 140c-46.3 0-84 37.6-84 83.9z"
+            />
+          </svg>
+          <select
+            class="w-full rounded-xl border border-slate-700 bg-slate-950 py-3 pl-11 pr-4 text-white outline-none transition focus:border-cyan-500"
+          >
+            <option
+              value=""
+            >
+              Weather Condition
+            </option>
+            <option
+              value="Sunny"
+            >
+              Sunny
+            </option>
+            <option
+              value="Cloudy"
+            >
+              Cloudy
+            </option>
+            <option
+              value="Rainy"
+            >
+              Rainy
+            </option>
+            <option
+              value="Windy"
+            >
+              Windy
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div
+      class="grid gap-6 md:grid-cols-2"
+    >
+      <div>
+        <label
+          class="mb-2 block text-sm font-medium text-slate-300"
+        >
+          Incident Type
+        </label>
+        <div
+          class="relative"
+        >
+          <svg
+            class="absolute left-4 top-4 text-slate-500"
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 576 512"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M569.517 440.013C587.975 472.007 564.806 512 527.94 512H48.054c-36.937 0-59.999-40.055-41.577-71.987L246.423 23.985c18.467-32.009 64.72-31.951 83.154 0l239.94 416.028zM288 354c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"
+            />
+          </svg>
+          <select
+            class="w-full rounded-xl border border-slate-700 bg-slate-950 py-3 pl-11 pr-4 text-white outline-none transition focus:border-cyan-500"
+          >
+            <option
+              value=""
+            >
+              Select Incident
+            </option>
+            <option
+              value="Crowd Congestion"
+            >
+              Crowd Congestion
+            </option>
+            <option
+              value="Medical Emergency"
+            >
+              Medical Emergency
+            </option>
+            <option
+              value="Security Threat"
+            >
+              Security Threat
+            </option>
+            <option
+              value="Gate Delay"
+            >
+              Gate Delay
+            </option>
+            <option
+              value="Transport Delay"
+            >
+              Transport Delay
+            </option>
+            <option
+              value="VIP Movement"
+            >
+              VIP Movement
+            </option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label
+          class="mb-2 block text-sm font-medium text-slate-300"
+        >
+          Priority
+        </label>
+        <div
+          class="relative"
+        >
+          <svg
+            class="absolute left-4 top-4 text-slate-500"
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 512 512"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M349.565 98.783C295.978 98.783 251.721 64 184.348 64c-24.955 0-47.309 4.384-68.045 12.013a55.947 55.947 0 0 0 3.586-23.562C118.117 24.015 94.806 1.206 66.338.048 34.345-1.254 8 24.296 8 56c0 19.026 9.497 35.825 24 45.945V488c0 13.255 10.745 24 24 24h16c13.255 0 24-10.745 24-24v-94.4c28.311-12.064 63.582-22.122 114.435-22.122 53.588 0 97.844 34.783 165.217 34.783 48.169 0 86.667-16.294 122.505-40.858C506.84 359.452 512 349.571 512 339.045v-243.1c0-23.393-24.269-38.87-45.485-29.016-34.338 15.948-76.454 31.854-116.95 31.854z"
+            />
+          </svg>
+          <select
+            class="w-full rounded-xl border border-slate-700 bg-slate-950 py-3 pl-11 pr-4 text-white outline-none transition focus:border-cyan-500"
+          >
+            <option
+              value=""
+            >
+              Select Priority
+            </option>
+            <option
+              value="Low"
+            >
+              Low
+            </option>
+            <option
+              value="Medium"
+            >
+              Medium
+            </option>
+            <option
+              value="High"
+            >
+              High
+            </option>
+            <option
+              value="Critical"
+            >
+              Critical
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div>
+      <label
+        class="mb-2 block text-sm font-medium text-slate-300"
+      >
+        Additional Notes
+      </label>
+      <textarea
+        class="w-full rounded-xl border border-slate-700 bg-slate-950 px-4 py-3 text-white outline-none transition focus:border-cyan-500"
+        placeholder="Provide any additional operational information..."
+        rows="5"
+      />
+    </div>
+    <div
+      class="rounded-xl border border-cyan-500/20 bg-cyan-500/5 p-5"
+    >
+      <h3
+        class="mb-4 text-lg font-semibold text-cyan-300"
+      >
+        Live Scenario Preview
+      </h3>
+      <div
+        class="grid gap-4 text-sm md:grid-cols-2"
+      >
+        <div>
+          <span
+            class="text-slate-500"
+          >
+            Stadium
+          </span>
+          <p
+            class="mt-1 text-white"
+          >
+            --
+          </p>
+        </div>
+        <div>
+          <span
+            class="text-slate-500"
+          >
+            Match
+          </span>
+          <p
+            class="mt-1 text-white"
+          >
+            --
+          </p>
+        </div>
+        <div>
+          <span
+            class="text-slate-500"
+          >
+            Crowd
+          </span>
+          <p
+            class="mt-1 text-white"
+          >
+            --
+          </p>
+        </div>
+        <div>
+          <span
+            class="text-slate-500"
+          >
+            Incident
+          </span>
+          <p
+            class="mt-1 text-white"
+          >
+            --
+          </p>
+        </div>
+      </div>
+    </div>
+    <div
+      class="flex flex-col gap-4 rounded-2xl border border-slate-800 bg-slate-900/60 p-5 lg:flex-row lg:items-center lg:justify-between"
+    >
+      <div>
+        <h3
+          class="text-lg font-semibold text-white"
+        >
+          Ready to Generate AI Briefing
+        </h3>
+        <p
+          class="mt-1 text-sm text-slate-400"
+        >
+          ArenaPilot AI will analyze the scenario using the Rules Engine and generate operational recommendations.
+        </p>
+      </div>
+      <button
+        aria-label="Generate AI Briefing"
+        class="font-body rounded-xl px-5 py-3 font-semibold transition duration-200 disabled:opacity-50 bg-gradient-to-r from-blue-600 to-cyan-500 text-white hover:opacity-90 flex items-center justify-center gap-3 px-8 py-3"
+      >
+        <svg
+          fill="currentColor"
+          height="1em"
+          stroke="currentColor"
+          stroke-width="0"
+          viewBox="0 0 512 512"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M224 96l16-32 32-16-32-16-16-32-16 32-32 16 32 16 16 32zM80 160l26.66-53.33L160 80l-53.34-26.67L80 0 53.34 53.33 0 80l53.34 26.67L80 160zm352 128l-26.66 53.33L352 368l53.34 26.67L432 448l26.66-53.33L512 368l-53.34-26.67L432 288zm70.62-193.77L417.77 9.38C411.53 3.12 403.34 0 395.15 0c-8.19 0-16.38 3.12-22.63 9.38L9.38 372.52c-12.5 12.5-12.5 32.76 0 45.25l84.85 84.85c6.25 6.25 14.44 9.37 22.62 9.37 8.19 0 16.38-3.12 22.63-9.37l363.14-363.15c12.5-12.48 12.5-32.75 0-45.24zM359.45 203.46l-50.91-50.91 86.6-86.6 50.91 50.91-86.6 86.6z"
+          />
+        </svg>
+        Generate AI Briefing
+      </button>
+    </div>
+  </div>
+</div>
+`;

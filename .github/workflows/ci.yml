@@ -15,7 +15,7 @@ jobs:
 
   frontend:
 
-    name: Frontend Build
+    name: Frontend Build & Tests
 
     runs-on: ubuntu-latest
 
@@ -38,10 +38,16 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Lint
+      - name: Run ESLint
         run: npm run lint
 
-      - name: Build Project
+      - name: Run Unit Tests
+        run: npm test -- --run
+
+      - name: Generate Coverage Report
+        run: npm run test:coverage
+
+      - name: Build Frontend
         run: npm run build
 
   backend:
@@ -69,5 +75,5 @@ jobs:
       - name: Install Dependencies
         run: npm ci
 
-      - name: Run Tests
+      - name: Run Backend Tests
         run: npm test
