@@ -195,6 +195,7 @@ const RoutePlanner = ({ analysis }) => {
           </label>
 
           <Button
+            aria-label="Generate Smart Route"
             className="w-full"
             onClick={async () => {
               if (!start || !destination) return;

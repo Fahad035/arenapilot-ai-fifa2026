@@ -148,6 +148,7 @@ const ChatWindow = ({ analysis }) => {
         />
 
         <Button
+          aria-label="Send Message"
           onClick={sendMessage}
           disabled={loading}
           className="flex items-center gap-2"

@@ -497,6 +497,7 @@ const ScenarioForm = ({
           onClick={handleGenerate}
           disabled={loading}
           className="flex items-center justify-center gap-3 px-8 py-3"
+          aria-label="Generate AI Briefing"
         >
           {loading ? (
             <>

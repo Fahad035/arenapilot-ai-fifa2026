@@ -19,7 +19,7 @@ Please proceed to Gate D to avoid congestion near Gate C.
 Thank you for your cooperation.`}
 />
 
-<Button className="mt-5 w-full">
+<Button aria-label="Generate Announcement" className="mt-5 w-full">
 Generate Announcement
 </Button>
 
