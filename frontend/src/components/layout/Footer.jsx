@@ -20,7 +20,8 @@ const Footer = () => {
           <a
             href="https://github.com/Fahad035/arenapilot-ai-fifa2026"
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
+            aria-label="View ArenaPilot AI source code on GitHub"
             className="transition hover:text-white"
             style={{ color: "var(--muted)" }}
           >

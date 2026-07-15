@@ -63,6 +63,7 @@ const Hero = () => {
 
                         <Link
                             to="/dashboard"
+                            aria-label="Open Live Stadium Dashboard"
                             className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-7 py-4 font-semibold transition hover:bg-blue-700"
                         >
                             Launch Dashboard
