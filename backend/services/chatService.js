@@ -8,7 +8,6 @@ const generateChatResponse = async ({
   analysis,
 }) => {
   if (USE_MOCK) {
-    console.log("Using Mock Chat AI...");
 
     return mockChatResponse({
       message,
@@ -45,7 +44,6 @@ Instructions:
   } catch (error) {
     console.error("Chat Gemini Error:", error);
 
-    console.log("Falling back to Mock Chat...");
 
     return mockChatResponse({
       message,

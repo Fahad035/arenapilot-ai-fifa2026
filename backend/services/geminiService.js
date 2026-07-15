@@ -6,7 +6,6 @@ const USE_MOCK = process.env.USE_MOCK_AI === "true";
 
 const generateBriefing = async (analysis) => {
   if (USE_MOCK) {
-    console.log("Using Mock AI Response...");
     return mockBriefing(analysis);
   }
 
@@ -23,7 +22,6 @@ const generateBriefing = async (analysis) => {
   } catch (error) {
     console.error("Gemini Error:", error);
 
-    console.log("Falling back to Mock AI...");
 
     return mockBriefing(analysis);
   }
