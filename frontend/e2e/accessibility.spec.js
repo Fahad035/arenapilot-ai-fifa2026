@@ -1,37 +1,108 @@
-    import { test, expect } from "@playwright/test";
+import { test, expect } from "@playwright/test";
 
-test("Images have alt text", async ({ page }) => {
-  await page.goto("/");
+test.describe("Accessibility Checks", () => {
+  test("Page has valid title", async ({ page }) => {
+    await page.goto("/");
 
-  const images = page.locator("img");
+    await expect(page).toHaveTitle(/ArenaPilot/i);
+  });
 
-  const count = await images.count();
+  test("Main navigation is accessible", async ({ page }) => {
+    await page.goto("/");
 
-  for (let i = 0; i < count; i++) {
-    await expect(images.nth(i)).toHaveAttribute("alt");
-  }
-});
+    const links = page.locator("a");
 
-test("Buttons are visible", async ({ page }) => {
-  await page.goto("/");
+    if (await links.count()) {
+      await expect(links.first()).toBeVisible();
+    }
+  });
 
-  const buttons = page.locator("button");
+  test("Buttons are visible", async ({ page }) => {
+    await page.goto("/dashboard");
 
-  await expect(buttons.first()).toBeVisible();
-});
+    const buttons = page.locator("button");
 
-test("Inputs are accessible", async ({ page }) => {
-  await page.goto("/dashboard");
+    expect(await buttons.count()).toBeGreaterThan(0);
 
-  const inputs = page.locator("input");
+    await expect(buttons.first()).toBeVisible();
+  });
 
-  if (await inputs.count()) {
-    await expect(inputs.first()).toBeVisible();
-  }
-});
+  test("Inputs are accessible", async ({ page }) => {
+    await page.goto("/dashboard");
 
-test("Page has title", async ({ page }) => {
-  await page.goto("/");
+    const inputs = page.locator(
+      'input, textarea, select'
+    );
 
-  await expect(page).toHaveTitle(/ArenaPilot/i);
+    if (await inputs.count()) {
+      await expect(inputs.first()).toBeVisible();
+    }
+  });
+
+  test("Images contain alt attributes", async ({ page }) => {
+    await page.goto("/");
+
+    const images = page.locator("img");
+
+    const count = await images.count();
+
+    for (let i = 0; i < count; i++) {
+      await expect(
+        images.nth(i)
+      ).toHaveAttribute("alt");
+    }
+  });
+
+  test("Dashboard page loads without accessibility blockers", async ({
+    page,
+  }) => {
+    await page.goto("/dashboard");
+
+    await expect(
+      page.locator("body")
+    ).toBeVisible();
+  });
+
+  test("AI Assistant input is keyboard accessible", async ({
+    page,
+  }) => {
+    await page.goto("/dashboard");
+
+    const assistantTab = page
+      .getByRole("button", {
+        name: /ai assistant/i,
+      });
+
+    if (await assistantTab.count()) {
+      await assistantTab.click();
+    }
+
+    const chatInput = page.getByPlaceholder(
+      /ask arenapilot ai/i
+    );
+
+    if (await chatInput.count()) {
+      await chatInput.focus();
+
+      await expect(chatInput).toBeFocused();
+    }
+  });
+
+  test("All form controls are enabled", async ({
+    page,
+  }) => {
+    await page.goto("/dashboard");
+
+    const controls = page.locator(
+      "input, select, textarea, button"
+    );
+
+    const count = await controls.count();
+
+    if (count > 0) {
+      await expect(
+        controls.first()
+      ).toBeEnabled();
+    }
+  });
 });

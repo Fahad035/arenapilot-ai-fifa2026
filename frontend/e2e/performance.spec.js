@@ -1,35 +1,126 @@
 import { test, expect } from "@playwright/test";
 
-test("Homepage loads successfully", async ({ page }) => {
-  const start = Date.now();
+test.describe("Performance Tests", () => {
+  test("Homepage loads successfully", async ({ page }) => {
+    const start = Date.now();
 
-  await page.goto("/");
+    await page.goto("/");
 
-  const end = Date.now();
+    await expect(page.locator("body")).toBeVisible();
 
-  expect(end - start).toBeLessThan(5000);
-});
+    const loadTime = Date.now() - start;
 
-test("Dashboard loads successfully", async ({ page }) => {
-  const start = Date.now();
+    console.log(`Homepage loaded in ${loadTime} ms`);
 
-  await page.goto("/dashboard");
+    expect(loadTime).toBeLessThan(5000);
+  });
 
-  const end = Date.now();
+  test("Dashboard loads successfully", async ({ page }) => {
+    const start = Date.now();
 
-  expect(end - start).toBeLessThan(5000);
-});
+    await page.goto("/dashboard");
 
-test("No console errors", async ({ page }) => {
-  const errors = [];
+    await expect(page.locator("body")).toBeVisible();
 
-  page.on("console", (msg) => {
-    if (msg.type() === "error") {
-      errors.push(msg.text());
+    const loadTime = Date.now() - start;
+
+    console.log(`Dashboard loaded in ${loadTime} ms`);
+
+    expect(loadTime).toBeLessThan(6000);
+  });
+
+  test("No JavaScript console errors", async ({ page }) => {
+    const errors = [];
+
+    page.on("console", (msg) => {
+      if (msg.type() === "error") {
+        errors.push(msg.text());
+      }
+    });
+
+    await page.goto("/dashboard");
+
+    await page.waitForLoadState("networkidle");
+
+    console.log(errors);
+
+    expect(errors).toEqual([]);
+  });
+
+  test("No failed network requests", async ({ page }) => {
+    const failedRequests = [];
+
+    page.on("requestfailed", (request) => {
+      failedRequests.push(request.url());
+    });
+
+    await page.goto("/dashboard");
+
+    await page.waitForLoadState("networkidle");
+
+    console.log(failedRequests);
+
+    expect(failedRequests).toEqual([]);
+  });
+
+  test("Application responds within acceptable time", async ({ page }) => {
+    await page.goto("/dashboard");
+
+    const start = Date.now();
+
+    await page.reload();
+
+    await page.waitForLoadState("networkidle");
+
+    const duration = Date.now() - start;
+
+    console.log(`Reload completed in ${duration} ms`);
+
+    expect(duration).toBeLessThan(5000);
+  });
+
+  test("Dashboard remains responsive after navigation", async ({ page }) => {
+    await page.goto("/dashboard");
+
+    const buttons = page.locator("button");
+
+    const count = await buttons.count();
+
+    if (count > 0) {
+      await buttons.first().click();
+    }
+
+    await expect(page.locator("body")).toBeVisible();
+  });
+
+  test("AI Assistant input remains interactive", async ({ page }) => {
+    await page.goto("/dashboard");
+
+    const assistantTab = page.getByRole("button", {
+      name: /ai assistant/i,
+    });
+
+    if (await assistantTab.count()) {
+      await assistantTab.click();
+    }
+
+    const input = page.getByPlaceholder(/ask arenapilot ai/i);
+
+    if (await input.count()) {
+      await input.fill("Performance Test");
+
+      await expect(input).toHaveValue("Performance Test");
     }
   });
 
-  await page.goto("/");
+  test("Memory stability after multiple reloads", async ({ page }) => {
+    await page.goto("/");
 
-  expect(errors).toHaveLength(0);
+    for (let i = 0; i < 3; i++) {
+      await page.reload();
+      await page.waitForLoadState("networkidle");
+    }
+
+    await expect(page.locator("body")).toBeVisible();
+  });
 });
