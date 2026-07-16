@@ -1,6 +1,7 @@
 import {
   FaDownload,
   FaGlobe,
+  FaPlus,
 } from "react-icons/fa";
 
 import { languages } from "../../constants/chatLanguages";
@@ -9,6 +10,7 @@ const ChatToolbar = ({
   language,
   setLanguage,
   messages,
+  onNewChat,
 }) => {
   const handleExport = () => {
     const chatContent = messages
@@ -66,6 +68,8 @@ const ChatToolbar = ({
 
       <div className="flex flex-wrap items-center gap-3">
 
+        {/* Language */}
+
         <div className="relative">
 
           <FaGlobe
@@ -110,8 +114,40 @@ const ChatToolbar = ({
 
         </div>
 
+        {/* New Chat */}
+
+        <button
+          onClick={onNewChat}
+          aria-label="new chat"
+          className="
+            flex
+            items-center
+            gap-2
+            rounded-xl
+            border
+            border-emerald-500/30
+            bg-emerald-500/10
+            px-4
+            py-2
+            text-sm
+            font-medium
+            text-emerald-300
+            transition
+            hover:border-emerald-400
+            hover:bg-emerald-500/20
+          "
+        >
+          <FaPlus />
+
+          New Chat
+
+        </button>
+
+        {/* Export */}
+
         <button
           onClick={handleExport}
+          aria-label="Export Chat"
           className="
             flex
             items-center

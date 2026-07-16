@@ -13,7 +13,10 @@ import {
 import Card from "../ui/Card";
 import Button from "../ui/Button";
 
-import { sendChatMessage } from "../../services/chatService";
+import {
+  sendChatMessage,
+  resetConversation,
+} from "../../services/chatService";
 
 import {
   languageInstructions,
@@ -25,13 +28,16 @@ import ChatToolbar from "./ChatToolbar";
 
 
 const ChatWindow = forwardRef(({ analysis }, ref) => {
-  const [messages, setMessages] = useState([
+  const initialMessages = [
     {
       role: "assistant",
       text:
         "Hello! I'm ArenaPilot AI. Ask me anything about this stadium scenario.",
     },
-  ]);
+  ];
+
+  const [messages, setMessages] =
+    useState(initialMessages);
 
   const [input, setInput] = useState("");
 
@@ -78,21 +84,16 @@ const ChatWindow = forwardRef(({ analysis }, ref) => {
 
 ${question}`;
 
-      const response =
-        await sendChatMessage(
-          finalPrompt,
-          analysis
-        );
+      const response = await sendChatMessage(
+        finalPrompt,
+        analysis
+      );
 
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
-          text:
-            typeof response === "string"
-              ? response
-              : response?.reply ??
-              "No response received.",
+          text: response.reply,
         },
       ]);
     } catch (error) {
@@ -111,10 +112,21 @@ ${question}`;
     }
   };
 
+  const clearConversation = () => {
+    resetConversation();
+
+    setMessages(initialMessages);
+
+    setInput("");
+
+    setLoading(false);
+  };
   useImperativeHandle(ref, () => ({
     sendPrompt(prompt) {
       sendMessage(prompt);
     },
+
+    clearConversation,
   }));
 
   return (
@@ -124,9 +136,10 @@ ${question}`;
         language={language}
         setLanguage={setLanguage}
         messages={messages}
+        onNewChat={clearConversation}
       />
 
-      
+
 
       <div className="flex-1 space-y-4 overflow-y-auto rounded-xl bg-slate-900 p-5">
 
