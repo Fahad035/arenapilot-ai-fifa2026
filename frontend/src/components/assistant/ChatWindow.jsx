@@ -1,8 +1,16 @@
-import { useState } from "react";
+import {
+  useState,
+  useRef,
+  useImperativeHandle,
+  forwardRef,
+  useEffect,
+} from "react";
+
 import {
   FaRobot,
   FaUser,
   FaPaperPlane,
+  FaGlobe,
 } from "react-icons/fa";
 
 import Card from "../ui/Card";
@@ -10,7 +18,15 @@ import Button from "../ui/Button";
 
 import { sendChatMessage } from "../../services/chatService";
 
-const ChatWindow = ({ analysis }) => {
+const languageInstructions = {
+  English: "Respond only in English.",
+  Hindi: "Respond only in Hindi.",
+  Arabic: "Respond only in Arabic.",
+  French: "Respond only in French.",
+  Spanish: "Respond only in Spanish.",
+};
+
+const ChatWindow = forwardRef(({ analysis }, ref) => {
   const [messages, setMessages] = useState([
     {
       role: "assistant",
@@ -23,10 +39,24 @@ const ChatWindow = ({ analysis }) => {
 
   const [loading, setLoading] = useState(false);
 
-  const sendMessage = async () => {
-    if (!input.trim() || loading) return;
+  const [language, setLanguage] =
+    useState("English");
 
-    const question = input;
+  const bottomRef = useRef(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({
+      behavior: "smooth",
+    });
+  }, [messages, loading]);
+
+  const sendMessage = async (
+    customQuestion = null
+  ) => {
+    const question =
+      customQuestion ?? input;
+
+    if (!question.trim() || loading) return;
 
     setMessages((prev) => [
       ...prev,
@@ -36,17 +66,23 @@ const ChatWindow = ({ analysis }) => {
       },
     ]);
 
-    setInput("");
+    if (!customQuestion) {
+      setInput("");
+    }
+
     setLoading(true);
 
     try {
-      console.log("Chat analysis:", analysis);
-      const response = await sendChatMessage(
-        question,
-        analysis
-      );
+      const finalPrompt = `${languageInstructions[language]}
 
-      // backend returns: { success, reply, timestamp }
+${question}`;
+
+      const response =
+        await sendChatMessage(
+          finalPrompt,
+          analysis
+        );
+
       setMessages((prev) => [
         ...prev,
         {
@@ -54,7 +90,7 @@ const ChatWindow = ({ analysis }) => {
           text:
             typeof response === "string"
               ? response
-              : response?.reply ||
+              : response?.reply ??
                 "No response received.",
         },
       ]);
@@ -69,21 +105,61 @@ const ChatWindow = ({ analysis }) => {
             "Unable to contact ArenaPilot AI.",
         },
       ]);
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
+
+  useImperativeHandle(ref, () => ({
+    sendPrompt(prompt) {
+      sendMessage(prompt);
+    },
+  }));
 
   return (
     <Card className="flex h-190 flex-col">
 
-      <h2 className="mb-6 text-2xl font-bold text-white">
-        ArenaPilot AI Assistant
-      </h2>
+      <div className="mb-6 flex items-center justify-between">
+
+        <div>
+
+          <h2 className="text-2xl font-bold text-white">
+            ArenaPilot AI Assistant
+          </h2>
+
+          <p className="mt-2 text-sm text-slate-400">
+            Ask operational questions in
+            multiple languages.
+          </p>
+
+        </div>
+
+        <div className="flex items-center gap-2">
+
+          <FaGlobe className="text-cyan-400" />
+
+          <select
+            value={language}
+            onChange={(e) =>
+              setLanguage(e.target.value)
+            }
+            className="rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-white outline-none focus:border-cyan-500"
+          >
+            <option>English</option>
+            <option>Hindi</option>
+            <option>Arabic</option>
+            <option>French</option>
+            <option>Spanish</option>
+          </select>
+
+        </div>
+
+      </div>
 
       <div className="flex-1 space-y-4 overflow-y-auto rounded-xl bg-slate-900 p-5">
 
         {messages.map((msg, index) => (
+
           <div
             key={index}
             className={`flex ${
@@ -92,13 +168,15 @@ const ChatWindow = ({ analysis }) => {
                 : "justify-end"
             }`}
           >
+
             <div
               className={`max-w-[80%] rounded-2xl p-4 ${
                 msg.role === "assistant"
-                  ? "bg-cyan-500/10 border border-cyan-500/20"
+                  ? "border border-cyan-500/20 bg-cyan-500/10"
                   : "bg-slate-700"
               }`}
             >
+
               <div className="mb-2 flex items-center gap-2">
 
                 {msg.role === "assistant" ? (
@@ -120,14 +198,19 @@ const ChatWindow = ({ analysis }) => {
               </p>
 
             </div>
+
           </div>
+
         ))}
 
         {loading && (
-          <div className="text-sm text-cyan-400">
-            ArenaPilot AI is thinking...
+          <div className="rounded-xl border border-cyan-500/20 bg-cyan-500/10 p-4 text-sm text-cyan-400">
+            ArenaPilot AI is analyzing your
+            request...
           </div>
         )}
+
+        <div ref={bottomRef} />
 
       </div>
 
@@ -149,19 +232,23 @@ const ChatWindow = ({ analysis }) => {
 
         <Button
           aria-label="Send Message"
-          onClick={sendMessage}
+          onClick={() => sendMessage()}
           disabled={loading}
           className="flex items-center gap-2"
         >
           <FaPaperPlane />
 
-          Send
+          {loading
+            ? "Sending..."
+            : "Send"}
         </Button>
 
       </div>
 
     </Card>
   );
-};
+});
+
+ChatWindow.displayName = "ChatWindow";
 
 export default ChatWindow;
