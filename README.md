@@ -50,13 +50,18 @@ Traditional monitoring systems often provide data without meaningful recommendat
 ArenaPilot AI addresses this challenge by providing:
 
 - AI-generated operational briefings
+- AI-powered crowd density and congestion analysis
 - Real-time crowd intelligence
+- Intelligent spectator navigation and gate recommendations
+- Multilingual AI Assistant supporting English, Hindi, Arabic, Spanish, and French for   international visitors and staff
 - Risk assessment
 - Emergency response recommendations
 - Smart route optimization
 - Accessibility assistance
 - Sustainability insights
 - Interactive AI assistant for operational queries
+- Exportable operational reports and AI conversations for incident documentation
+- AI-powered accessibility assistance and safer routing
 
 ---
 
@@ -150,6 +155,23 @@ Examples:
 - Emergency planning
 
 ---
+
+### 🌍 Multilingual AI Assistant
+
+ArenaPilot AI now supports multilingual AI interactions, enabling spectators, volunteers, and stadium operators from different countries to communicate naturally with the assistant.
+
+Supported Languages:
+
+- English
+- Hindi
+- Arabic
+- Spanish
+- French
+
+Language selection automatically instructs the AI model to respond in the selected language without requiring any backend modifications.
+
+---
+
 
 ## 🌱 Sustainability Monitoring
 
@@ -316,16 +338,15 @@ Backend
 > https://your-render-link.onrender.com
 
 ---
+### Innovation
 
-## Demonstration Video
-
-> https://youtube.com/your-demo-video
+ArenaPilot AI goes beyond traditional stadium dashboards by integrating Generative AI with multilingual communication capabilities. This enables users from multiple countries to interact naturally with the platform, making it particularly suitable for global sporting events such as the FIFA World Cup 2026 where accessibility and language inclusivity are critical.
 
 ---
 
 # ⭐ Why ArenaPilot AI?
 
-Unlike traditional stadium dashboards that only visualize operational data, ArenaPilot AI transforms live information into **AI-generated operational intelligence**.
+Unlike traditional dashboards, ArenaPilot AI enables multilingual communication between AI and users, making the platform suitable for international sporting events where operators, volunteers, media personnel, and spectators speak different languages.
 
 By combining Generative AI with operational analytics, the platform empowers stadium operators to make faster, safer, and more informed decisions during high-attendance events such as the FIFA World Cup 2026.
 
@@ -894,6 +915,19 @@ Example questions:
 
 ---
 
+### AI Communication Features
+
+- AI-powered operational assistant
+- Context-aware stadium conversations
+- Suggested operational prompts
+- Multilingual AI responses
+- Typing indicator
+- Voice Read Aloud (SpeechSynthesis API)
+- Copy AI responses
+- Export conversation history
+
+---
+
 ## 📜 Scenario History
 
 Previous operational scenarios can be reviewed for comparison and analysis.
@@ -1155,7 +1189,7 @@ Future enhancements planned for ArenaPilot AI include:
 
 # 💡 Why ArenaPilot AI?
 
-ArenaPilot AI goes beyond traditional dashboards by transforming operational data into actionable intelligence.
+Unlike traditional dashboards, ArenaPilot AI enables multilingual communication between AI and users, making the platform suitable for international sporting events where operators, volunteers, media personnel, and spectators speak different languages.
 
 Instead of simply presenting information, it helps operators understand:
 

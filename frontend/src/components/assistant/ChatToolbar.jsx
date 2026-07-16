@@ -45,7 +45,7 @@ const ChatToolbar = ({
   };
 
   return (
-    <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+    <div className="mb-6 flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
 
       {/* Left */}
 
