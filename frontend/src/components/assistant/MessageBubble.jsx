@@ -8,6 +8,8 @@ import {
   FaCheck,
 } from "react-icons/fa";
 
+import ReasoningCard from "./ReasoningCard";
+
 const MessageBubble = ({ message }) => {
   const [copied, setCopied] = useState(false);
 
@@ -29,15 +31,16 @@ const MessageBubble = ({ message }) => {
 
   const handleSpeak = () => {
     if (!("speechSynthesis" in window)) {
-      alert("Speech synthesis is not supported in this browser.");
+      alert(
+        "Speech synthesis is not supported in this browser."
+      );
       return;
     }
 
     window.speechSynthesis.cancel();
 
-    const utterance = new SpeechSynthesisUtterance(
-      message.text
-    );
+    const utterance =
+      new SpeechSynthesisUtterance(message.text);
 
     utterance.rate = 1;
     utterance.pitch = 1;
@@ -124,6 +127,14 @@ const MessageBubble = ({ message }) => {
         <p className="whitespace-pre-wrap leading-7 text-slate-200">
           {message.text}
         </p>
+
+        {isAssistant &&
+          message.reasoning &&
+          message.reasoning.length > 0 && (
+            <ReasoningCard
+              reasoning={message.reasoning}
+            />
+          )}
 
         {copied && (
           <p className="mt-3 text-xs text-emerald-400">

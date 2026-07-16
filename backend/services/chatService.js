@@ -26,12 +26,28 @@ const buildConversationPrompt = (history) => {
     .join("\n");
 };
 
+const parseGeminiJSON = (text) => {
+  try {
+    const cleaned = text
+      .replace(/```json/g, "")
+      .replace(/```/g, "")
+      .trim();
+
+    return JSON.parse(cleaned);
+  } catch {
+    return {
+      reply: text,
+      reasoning:
+        "The AI generated this response using the available stadium scenario and previous conversation.",
+    };
+  }
+};
+
 const generateChatResponse = async ({
   sessionId = "default",
   message,
   analysis,
 }) => {
-  // Save current user message
   addConversationMessage(sessionId, {
     role: "user",
     text: message,
@@ -50,7 +66,11 @@ const generateChatResponse = async ({
       text: reply,
     });
 
-    return reply;
+    return {
+      reply,
+      reasoning:
+        "Generated using ArenaPilot AI mock mode.",
+    };
   }
 
   try {
@@ -81,27 +101,42 @@ LATEST USER QUESTION
 ${message}
 
 ====================================================
-INSTRUCTIONS
+IMPORTANT
 ====================================================
 
-- Remember previous conversation.
-- Answer based on BOTH the scenario and previous messages.
+Return ONLY valid JSON.
+
+Format:
+
+{
+  "reply": "...",
+  "reasoning": "Explain briefly WHY this answer was produced using the supplied scenario."
+}
+
+Rules:
+
+- Never use markdown.
+- Never wrap JSON in code blocks.
 - Never invent information.
-- If information is unavailable, clearly say so.
-- Be concise.
-- Use bullet points whenever helpful.
+- Base reasoning only on supplied scenario and previous conversation.
+- reasoning should be concise (1-3 sentences).
 `;
 
     const result = await model.generateContent(prompt);
 
-    const reply = result.response.text();
+    const parsed = parseGeminiJSON(
+      result.response.text()
+    );
 
     addConversationMessage(sessionId, {
       role: "assistant",
-      text: reply,
+      text: parsed.reply,
     });
 
-    return reply;
+    return {
+      reply: parsed.reply,
+      reasoning: parsed.reasoning,
+    };
   } catch (error) {
     console.error("Chat Gemini Error:", error);
 
@@ -115,7 +150,11 @@ INSTRUCTIONS
       text: reply,
     });
 
-    return reply;
+    return {
+      reply,
+      reasoning:
+        "Generated using ArenaPilot AI fallback mode because the AI service was unavailable.",
+    };
   }
 };
 

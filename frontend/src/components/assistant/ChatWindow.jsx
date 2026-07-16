@@ -26,13 +26,13 @@ import TypingIndicator from "./TypingIndicator";
 import MessageBubble from "./MessageBubble";
 import ChatToolbar from "./ChatToolbar";
 
-
 const ChatWindow = forwardRef(({ analysis }, ref) => {
   const initialMessages = [
     {
       role: "assistant",
       text:
         "Hello! I'm ArenaPilot AI. Ask me anything about this stadium scenario.",
+      reasoning: [],
     },
   ];
 
@@ -48,13 +48,11 @@ const ChatWindow = forwardRef(({ analysis }, ref) => {
 
   const bottomRef = useRef(null);
 
-
   useEffect(() => {
     bottomRef.current?.scrollIntoView({
       behavior: "smooth",
     });
   }, [messages, loading]);
-
 
   const sendMessage = async (
     customQuestion = null
@@ -94,6 +92,7 @@ ${question}`;
         {
           role: "assistant",
           text: response.reply,
+          reasoning: response.reasoning ?? [],
         },
       ]);
     } catch (error) {
@@ -105,6 +104,7 @@ ${question}`;
           role: "assistant",
           text:
             "Unable to contact ArenaPilot AI.",
+          reasoning: [],
         },
       ]);
     } finally {
@@ -121,6 +121,7 @@ ${question}`;
 
     setLoading(false);
   };
+
   useImperativeHandle(ref, () => ({
     sendPrompt(prompt) {
       sendMessage(prompt);
@@ -138,8 +139,6 @@ ${question}`;
         messages={messages}
         onNewChat={clearConversation}
       />
-
-
 
       <div className="flex-1 space-y-4 overflow-y-auto rounded-xl bg-slate-900 p-5">
 
@@ -187,6 +186,7 @@ ${question}`;
           {loading
             ? "Sending..."
             : "Send"}
+
         </Button>
 
       </div>

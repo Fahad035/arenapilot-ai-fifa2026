@@ -4,31 +4,33 @@ import api from "./api";
 ---------------------------------------------------------
 ArenaPilot AI Conversation Memory
 ---------------------------------------------------------
-A unique conversation ID is generated once per browser
-session and sent with every chat request.
+A unique session ID is generated once per browser session
+and sent with every request.
 
-This allows the backend to remember previous messages
-without changing the existing UI logic.
+The backend uses this ID to remember previous messages.
 ---------------------------------------------------------
 */
 
 const STORAGE_KEY = "arenaPilotConversationId";
 
-const generateConversationId = () => {
-  if (typeof crypto !== "undefined" && crypto.randomUUID) {
+const generateSessionId = () => {
+  if (
+    typeof crypto !== "undefined" &&
+    crypto.randomUUID
+  ) {
     return crypto.randomUUID();
   }
 
-  return `conversation-${Date.now()}-${Math.random()
+  return `session-${Date.now()}-${Math.random()
     .toString(36)
     .substring(2, 10)}`;
 };
 
-const getConversationId = () => {
+const getSessionId = () => {
   let id = localStorage.getItem(STORAGE_KEY);
 
   if (!id) {
-    id = generateConversationId();
+    id = generateSessionId();
     localStorage.setItem(STORAGE_KEY, id);
   }
 
@@ -43,17 +45,19 @@ export const sendChatMessage = async (
   message,
   analysis
 ) => {
-  const conversationId = getConversationId();
+  const sessionId = getSessionId();
 
   const { data } = await api.post("/chat", {
+    sessionId,
     message,
     analysis,
-    conversationId,
   });
 
   return {
+    success: data.success,
     reply: data.reply,
-    conversationId: data.conversationId,
+    reasoning: data.reasoning ?? [],
+    sessionId: data.sessionId,
     timestamp: data.timestamp,
   };
 };
