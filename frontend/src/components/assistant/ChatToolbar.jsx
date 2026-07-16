@@ -3,13 +3,7 @@ import {
   FaGlobe,
 } from "react-icons/fa";
 
-const languages = [
-  "English",
-  "Hindi",
-  "Spanish",
-  "French",
-  "Arabic",
-];
+import { languages } from "../../constants/chatLanguages";
 
 const ChatToolbar = ({
   language,

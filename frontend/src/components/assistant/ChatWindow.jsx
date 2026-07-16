@@ -8,25 +8,21 @@ import {
 
 import {
   FaPaperPlane,
-  FaGlobe,
 } from "react-icons/fa";
 
 import Card from "../ui/Card";
 import Button from "../ui/Button";
 
 import { sendChatMessage } from "../../services/chatService";
+
+import {
+  languageInstructions,
+} from "../../constants/chatLanguages";
+
 import TypingIndicator from "./TypingIndicator";
 import MessageBubble from "./MessageBubble";
 import ChatToolbar from "./ChatToolbar";
 
-
-const languageInstructions = {
-  English: "Respond only in English.",
-  Hindi: "Respond only in Hindi.",
-  Arabic: "Respond only in Arabic.",
-  French: "Respond only in French.",
-  Spanish: "Respond only in Spanish.",
-};
 
 const ChatWindow = forwardRef(({ analysis }, ref) => {
   const [messages, setMessages] = useState([
@@ -46,7 +42,6 @@ const ChatWindow = forwardRef(({ analysis }, ref) => {
 
   const bottomRef = useRef(null);
 
-  const languages = Object.keys(languageInstructions);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({
@@ -131,45 +126,7 @@ ${question}`;
         messages={messages}
       />
 
-      <div className="mb-6 flex items-center justify-between">
-
-        <div>
-
-          <h2 className="text-2xl font-bold text-white">
-            ArenaPilot AI Assistant
-          </h2>
-
-          <p className="mt-2 text-sm text-slate-400">
-            Ask operational questions in
-            multiple languages.
-          </p>
-
-        </div>
-
-        <div className="flex items-center gap-2">
-
-          <FaGlobe className="text-cyan-400" />
-
-          <select
-            value={language}
-            onChange={(e) =>
-              setLanguage(e.target.value)
-            }
-            className="rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-white outline-none focus:border-cyan-500"
-          >
-            {languages.map((language) => (
-              <option
-                key={language}
-                value={language}
-              >
-                {language}
-              </option>
-            ))}
-          </select>
-
-        </div>
-
-      </div>
+      
 
       <div className="flex-1 space-y-4 overflow-y-auto rounded-xl bg-slate-900 p-5">
 
