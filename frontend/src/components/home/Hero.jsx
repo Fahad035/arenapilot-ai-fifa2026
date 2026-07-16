@@ -73,14 +73,15 @@ const Hero = () => {
 
                         <Link
                             to="/about"
+                            aria-label="Learn more about ArenaPilot AI and FIFA World Cup 2026 Smart Stadium platform"
                             className="rounded-xl border border-slate-700 px-7 py-4 font-semibold text-slate-300 transition hover:border-blue-500 hover:text-white"
                         >
-                            Learn More
+                            About ArenaPilot AI
                         </Link>
 
                     </div>
 
-                    
+
 
                 </div>
 
