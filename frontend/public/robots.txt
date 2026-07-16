@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://arenapilot-ai-fifa2026.vercel.app/sitemap.xml
