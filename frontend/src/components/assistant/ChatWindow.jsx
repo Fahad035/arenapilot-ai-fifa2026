@@ -7,8 +7,6 @@ import {
 } from "react";
 
 import {
-  FaRobot,
-  FaUser,
   FaPaperPlane,
   FaGlobe,
 } from "react-icons/fa";
@@ -17,6 +15,10 @@ import Card from "../ui/Card";
 import Button from "../ui/Button";
 
 import { sendChatMessage } from "../../services/chatService";
+import TypingIndicator from "./TypingIndicator";
+import MessageBubble from "./MessageBubble";
+import ChatToolbar from "./ChatToolbar";
+
 
 const languageInstructions = {
   English: "Respond only in English.",
@@ -44,19 +46,23 @@ const ChatWindow = forwardRef(({ analysis }, ref) => {
 
   const bottomRef = useRef(null);
 
+  const languages = Object.keys(languageInstructions);
+
   useEffect(() => {
     bottomRef.current?.scrollIntoView({
       behavior: "smooth",
     });
   }, [messages, loading]);
 
+
   const sendMessage = async (
     customQuestion = null
   ) => {
-    const question =
-      customQuestion ?? input;
+    const question = (
+      customQuestion ?? input
+    ).trim();
 
-    if (!question.trim() || loading) return;
+    if (!question || loading) return;
 
     setMessages((prev) => [
       ...prev,
@@ -91,7 +97,7 @@ ${question}`;
             typeof response === "string"
               ? response
               : response?.reply ??
-                "No response received.",
+              "No response received.",
         },
       ]);
     } catch (error) {
@@ -119,6 +125,12 @@ ${question}`;
   return (
     <Card className="flex h-190 flex-col">
 
+      <ChatToolbar
+        language={language}
+        setLanguage={setLanguage}
+        messages={messages}
+      />
+
       <div className="mb-6 flex items-center justify-between">
 
         <div>
@@ -145,11 +157,14 @@ ${question}`;
             }
             className="rounded-xl border border-slate-700 bg-slate-900 px-3 py-2 text-white outline-none focus:border-cyan-500"
           >
-            <option>English</option>
-            <option>Hindi</option>
-            <option>Arabic</option>
-            <option>French</option>
-            <option>Spanish</option>
+            {languages.map((language) => (
+              <option
+                key={language}
+                value={language}
+              >
+                {language}
+              </option>
+            ))}
           </select>
 
         </div>
@@ -158,57 +173,14 @@ ${question}`;
 
       <div className="flex-1 space-y-4 overflow-y-auto rounded-xl bg-slate-900 p-5">
 
-        {messages.map((msg, index) => (
-
-          <div
+        {messages.map((message, index) => (
+          <MessageBubble
             key={index}
-            className={`flex ${
-              msg.role === "assistant"
-                ? "justify-start"
-                : "justify-end"
-            }`}
-          >
-
-            <div
-              className={`max-w-[80%] rounded-2xl p-4 ${
-                msg.role === "assistant"
-                  ? "border border-cyan-500/20 bg-cyan-500/10"
-                  : "bg-slate-700"
-              }`}
-            >
-
-              <div className="mb-2 flex items-center gap-2">
-
-                {msg.role === "assistant" ? (
-                  <FaRobot className="text-cyan-400" />
-                ) : (
-                  <FaUser className="text-white" />
-                )}
-
-                <span className="text-xs text-slate-400">
-                  {msg.role === "assistant"
-                    ? "ArenaPilot AI"
-                    : "You"}
-                </span>
-
-              </div>
-
-              <p className="whitespace-pre-wrap leading-7 text-slate-200">
-                {msg.text}
-              </p>
-
-            </div>
-
-          </div>
-
+            message={message}
+          />
         ))}
 
-        {loading && (
-          <div className="rounded-xl border border-cyan-500/20 bg-cyan-500/10 p-4 text-sm text-cyan-400">
-            ArenaPilot AI is analyzing your
-            request...
-          </div>
-        )}
+        {loading && <TypingIndicator />}
 
         <div ref={bottomRef} />
 
@@ -222,7 +194,11 @@ ${question}`;
             setInput(e.target.value)
           }
           onKeyDown={(e) => {
-            if (e.key === "Enter") {
+            if (
+              e.key === "Enter" &&
+              !e.shiftKey
+            ) {
+              e.preventDefault();
               sendMessage();
             }
           }}
@@ -232,7 +208,7 @@ ${question}`;
 
         <Button
           aria-label="Send Message"
-          onClick={() => sendMessage()}
+          onClick={sendMessage}
           disabled={loading}
           className="flex items-center gap-2"
         >
