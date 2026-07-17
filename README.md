@@ -1,4 +1,3 @@
-<div align="center">
 
 # 🏟️ ArenaPilot AI
 
@@ -44,6 +43,8 @@ Rather than functioning as a traditional dashboard, ArenaPilot AI serves as an *
 # 🎯 Problem Statement
 
 Managing a large-scale sporting event involves coordinating thousands of moving parts simultaneously.
+
+ArenaPilot AI is designed to address the operational challenges faced during large international sporting events such as the FIFA World Cup 2026. The platform combines Generative AI with real-time operational intelligence to improve stadium safety, crowd management, accessibility, and decision-making.
 
 Traditional monitoring systems often provide data without meaningful recommendations, forcing operators to manually interpret information during time-critical situations.
 
@@ -281,47 +282,48 @@ Supports:
 
 # 🌟 Highlights
 
-✔ AI-Powered Decision Support
-
-✔ Real-Time Stadium Intelligence
-
-✔ Modern Responsive Dashboard
-
-✔ Accessibility-Oriented Design
-
-✔ Sustainability Monitoring
-
-✔ Google Gemini Integration
-
-✔ Intelligent Route Optimization
-
-✔ Emergency Operations Support
-
-✔ Operational Risk Assessment
-
-✔ Interactive AI Chat Assistant
-
-✔ Modular Component Architecture
-
-✔ Production-Ready UI
+✔ AI Stadium Analysis
+✔ Crowd Intelligence
+✔ Smart Navigation
+✔ AI Briefings
+✔ Multilingual AI Assistant
+✔ Voice Responses
+✔ Exportable AI Reports
+✔ Suggested AI Prompts
+✔ Real-time Dashboard
 
 ---
 
+## Additional AI Capabilities
+
+- Multilingual Prompt Engineering
+- Browser-based Speech Synthesis
+- Clipboard Integration
+- Chat Export (.txt)
+- Suggested Prompt Automation
+
+---
 # 📸 Screenshots
 
 > Replace the placeholders below with actual project screenshots after deployment.
 
 | Dashboard | AI Briefing |
 |------------|-------------|
-| ![](docs/screenshots/dashboard.png) | ![](docs/screenshots/briefing.png) |
+| ![]<img width="1365" height="596" alt="Image2" src="https://github.com/user-attachments/assets/19884a9f-3e91-4adf-a584-c9eb715ad797" />
+ | ![]<img width="1365" height="596" alt="Image4" src="https://github.com/user-attachments/assets/81bb908e-30e6-4b43-ab8d-0c7ba20e7621" />
+|
 
 | Crowd Intelligence | Navigator |
 |--------------------|-----------|
-| ![](docs/screenshots/crowd.png) | ![](docs/screenshots/navigator.png) |
+| ![]<img width="1365" height="597" alt="Image3" src="https://github.com/user-attachments/assets/688a8e9f-704a-4e24-b6c4-dcca72e245b7" />
+ | ![]<img width="1365" height="565" alt="Image5" src="https://github.com/user-attachments/assets/ab33c7ba-25e5-4ac4-badc-5c3a4814a992" />
+ |
 
 | Alerts | AI Assistant |
 |---------|--------------|
-| ![](docs/screenshots/alerts.png) | ![](docs/screenshots/assistant.png) |
+| ![]<img width="1365" height="599" alt="Image9" src="https://github.com/user-attachments/assets/90d1b921-831c-4809-9adf-8bb92cb9d56b" />
+ | ![]<img width="1363" height="599" alt="Image7" src="https://github.com/user-attachments/assets/c8ddfda9-166b-4b83-a1e4-375a514e5d4d" />
+|
 
 ---
 
@@ -331,11 +333,11 @@ Supports:
 
 Frontend
 
-> https://your-vercel-link.vercel.app
+> https://arenapilot-ai-fifa2026.vercel.app
 
 Backend
 
-> https://your-render-link.onrender.com
+> https://arenapilot-ai-fifa2026.onrender.com
 
 ---
 ### Innovation
