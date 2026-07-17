@@ -1,4 +1,4 @@
-    import { useMemo } from "react";
+import { useMemo } from "react";
 import {
   FaCircle,
   FaExclamationTriangle,
@@ -37,9 +37,7 @@ const defaultAlerts = [
 ];
 
 const AlertTicker = ({ analysis }) => {
-
   const alerts = useMemo(() => {
-
     if (analysis?.alerts?.length) {
       return analysis.alerts.map((item) => ({
         text: item.title,
@@ -49,47 +47,33 @@ const AlertTicker = ({ analysis }) => {
     }
 
     return defaultAlerts;
-
   }, [analysis]);
+
+  const tickerItems = [...alerts, ...alerts];
 
   return (
     <div className="overflow-hidden border-b border-cyan-500/10 bg-slate-900">
-
       <div className="flex whitespace-nowrap">
-
         <div className="ticker flex items-center">
-
-          {[...alerts, ...alerts].map((item, index) => {
-
+          {tickerItems.map((item, index) => {
             const Icon = item.icon;
-
             return (
-
               <div
                 key={index}
                 className="mx-8 flex items-center gap-3 py-3"
               >
-
                 <Icon className={`${item.color} text-sm`} />
-
                 <span className="text-sm font-medium text-slate-300">
-
                   {item.text}
-
                 </span>
-
               </div>
-
             );
-
           })}
-
         </div>
-
       </div>
-
     </div>
   );
 };
 
 export default AlertTicker;
+

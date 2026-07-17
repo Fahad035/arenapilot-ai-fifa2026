@@ -42,7 +42,7 @@ export default function useLivePolling({
                 medicalRisk: latest.medicalRisk,
                 securityScore: latest.securityRisk,
               },
-              timeline: prev?.timeline ?? prev?.timeline ?? [],
+              timeline: prev?.timeline ?? [],
               overallStatus: undefined,
               overallScore: latest.score,
               briefing: undefined,
@@ -79,4 +79,3 @@ export default function useLivePolling({
     };
   }, [enabled, intervalMs, setAnalysis]);
 }
-

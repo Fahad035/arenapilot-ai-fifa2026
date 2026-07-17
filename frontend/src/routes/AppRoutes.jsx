@@ -1,8 +1,13 @@
+import { lazy, Suspense } from "react";
 import { Routes, Route, Outlet } from "react-router-dom";
+
 import MainLayout from "../components/layout/MainLayout";
-import Home from "../pages/Home";
-import Dashboard from "../pages/Dashboard";
-import About from "../pages/About";
+import RouteFallback from "../components/ui/RouteFallback";
+
+
+const Home = lazy(() => import("../pages/Home"));
+const Dashboard = lazy(() => import("../pages/Dashboard"));
+const About = lazy(() => import("../pages/About"));
 
 function PublicLayout() {
   return (
@@ -14,13 +19,15 @@ function PublicLayout() {
 
 export default function AppRoutes() {
   return (
-    <Routes>
-      <Route element={<PublicLayout />}>
-        <Route path="/" element={<Home />} />
-      </Route>
+    <Suspense fallback={<RouteFallback />}>
+      <Routes>
+        <Route element={<PublicLayout />}>
+          <Route path="/" element={<Home />} />
+        </Route>
 
-      <Route path="/dashboard" element={<Dashboard />} />
-      <Route path="/about" element={<About/>} />
-    </Routes>
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/about" element={<About />} />
+      </Routes>
+    </Suspense>
   );
 }

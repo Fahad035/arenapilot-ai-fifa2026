@@ -14,7 +14,10 @@ import {
 import Card from "../ui/Card";
 
 const defaultActions = [
+
   {
+
+
     title: "Deploy Additional Stewards",
     description:
       "Increase staff presence around Gate B to reduce crowd congestion.",
@@ -51,12 +54,7 @@ const defaultActions = [
   },
 ];
 
-const priorityColor = {
-  Critical: "text-red-400 bg-red-500/10 border-red-500/20",
-  High: "text-orange-400 bg-orange-500/10 border-orange-500/20",
-  Medium: "text-yellow-400 bg-yellow-500/10 border-yellow-500/20",
-  Low: "text-cyan-400 bg-cyan-500/10 border-cyan-500/20",
-};
+import { getPriorityStyle } from "./alertStyles";
 
 const EmergencyActions = ({ analysis }) => {
 
@@ -154,7 +152,7 @@ const EmergencyActions = ({ analysis }) => {
 
                 <span
                   className={`rounded-full border px-3 py-1 text-xs font-semibold ${
-                    priorityColor[action.priority]
+                    getPriorityStyle(action.priority)
                   }`}
                 >
                   {action.priority}

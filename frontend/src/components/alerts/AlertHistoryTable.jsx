@@ -1,10 +1,9 @@
-import {
-  FaCheckCircle,
-  FaClock,
-} from "react-icons/fa";
+import { FaCheckCircle, FaClock } from "react-icons/fa";
 
 import Card from "../ui/Card";
 import AlertSeverityBadge from "./AlertSeverityBadge";
+
+import { getSeverityStyle, getStatusClass } from "./alertStyles";
 
 const defaultHistory = [
   {
@@ -49,29 +48,6 @@ const defaultHistory = [
   },
 ];
 
-const severityClasses = {
-  Critical:
-    "bg-red-500/10 text-red-400 border border-red-500/20",
-
-  High:
-    "bg-orange-500/10 text-orange-400 border border-orange-500/20",
-
-  Medium:
-    "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20",
-
-  Low:
-    "bg-cyan-500/10 text-cyan-400 border border-cyan-500/20",
-};
-
-const statusClasses = {
-  Monitoring: "text-orange-400",
-
-  Investigating: "text-yellow-400",
-
-  Resolved: "text-emerald-400",
-
-  Completed: "text-cyan-400",
-};
 
 const AlertHistoryTable = ({ analysis }) => {
   const history =
@@ -173,13 +149,13 @@ const AlertHistoryTable = ({ analysis }) => {
 
                 <td>
 
-                  <span
-                    className={`font-medium ${
-                      statusClasses[item.status]
-                    }`}
-                  >
-                    {item.status}
-                  </span>
+                    <span
+                      className={`font-medium ${
+                        getStatusClass(item.status)
+                      }`}
+                    >
+                      {item.status}
+                    </span>
 
                 </td>
 
@@ -217,9 +193,9 @@ const AlertHistoryTable = ({ analysis }) => {
               </h3>
 
               <span
-                className={`rounded-full px-3 py-1 text-xs ${
-                  severityClasses[item.severity]
-                }`}
+                  className={`rounded-full px-3 py-1 text-xs ${
+                    getSeverityStyle(item.severity)
+                  }`}
               >
                 {item.severity}
               </span>
