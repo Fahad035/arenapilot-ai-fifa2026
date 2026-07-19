@@ -1,8 +1,0 @@
-- [ ] Refactor shared patterns inside frontend/src/components (without changing styling/UI/behavior)
-- [ ] Ensure no API prop changes across all components
-- [ ] Apply SOLID/DRY/KISS/clean code improvements per component
-- [ ] Add React.memo/useMemo/useCallback where beneficial (behavior preserved)
-- [ ] Split oversized components into smaller reusable components (DOM/styling preserved)
-- [ ] Remove dead code/unused vars/imports
-- [ ] Return COMPLETE UPDATED FILES only (all files under frontend/src/components)
-- [ ] Run frontend lint/tests/build to verify
