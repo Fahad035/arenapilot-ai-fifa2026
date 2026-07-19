@@ -14,8 +14,6 @@ import settingsRoutes from "./routes/settingsRoutes.js";
 
 const app = express();
 
-// CORS: only allow explicitly configured origins in production.
-// ALLOWED_ORIGINS is a comma-separated list, e.g. "https://arenapilot-ai-fifa2026.vercel.app,http://localhost:5173"
 const allowedOrigins = (process.env.ALLOWED_ORIGINS || "http://localhost:5173")
   .split(",")
   .map((origin) => origin.trim())
@@ -23,7 +21,6 @@ const allowedOrigins = (process.env.ALLOWED_ORIGINS || "http://localhost:5173")
 
 const corsOptions = {
   origin: (origin, callback) => {
-    // Allow non-browser requests (no Origin header, e.g. curl/health checks)
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
@@ -65,9 +62,6 @@ app.get("/", (req, res) => {
   });
 });
 
-// Stricter limiter on AI/chat routes (expensive Gemini calls), lighter default elsewhere.
-// Applied per-router (not by app-level path prefix) so /api/live and /api/settings,
-// which also start with "/api", don't accidentally inherit the AI limiter.
 app.use("/api", aiLimiter, aiRoutes);
 app.use("/api/chat", aiLimiter, chatRoutes);
 app.use("/api/live", defaultLimiter, liveRoutes);
