@@ -58,18 +58,14 @@ test.describe("Dashboard", () => {
     ).toBeVisible();
   });
 
-  test("Navigate to Settings tab", async ({ page }) => {
-    const settingsTab = page.getByRole("button", {
-      name: /settings/i,
+  test("Navigate to AI Briefing tab", async ({ page }) => {
+    const briefingTab = page.getByRole("button", {
+      name: /AI Briefing/i,
     });
 
-    if (await settingsTab.count()) {
-      await settingsTab.click();
+    await briefingTab.click();
 
-      await expect(
-        page.getByText(/Settings/i)
-      ).toBeVisible();
-    }
+    await expect(briefingTab).toBeVisible();
   });
 
   test("Sidebar navigation changes active tab", async ({ page }) => {
