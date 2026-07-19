@@ -49,7 +49,7 @@ vi.mock("../components/alerts/SettingsTab", () => ({
 }));
 
 describe("Dashboard", () => {
-  it("renders successfully", () => {
+  it("renders successfully", async () => {
     renderWithRouter(<Dashboard />);
 
     expect(
@@ -65,7 +65,7 @@ describe("Dashboard", () => {
     ).toBeInTheDocument();
 
     expect(
-      screen.getByText("Overview Tab")
+      await screen.findByText("Overview Tab")
     ).toBeInTheDocument();
   });
 });
