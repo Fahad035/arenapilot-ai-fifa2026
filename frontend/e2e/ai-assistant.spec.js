@@ -150,15 +150,13 @@ test.describe("ArenaPilot AI Assistant", () => {
 
   test("Suggested prompt sends automatically", async ({ page }) => {
     await page
-      .getByText(
-        /Summarize the current stadium situation/i
-      )
+      .getByRole("button", {
+        name: /Summarize the current stadium situation/i,
+      })
       .click();
 
     await expect(
-      page.getByText(
-        /Summarize the current stadium situation/i
-      )
+      page.getByText(/Summarize the current stadium situation/i).last()
     ).toBeVisible();
   });
 
@@ -214,7 +212,7 @@ test.describe("ArenaPilot AI Assistant", () => {
     await page.waitForTimeout(3000);
 
     await expect(
-      page.getByText(/Why this answer|Reasoning/i)
+      page.getByText(/Why ArenaPilot AI Recommended This/i)
     ).toBeVisible();
   });
 
