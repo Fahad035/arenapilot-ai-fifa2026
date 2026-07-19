@@ -2,8 +2,6 @@ import { useEffect, useRef } from "react";
 
 import { getLatestLiveSnapshot } from "../../services/liveService";
 
-// Polls backend for the latest saved snapshot and pushes updates into setAnalysis.
-// polling stops automatically when unmounted.
 export default function useLivePolling({
   enabled,
   setAnalysis,
@@ -21,14 +19,11 @@ export default function useLivePolling({
         const snap = await getLatestLiveSnapshot();
         if (stopped) return;
 
-        // snap.latest is the history entry created in aiController
-        // For now, map to the analysis fields used by the Overview widgets.
         const latest = snap?.latest ?? null;
         if (!latest) return;
 
         setAnalysis((prev) => {
           if (!prev) {
-            // keep minimal shape consistent with UI
             return {
               risk: latest.risk,
               confidence: latest.confidence,
@@ -65,7 +60,6 @@ export default function useLivePolling({
           };
         });
       } catch (e) {
-        // swallow polling errors to avoid breaking UI
         console.error("live polling error", e);
       }
     };
