@@ -2,7 +2,7 @@ import { getGeminiModel } from "../config/gemini.js";
 import mockChatResponse from "../mock/mockChatResponse.js";
 
 import {
-  getConversation,
+  getConversationHistory,
   addConversationMessage,
 } from "../utils/conversationStore.js";
 
@@ -48,12 +48,9 @@ const generateChatResponse = async ({
   message,
   analysis,
 }) => {
-  addConversationMessage(sessionId, {
-    role: "user",
-    text: message,
-  });
+  addConversationMessage(sessionId, "user", message);
 
-  const history = getConversation(sessionId);
+  const history = getConversationHistory(sessionId);
 
   if (USE_MOCK) {
     const reply = mockChatResponse({
@@ -61,10 +58,7 @@ const generateChatResponse = async ({
       analysis,
     });
 
-    addConversationMessage(sessionId, {
-      role: "assistant",
-      text: reply,
-    });
+    addConversationMessage(sessionId, "assistant", reply);
 
     return {
       reply,
@@ -128,10 +122,7 @@ Rules:
       result.response.text()
     );
 
-    addConversationMessage(sessionId, {
-      role: "assistant",
-      text: parsed.reply,
-    });
+    addConversationMessage(sessionId, "assistant", parsed.reply);
 
     return {
       reply: parsed.reply,
@@ -145,10 +136,7 @@ Rules:
       analysis,
     });
 
-    addConversationMessage(sessionId, {
-      role: "assistant",
-      text: reply,
-    });
+    addConversationMessage(sessionId, "assistant", reply);
 
     return {
       reply,
