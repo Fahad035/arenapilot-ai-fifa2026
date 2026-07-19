@@ -4,7 +4,6 @@ import { Routes, Route, Outlet } from "react-router-dom";
 import MainLayout from "../components/layout/MainLayout";
 import RouteFallback from "../components/ui/RouteFallback";
 
-
 const Home = lazy(() => import("../pages/Home"));
 const Dashboard = lazy(() => import("../pages/Dashboard"));
 const About = lazy(() => import("../pages/About"));
