@@ -30,7 +30,7 @@ test.describe("Homepage", () => {
 
   test("Launch Dashboard button exists", async ({ page }) => {
     const dashboardButton = page.getByRole("link", {
-      name: /Launch Dashboard/i,
+      name: /Open Live Stadium Dashboard/i,
     });
 
     await expect(dashboardButton).toBeVisible();
@@ -47,7 +47,7 @@ test.describe("Homepage", () => {
   test("Dashboard navigation works", async ({ page }) => {
     await page
       .getByRole("link", {
-        name: /Launch Dashboard/i,
+        name: /Open Live Stadium Dashboard/i,
       })
       .click();
 
