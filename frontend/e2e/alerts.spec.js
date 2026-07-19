@@ -18,11 +18,11 @@ test.describe("Alerts Page", () => {
 
   test("Alert summary cards are displayed", async ({ page }) => {
     await expect(
-      page.getByText(/critical/i).first()
+      page.getByText(/critical alerts/i).first()
     ).toBeVisible();
 
     await expect(
-      page.getByText(/warning/i).first()
+      page.getByText(/high priority/i).first()
     ).toBeVisible();
   });
 
@@ -34,7 +34,7 @@ test.describe("Alerts Page", () => {
 
   test("Emergency actions section is visible", async ({ page }) => {
     await expect(
-      page.getByText(/emergency actions/i)
+      page.getByText(/AI Recommended Actions/i)
     ).toBeVisible();
   });
 
