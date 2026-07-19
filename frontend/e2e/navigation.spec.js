@@ -6,7 +6,7 @@ test.describe("Navigation", () => {
 
     await page
       .getByRole("link", {
-        name: /Launch Dashboard/i,
+        name: /Open Live Stadium Dashboard/i,
       })
       .click();
 
@@ -87,20 +87,16 @@ test.describe("Navigation", () => {
     ).toBeVisible();
   });
 
-  test("Sidebar navigation - Settings", async ({ page }) => {
+  test("Sidebar navigation - AI Briefing", async ({ page }) => {
     await page.goto("/dashboard");
 
-    const settingsTab = page.getByRole("button", {
-      name: /Settings/i,
+    const briefingTab = page.getByRole("button", {
+      name: /AI Briefing/i,
     });
 
-    if (await settingsTab.count()) {
-      await settingsTab.click();
+    await briefingTab.click();
 
-      await expect(
-        page.getByText(/Settings/i)
-      ).toBeVisible();
-    }
+    await expect(briefingTab).toBeVisible();
   });
 
   test("Browser Back and Forward Navigation", async ({ page }) => {
@@ -108,7 +104,7 @@ test.describe("Navigation", () => {
 
     await page
       .getByRole("link", {
-        name: /Launch Dashboard/i,
+        name: /Open Live Stadium Dashboard/i,
       })
       .click();
 
