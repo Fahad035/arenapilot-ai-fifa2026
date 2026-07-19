@@ -1,9 +1,9 @@
 const sanitizeValue = (value) => {
   if (typeof value === "string") {
     return value
+      .replace(/<script.*?>.*?<\/script>/gi, "")
       .replace(/[<>]/g, "")
       .replace(/javascript:/gi, "")
-      .replace(/<script.*?>.*?<\/script>/gi, "")
       .trim();
   }
 
